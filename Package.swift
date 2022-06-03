@@ -12,7 +12,8 @@ let package = Package(
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "UI",
-            targets: ["UI"]),
+            targets: ["UI"]
+        ),
     ],
     dependencies: [
         .package(
@@ -30,9 +31,11 @@ let package = Package(
             dependencies: [
                 .product(name: "Collections", package: "swift-collections"),
                 .product(name: "Utility", package: "swift-architecture-template-utility"),
-            ]),
+            ]
+        ),
         .testTarget(
             name: "UITests",
-            dependencies: ["UI"]),
+            dependencies: ["UI"]
+        ),
     ]
 )

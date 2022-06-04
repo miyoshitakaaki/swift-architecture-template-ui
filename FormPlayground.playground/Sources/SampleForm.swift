@@ -5,11 +5,21 @@ import UIKit
 
 public class SampleForm: Form {
     public struct InputType: Equatable, Initializable, Validatable {
-        let text = ""
+        public var old = ""
+        public var new = ""
+        public var passwordConfirm = ""
 
         public init() {}
 
-        public var isValid: Bool { !self.text.isEmpty }
+        public var isValid: Bool {
+            !self.old.isEmpty &&
+                !self.new.isEmpty &&
+                !self.passwordConfirm.isEmpty &&
+                self.new == self.passwordConfirm &&
+                self.old.isValid(regex: .password) &&
+                self.new.isValid(regex: .password) &&
+                self.passwordConfirm.isValid(regex: .password)
+        }
     }
 
     public typealias Input = InputType
@@ -67,7 +77,19 @@ public class SampleForm: Form {
     }
 
     public var data: AnyPublisher<InputType, Never> {
-        Just(.init()).eraseToAnyPublisher()
+        Publishers.CombineLatest3(
+            self.oldPasswordEdit,
+            self.newPasswordEdit,
+            self.newPasswordConfirmViewEdit
+        )
+        .map { data1, data2, data3 in
+            var data = Input()
+            data.old = data1
+            data.new = data2
+            data.passwordConfirm = data3
+            return data
+        }
+        .eraseToAnyPublisher()
     }
 
     public init() {}

@@ -50,6 +50,30 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
         return CGRect(x: 0, y: 0, width: self.inset, height: self.textFieldHeight)
     }
 
+    private func calcRect(forBounds bounds: CGRect) -> CGRect {
+        var rect = bounds.insetBy(dx: self.inset, dy: self.inset)
+        if (!self.showOptionButton) {
+            return rect
+        } else {
+            rect.size = CGSize(width: rect.width - (showButtonWidth - inset),
+                               height: rect.height)
+            return rect
+        }
+    }
+
+    override public func textRect(forBounds bounds: CGRect) -> CGRect {
+        calcRect(forBounds: bounds)
+    }
+
+    override public func editingRect(forBounds bounds: CGRect) -> CGRect {
+        calcRect(forBounds: bounds)
+    }
+
+    override public func placeholderRect(forBounds bounds: CGRect) -> CGRect {
+        calcRect(forBounds: bounds)
+    }
+
+
     override public func rightViewRect(forBounds bounds: CGRect) -> CGRect {
         if (!self.showOptionButton) {
             return CGRect(x: self.frame.width - self.inset, y: 0,

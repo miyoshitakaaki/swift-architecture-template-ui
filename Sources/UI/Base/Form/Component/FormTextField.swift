@@ -49,10 +49,6 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
 
     public let textPublisher = CurrentValueSubject<String, Never>("")
 
-    override public func leftViewRect(forBounds bounds: CGRect) -> CGRect {
-        return CGRect(x: 0, y: 0, width: self.inset, height: self.textFieldHeight)
-    }
-
     private func calcRect(forBounds bounds: CGRect) -> CGRect {
         var rect = bounds.insetBy(dx: self.inset, dy: self.inset)
         if (!self.showOptionButton) {
@@ -112,8 +108,6 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
 
     private let underArrowView: UnderArrowView = .init()
 
-    /// 左側余白を表現するためのスペーサー
-    private let leftSpacerView: UIView = .init()
     /// optionButtonをTextField.rightViewにサイズ指定して表示するためのコンテナ
     private let optionButtonContainerView: UIView = .init()
     private let optionButton: UIButton = .init(
@@ -192,14 +186,10 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
 
         /*
          テキスト入力エリア左右の余白
-         leftView, rightViewを使用して余白を設ける
+         rightViewを使用して余白を設ける
          セキュアのときはボタン用のスペースを算出し下記funcで返す必要がある
-         `leftViewRect(forBounds bounds: CGRect) -> CGRect`
          `rightViewRect(forBounds bounds: CGRect) -> CGRect`
          */
-        self.leftView = self.leftSpacerView
-        self.leftSpacerView.backgroundColor = .clear
-        self.leftViewMode = .always
         self.rightViewMode = .always
 
         self.optionButtonContainerView.translatesAutoresizingMaskIntoConstraints = false

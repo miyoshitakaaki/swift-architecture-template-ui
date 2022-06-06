@@ -40,8 +40,11 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
     // TODO: should remove this doubleList specfic property
     private var doubleList = ("", "")
 
+    /// テキストフィールド内のinset
     private let inset: CGFloat = 16
-    private let showButtonWidth: CGFloat = 70
+    /// 表示ボタンの横幅
+    private let showButtonWidth: CGFloat = 90
+    /// 表示ボタンの高さ
     private let textFieldHeight: CGFloat = 50
 
     public let textPublisher = CurrentValueSubject<String, Never>("")

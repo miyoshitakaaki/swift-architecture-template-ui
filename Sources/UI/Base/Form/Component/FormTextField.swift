@@ -2,12 +2,6 @@ import Combine
 import UIKit
 
 extension ViewStyle where T: UIButton {
-    static var right: ViewStyle<T> {
-        ViewStyle<T> {
-            $0.contentHorizontalAlignment = .right
-        }
-    }
-
     static var accentBlue: ViewStyle<T> {
         ViewStyle<T> {
             $0.setTitleColor(UIConfig.accentBlue, for: .normal)
@@ -47,19 +41,23 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
     private var doubleList = ("", "")
 
     private let inset: CGFloat = 16
+    private let showButtonWidth: CGFloat = 70
+    private let textFieldHeight: CGFloat = 50
 
     public let textPublisher = CurrentValueSubject<String, Never>("")
 
-    override public func textRect(forBounds bounds: CGRect) -> CGRect {
-        bounds.insetBy(dx: self.inset, dy: self.inset)
+    override public func leftViewRect(forBounds bounds: CGRect) -> CGRect {
+        return CGRect(x: 0, y: 0, width: self.inset, height: self.textFieldHeight)
     }
 
-    override public func editingRect(forBounds bounds: CGRect) -> CGRect {
-        bounds.insetBy(dx: self.inset, dy: self.inset)
-    }
-
-    override public func placeholderRect(forBounds bounds: CGRect) -> CGRect {
-        bounds.insetBy(dx: self.inset, dy: self.inset)
+    override public func rightViewRect(forBounds bounds: CGRect) -> CGRect {
+        if (!self.showOptionButton) {
+            return CGRect(x: self.frame.width - self.inset, y: 0,
+                          width: self.inset, height: self.textFieldHeight)
+        } else {
+            return CGRect(x: self.frame.width - self.showButtonWidth, y: 0,
+                          width: self.showButtonWidth, height: self.textFieldHeight)
+        }
     }
 
     public func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
@@ -87,12 +85,17 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
 
     private let underArrowView: UnderArrowView = .init()
 
+    /// 左側余白を表現するためのスペーサー
+    private let leftSpacerView: UIView = .init()
+    /// optionButtonをTextField.rightViewにサイズ指定して表示するためのコンテナ
+    private let optionButtonContainerView: UIView = .init()
     private let optionButton: UIButton = .init(
-        style: .right.compose(with: .accentBlue),
+        style: .accentBlue,
         title: "表示",
         for: .normal
     )
 
+    private var showOptionButton: Bool = false
     private var picker: Picker
 
     public init(
@@ -109,9 +112,9 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
         self.picker = picker
 
         super.init(frame: .zero)
-
+        
         self.text = dummyText
-        self.optionButton.isHidden = showOptionButton == false
+        self.showOptionButton = showOptionButton
         self.isSecureTextEntry = isSecureTextEntry
         self.delegate = self
         if let placeholderColor = placeholderColor {
@@ -160,22 +163,43 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
             addArrowButton()
         }
 
-        self.addSubviews(
-            self.optionButton,
-            constraints:
-            self.optionButton.centerYAnchor.constraint(
-                equalTo: self.centerYAnchor
-            ),
-            self.optionButton.trailingAnchor.constraint(
-                equalTo: self.trailingAnchor,
-                constant: -16
-            ),
-            self.optionButton.heightAnchor.constraint(equalToConstant: 50),
-            self.optionButton.widthAnchor.constraint(equalToConstant: 90)
-        )
+        /*
+         テキスト入力エリア左右の余白
+         leftView, rightViewを使用して余白を設ける
+         セキュアのときはボタン用のスペースを算出し下記funcで返す必要がある
+         `leftViewRect(forBounds bounds: CGRect) -> CGRect`
+         `rightViewRect(forBounds bounds: CGRect) -> CGRect`
+         */
+        self.leftView = self.leftSpacerView
+        self.leftSpacerView.backgroundColor = .clear
+        self.leftViewMode = .always
+        self.rightViewMode = .always
 
-        self.addTarget(self, action: #selector(self.didValueChanged), for: .editingChanged)
-        self.optionButton.addTarget(self, action: #selector(self.secureToggle), for: .touchUpInside)
+        self.optionButtonContainerView.translatesAutoresizingMaskIntoConstraints = false
+        self.optionButtonContainerView.backgroundColor = .clear
+        self.rightView = self.optionButtonContainerView
+        if (!self.showOptionButton) {
+            // 非セキュア
+            optionButtonContainerView.widthAnchor.constraint(equalToConstant: self.inset).isActive = true
+            optionButtonContainerView.heightAnchor.constraint(equalToConstant: self.textFieldHeight).isActive = true
+        } else {
+            // セキュア
+            // UITextField.rightViewに直接UIButtonをaddSubviewするとリサイズされてしまうためUIViewでwrapする
+            self.optionButton.translatesAutoresizingMaskIntoConstraints = false
+            self.optionButtonContainerView.addSubviews(
+                self.optionButton,
+                constraints:
+                self.optionButton.topAnchor.constraint(equalTo: self.optionButtonContainerView.topAnchor, constant: 0),
+                self.optionButton.leadingAnchor.constraint(equalTo: self.optionButtonContainerView.leadingAnchor, constant: 0),
+                self.optionButton.trailingAnchor.constraint(equalTo: self.optionButtonContainerView.trailingAnchor, constant: 0),
+                self.optionButton.bottomAnchor.constraint(equalTo: self.optionButtonContainerView.bottomAnchor, constant: 0),
+                self.optionButton.widthAnchor.constraint(equalToConstant: self.showButtonWidth),
+                self.optionButton.heightAnchor.constraint(equalToConstant: self.textFieldHeight)
+            )
+            optionButton.titleLabel?.textAlignment = .center
+            self.addTarget(self, action: #selector(self.didValueChanged), for: .editingChanged)
+            self.optionButton.addTarget(self, action: #selector(self.secureToggle), for: .touchUpInside)
+        }
     }
 
     @available(*, unavailable)

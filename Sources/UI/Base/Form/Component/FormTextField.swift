@@ -43,7 +43,7 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
     /// テキストフィールド内のinset
     private let inset: CGFloat = 16
     /// 表示ボタンの横幅
-    private let showButtonWidth: CGFloat = 90
+    private let optionButtonWidth: CGFloat = 90
 
     public let textPublisher = CurrentValueSubject<String, Never>("")
 
@@ -53,7 +53,7 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
             return rect
         } else {
             rect.size = CGSize(
-                width: rect.width - (self.showButtonWidth - self.inset),
+                width: rect.width - (self.optionButtonWidth - self.inset),
                 height: rect.height
             )
             return rect
@@ -82,9 +82,9 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
             )
         } else {
             return CGRect(
-                x: self.frame.width - self.showButtonWidth,
+                x: self.frame.width - self.optionButtonWidth,
                 y: 0,
-                width: self.showButtonWidth,
+                width: self.optionButtonWidth,
                 height: bounds.height
             )
         }

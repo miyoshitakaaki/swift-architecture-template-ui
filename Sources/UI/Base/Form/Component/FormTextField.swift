@@ -44,42 +44,49 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
     private let inset: CGFloat = 16
     /// 表示ボタンの横幅
     private let showButtonWidth: CGFloat = 90
-    /// 表示ボタンの高さ
-    private let textFieldHeight: CGFloat = 50
 
     public let textPublisher = CurrentValueSubject<String, Never>("")
 
     private func calcRect(forBounds bounds: CGRect) -> CGRect {
         var rect = bounds.insetBy(dx: self.inset, dy: self.inset)
-        if (!self.showOptionButton) {
+        if !self.showOptionButton {
             return rect
         } else {
-            rect.size = CGSize(width: rect.width - (showButtonWidth - inset),
-                               height: rect.height)
+            rect.size = CGSize(
+                width: rect.width - (self.showButtonWidth - self.inset),
+                height: rect.height
+            )
             return rect
         }
     }
 
     override public func textRect(forBounds bounds: CGRect) -> CGRect {
-        calcRect(forBounds: bounds)
+        self.calcRect(forBounds: bounds)
     }
 
     override public func editingRect(forBounds bounds: CGRect) -> CGRect {
-        calcRect(forBounds: bounds)
+        self.calcRect(forBounds: bounds)
     }
 
     override public func placeholderRect(forBounds bounds: CGRect) -> CGRect {
-        calcRect(forBounds: bounds)
+        self.calcRect(forBounds: bounds)
     }
 
-
     override public func rightViewRect(forBounds bounds: CGRect) -> CGRect {
-        if (!self.showOptionButton) {
-            return CGRect(x: self.frame.width - self.inset, y: 0,
-                          width: self.inset, height: self.textFieldHeight)
+        if !self.showOptionButton {
+            return CGRect(
+                x: self.frame.width - self.inset,
+                y: 0,
+                width: self.inset,
+                height: bounds.height
+            )
         } else {
-            return CGRect(x: self.frame.width - self.showButtonWidth, y: 0,
-                          width: self.showButtonWidth, height: self.textFieldHeight)
+            return CGRect(
+                x: self.frame.width - self.showButtonWidth,
+                y: 0,
+                width: self.showButtonWidth,
+                height: bounds.height
+            )
         }
     }
 
@@ -116,7 +123,7 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
         for: .normal
     )
 
-    private var showOptionButton: Bool = false
+    private let showOptionButton: Bool
     private var picker: Picker
 
     public init(
@@ -131,11 +138,11 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
         dummyText: String = ""
     ) {
         self.picker = picker
+        self.showOptionButton = showOptionButton
 
         super.init(frame: .zero)
-        
+
         self.text = dummyText
-        self.showOptionButton = showOptionButton
         self.isSecureTextEntry = isSecureTextEntry
         self.delegate = self
         if let placeholderColor = placeholderColor {
@@ -184,39 +191,11 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
             addArrowButton()
         }
 
-        /*
-         テキスト入力エリア左右の余白
-         rightViewを使用して余白を設ける
-         セキュアのときはボタン用のスペースを算出し下記funcで返す必要がある
-         `rightViewRect(forBounds bounds: CGRect) -> CGRect`
-         */
         self.rightViewMode = .always
-
-        self.optionButtonContainerView.translatesAutoresizingMaskIntoConstraints = false
-        self.optionButtonContainerView.backgroundColor = .clear
-        self.rightView = self.optionButtonContainerView
-        if (!self.showOptionButton) {
-            // 非セキュア
-            optionButtonContainerView.widthAnchor.constraint(equalToConstant: self.inset).isActive = true
-            optionButtonContainerView.heightAnchor.constraint(equalToConstant: self.textFieldHeight).isActive = true
-        } else {
-            // セキュア
-            // UITextField.rightViewに直接UIButtonをaddSubviewするとリサイズされてしまうためUIViewでwrapする
-            self.optionButton.translatesAutoresizingMaskIntoConstraints = false
-            self.optionButtonContainerView.addSubviews(
-                self.optionButton,
-                constraints:
-                self.optionButton.topAnchor.constraint(equalTo: self.optionButtonContainerView.topAnchor, constant: 0),
-                self.optionButton.leadingAnchor.constraint(equalTo: self.optionButtonContainerView.leadingAnchor, constant: 0),
-                self.optionButton.trailingAnchor.constraint(equalTo: self.optionButtonContainerView.trailingAnchor, constant: 0),
-                self.optionButton.bottomAnchor.constraint(equalTo: self.optionButtonContainerView.bottomAnchor, constant: 0),
-                self.optionButton.widthAnchor.constraint(equalToConstant: self.showButtonWidth),
-                self.optionButton.heightAnchor.constraint(equalToConstant: self.textFieldHeight)
-            )
-            optionButton.titleLabel?.textAlignment = .center
-            self.addTarget(self, action: #selector(self.didValueChanged), for: .editingChanged)
-            self.optionButton.addTarget(self, action: #selector(self.secureToggle), for: .touchUpInside)
-        }
+        self.rightView = self.optionButton
+        self.addTarget(self, action: #selector(self.didValueChanged), for: .editingChanged)
+        self.optionButton.addTarget(self, action: #selector(self.secureToggle), for: .touchUpInside)
+        self.optionButton.isHidden = !self.showOptionButton
     }
 
     @available(*, unavailable)

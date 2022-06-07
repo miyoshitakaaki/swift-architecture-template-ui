@@ -8,6 +8,10 @@ public class SampleForm: Form {
         public var old = ""
         public var new = ""
         public var passwordConfirm = ""
+        public var birthday = ""
+        public var gender = ""
+        public var email = ""
+        public var phone = ""
 
         public init() {}
 
@@ -18,7 +22,13 @@ public class SampleForm: Form {
                 self.new == self.passwordConfirm &&
                 self.old.isValid(regex: .password) &&
                 self.new.isValid(regex: .password) &&
-                self.passwordConfirm.isValid(regex: .password)
+                self.passwordConfirm.isValid(regex: .password) &&
+                !self.birthday.isEmpty &&
+                !self.gender.isEmpty &&
+                !self.email.isEmpty &&
+                self.email.isValid(regex: .email) &&
+                !self.phone.isEmpty &&
+                self.phone.isValid(regex: .phone)
         }
     }
 
@@ -65,6 +75,33 @@ public class SampleForm: Form {
         allowEmpty: false,
         isPassword: true
     )
+
+    private let birthdayEdit: TextEdit<FormTextField> = .init(
+        title: "生年月日",
+        edit: .init(placeholder: "", picker: .date(.birthday)),
+        allowEmpty: false
+    )
+
+    private let genderEdit: TextEdit<FormTextField> = .init(
+        title: "性別",
+        edit: .init(placeholder: "", picker: .list(["", "男性", "女性"])),
+        allowEmpty: false
+    )
+
+    private let emailEdit: TextEdit<FormTextField> = .init(
+        title: "メールアドレス",
+        edit: .init(placeholder: "", textContentType: .emailAddress),
+        allowEmpty: false,
+        isEmail: true
+    )
+
+    private let phoneEdit: TextEdit<FormTextField> = .init(
+        title: "電話番号",
+        edit: .init(placeholder: "例：08012345678", textContentType: .telephoneNumber),
+        allowEmpty: false,
+        isPhone: true
+    )
+
     public var views: [UIView] {
         [
             self.oldPasswordEdit.titleLabel,
@@ -73,23 +110,41 @@ public class SampleForm: Form {
             self.newPasswordEdit.edit,
             self.newPasswordConfirmViewEdit.titleLabel,
             self.newPasswordConfirmViewEdit.edit,
+            self.birthdayEdit.titleLabel,
+            self.birthdayEdit.edit,
+            self.genderEdit.titleLabel,
+            self.genderEdit.edit,
+            self.emailEdit.titleLabel,
+            self.emailEdit.edit,
+            self.phoneEdit.titleLabel,
+            self.phoneEdit.edit,
         ]
     }
 
     public var data: AnyPublisher<InputType, Never> {
-        Publishers.CombineLatest3(
-            self.oldPasswordEdit,
-            self.newPasswordEdit,
-            self.newPasswordConfirmViewEdit
-        )
-        .map { data1, data2, data3 in
-            var data = Input()
-            data.old = data1
-            data.new = data2
-            data.passwordConfirm = data3
-            return data
-        }
-        .eraseToAnyPublisher()
+        self.oldPasswordEdit
+            .combineLatest(self.newPasswordEdit)
+            .combineLatest(self.newPasswordConfirmViewEdit)
+            .combineLatest(self.birthdayEdit)
+            .combineLatest(self.genderEdit)
+            .combineLatest(self.emailEdit)
+            .combineLatest(self.phoneEdit)
+            .map { data in
+                let (
+                    (((((oldPassword, newPassword), newPasswordConfirm), birthday), gender), email),
+                    phone
+                ) = data
+                var data = Input()
+                data.old = oldPassword
+                data.new = newPassword
+                data.passwordConfirm = newPasswordConfirm
+                data.birthday = birthday
+                data.gender = gender
+                data.email = email
+                data.phone = phone
+                return data
+            }
+            .eraseToAnyPublisher()
     }
 
     public init() {}

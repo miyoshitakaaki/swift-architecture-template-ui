@@ -49,15 +49,15 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
 
     private func calcRect(forBounds bounds: CGRect) -> CGRect {
         var rect = bounds.insetBy(dx: self.inset, dy: self.inset)
-        if !self.showOptionButton {
-            return rect
-        } else {
+
+        if self.showOptionButton {
             rect.size = CGSize(
                 width: rect.width - (self.optionButtonWidth - self.inset),
                 height: rect.height
             )
-            return rect
         }
+
+        return rect
     }
 
     override public func textRect(forBounds bounds: CGRect) -> CGRect {

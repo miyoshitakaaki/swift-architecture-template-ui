@@ -73,21 +73,16 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
     }
 
     override public func rightViewRect(forBounds bounds: CGRect) -> CGRect {
-        if !self.showOptionButton {
-            return CGRect(
-                x: self.frame.width - self.inset,
-                y: 0,
-                width: self.inset,
-                height: bounds.height
-            )
-        } else {
-            return CGRect(
-                x: self.frame.width - self.optionButtonWidth,
-                y: 0,
-                width: self.optionButtonWidth,
-                height: bounds.height
-            )
-        }
+        .init(
+            x: self.showOptionButton
+                ? self.frame.width - self.optionButtonWidth
+                : self.frame.width - self.inset,
+            y: 0,
+            width: self.showOptionButton
+                ? self.optionButtonWidth
+                : self.inset,
+            height: bounds.height
+        )
     }
 
     public func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {

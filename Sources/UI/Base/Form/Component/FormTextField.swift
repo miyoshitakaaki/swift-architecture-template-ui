@@ -2,12 +2,6 @@ import Combine
 import UIKit
 
 extension ViewStyle where T: UIButton {
-    static var right: ViewStyle<T> {
-        ViewStyle<T> {
-            $0.contentHorizontalAlignment = .right
-        }
-    }
-
     static var accentBlue: ViewStyle<T> {
         ViewStyle<T> {
             $0.setTitleColor(UIConfig.accentBlue, for: .normal)
@@ -46,20 +40,49 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
     // TODO: should remove this doubleList specfic property
     private var doubleList = ("", "")
 
+    /// テキストフィールド内のinset
     private let inset: CGFloat = 16
+    /// 表示ボタンの横幅
+    private let optionButtonWidth: CGFloat = 90
 
     public let textPublisher = CurrentValueSubject<String, Never>("")
 
+    private func calcRect(forBounds bounds: CGRect) -> CGRect {
+        var rect = bounds.insetBy(dx: self.inset, dy: self.inset)
+
+        if self.showOptionButton {
+            rect.size = CGSize(
+                width: rect.width - (self.optionButtonWidth - self.inset),
+                height: rect.height
+            )
+        }
+
+        return rect
+    }
+
     override public func textRect(forBounds bounds: CGRect) -> CGRect {
-        bounds.insetBy(dx: self.inset, dy: self.inset)
+        self.calcRect(forBounds: bounds)
     }
 
     override public func editingRect(forBounds bounds: CGRect) -> CGRect {
-        bounds.insetBy(dx: self.inset, dy: self.inset)
+        self.calcRect(forBounds: bounds)
     }
 
     override public func placeholderRect(forBounds bounds: CGRect) -> CGRect {
-        bounds.insetBy(dx: self.inset, dy: self.inset)
+        self.calcRect(forBounds: bounds)
+    }
+
+    override public func rightViewRect(forBounds bounds: CGRect) -> CGRect {
+        .init(
+            x: self.showOptionButton
+                ? self.frame.width - self.optionButtonWidth
+                : self.frame.width - self.inset,
+            y: 0,
+            width: self.showOptionButton
+                ? self.optionButtonWidth
+                : self.inset,
+            height: bounds.height
+        )
     }
 
     public func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
@@ -87,12 +110,15 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
 
     private let underArrowView: UnderArrowView = .init()
 
+    /// optionButtonをTextField.rightViewにサイズ指定して表示するためのコンテナ
+    private let optionButtonContainerView: UIView = .init()
     private let optionButton: UIButton = .init(
-        style: .right.compose(with: .accentBlue),
+        style: .accentBlue,
         title: "表示",
         for: .normal
     )
 
+    private let showOptionButton: Bool
     private var picker: Picker
 
     public init(
@@ -107,11 +133,11 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
         dummyText: String = ""
     ) {
         self.picker = picker
+        self.showOptionButton = showOptionButton
 
         super.init(frame: .zero)
 
         self.text = dummyText
-        self.optionButton.isHidden = showOptionButton == false
         self.isSecureTextEntry = isSecureTextEntry
         self.delegate = self
         if let placeholderColor = placeholderColor {
@@ -160,22 +186,11 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
             addArrowButton()
         }
 
-        self.addSubviews(
-            self.optionButton,
-            constraints:
-            self.optionButton.centerYAnchor.constraint(
-                equalTo: self.centerYAnchor
-            ),
-            self.optionButton.trailingAnchor.constraint(
-                equalTo: self.trailingAnchor,
-                constant: -16
-            ),
-            self.optionButton.heightAnchor.constraint(equalToConstant: 50),
-            self.optionButton.widthAnchor.constraint(equalToConstant: 90)
-        )
-
+        self.rightViewMode = .always
+        self.rightView = self.optionButton
         self.addTarget(self, action: #selector(self.didValueChanged), for: .editingChanged)
         self.optionButton.addTarget(self, action: #selector(self.secureToggle), for: .touchUpInside)
+        self.optionButton.isHidden = !self.showOptionButton
     }
 
     @available(*, unavailable)

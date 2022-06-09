@@ -74,10 +74,6 @@ public extension Form {
     }
 }
 
-public protocol Initializable {
-    init()
-}
-
 public protocol Validatable {
     var isValid: Bool { get }
 }

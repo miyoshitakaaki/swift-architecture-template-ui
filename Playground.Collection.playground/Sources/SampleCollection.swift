@@ -48,6 +48,8 @@ public class SampleCollection: CollectionList {
 
     public var screenTitle: String { "ランキング" }
 
+    public var backGroundColor: UIColor { .yellow }
+
     public var topViewSubject = PassthroughSubject<String, Never>()
 
     public var fetchPublisher: ((parameter: String?, isAdditional: Bool))

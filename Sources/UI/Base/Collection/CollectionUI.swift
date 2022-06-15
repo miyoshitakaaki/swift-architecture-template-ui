@@ -138,7 +138,7 @@ private extension CollectionUI {
                 .constraint(equalTo: rootview.safeAreaLayoutGuide.trailingAnchor)
         )
 
-        self.collectionView.backgroundColor = UIColor.rgba(244, 244, 244, 1)
+        self.collectionView.backgroundColor = self.collection.backGroundColor
         self.collectionView.register(T.Cell.self, forCellWithReuseIdentifier: T.Cell.className)
         self.collectionView.refreshControl = RefreshControl(moveY: -self.collection.topViewHeight)
         self.collectionView.refreshControl?.addTarget(

@@ -10,6 +10,8 @@ public final class TableUI<T: Table>: ListUI<T>, UITableViewDataSource, UITableV
     let didItemSelectedPublisher = PassthroughSubject<IndexPath, Never>()
     let additionalLoadingIndexPathPublisher = PassthroughSubject<IndexPath, Never>()
 
+    private let table: T
+
     public init(
         style: UITableView.Style = .plain,
         viewDataItems: OrderedDictionary<String, [T.Cell.ViewData]> = [:],
@@ -19,6 +21,7 @@ public final class TableUI<T: Table>: ListUI<T>, UITableViewDataSource, UITableV
         self.tableView.sectionHeaderHeight = 0
         self.tableView.keyboardDismissMode = .interactive
         self.viewDataItems = viewDataItems
+        self.table = table
         super.init(list: table)
     }
 
@@ -103,7 +106,7 @@ extension TableUI: UserInterface {
                 .constraint(equalTo: rootview.safeAreaLayoutGuide.trailingAnchor)
         )
 
-        self.tableView.backgroundColor = UIColor.rgba(244, 244, 244, 1)
+        self.tableView.backgroundColor = self.table.backgroundColor
         self.tableView.separatorStyle = .none
         self.tableView.register(T.Cell.self, forCellReuseIdentifier: T.Cell.className)
         self.tableView.register(

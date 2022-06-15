@@ -48,7 +48,7 @@ public class SampleCollection: CollectionList {
 
     public var screenTitle: String { "ランキング" }
 
-    public var backGroundColor: UIColor { .yellow }
+    public var backgroundColor: UIColor { .yellow }
 
     public var topViewSubject = PassthroughSubject<String, Never>()
 
@@ -56,18 +56,18 @@ public class SampleCollection: CollectionList {
         -> AnyPublisher<Items, AppError> {{ _ in
         Just([
             "section1": [
-                .init(text: "delivery1"),
-                .init(text: "delivery2"),
-                .init(text: "delivery3"),
-                .init(text: "delivery4"),
-                .init(text: "delivery5"),
-                .init(text: "delivery6"),
-                .init(text: "delivery7"),
-                .init(text: "delivery8"),
-                .init(text: "delivery9"),
-                .init(text: "delivery10"),
-                .init(text: "delivery11"),
-                .init(text: "delivery12"),
+                .init(text: "collection1"),
+                .init(text: "collection2"),
+                .init(text: "collection3"),
+                .init(text: "collection4"),
+                .init(text: "collection5"),
+                .init(text: "collection6"),
+                .init(text: "collection7"),
+                .init(text: "collection8"),
+                .init(text: "collection9"),
+                .init(text: "collection10"),
+                .init(text: "collection11"),
+                .init(text: "collection12"),
             ],
         ]).setFailureType(to: AppError.self)
             .eraseToAnyPublisher()

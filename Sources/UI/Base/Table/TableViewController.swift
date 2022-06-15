@@ -42,7 +42,8 @@ public final class TableViewController<T: Table>: UIViewController, ActivityPres
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        self.view.backgroundColor = .white
+        self.view.backgroundColor = self.table.backgroundColor
+
         self.ui.setupView(rootview: view)
 
         if self.table.showSearchBar {

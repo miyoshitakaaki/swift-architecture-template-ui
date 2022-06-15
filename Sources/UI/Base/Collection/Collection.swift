@@ -11,7 +11,6 @@ public protocol CollectionList: List {
     typealias Items = OrderedDictionary<String, [Cell.ViewData]>
 
     var screenTitle: String { get }
-    var backGroundColor: UIColor { get }
     var composableLayout: UICollectionViewCompositionalLayout { get }
     var topViewSubject: PassthroughSubject<Parameter, Never> { get }
     var fetchPublisher: ((parameter: Parameter?, isAdditional: Bool))
@@ -19,7 +18,7 @@ public protocol CollectionList: List {
 }
 
 public extension CollectionList {
-    var backGroundColor: UIColor { UIColor.rgba(244, 244, 244, 1) }
+    var backgroundColor: UIColor { UIColor.rgba(244, 244, 244, 1) }
 }
 
 public protocol CollectionLayout: UICollectionViewCell {

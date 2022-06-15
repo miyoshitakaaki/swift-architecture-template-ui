@@ -39,7 +39,7 @@ public final class CollectionViewController<T: CollectionList>: UIViewController
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = self.collection.backGroundColor
+        view.backgroundColor = self.collection.backgroundColor
 
         self.ui.setupView(rootview: view)
 

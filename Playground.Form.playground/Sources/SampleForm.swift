@@ -2,6 +2,7 @@ import Combine
 import Foundation
 import UI
 import UIKit
+import Utility
 
 public class SampleForm: Form {
     public struct InputType: Equatable, Initializable, Validatable {

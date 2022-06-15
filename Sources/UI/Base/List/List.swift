@@ -8,6 +8,7 @@ public protocol List: AnyObject {
     var topView: T? { get }
     var topViewHeight: CGFloat { get }
     var hasSegmentedPageContainer: Bool { get }
+    var backgroundColor: UIColor { get }
 }
 
 public extension List {

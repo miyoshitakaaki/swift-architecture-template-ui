@@ -19,6 +19,10 @@ public protocol FormConfirmUIProtocol {
 
 extension FormConfirmUIProtocol {
     var completionButtonStyle: ViewStyle<UIButton> {
-        .cornerRadius.compose(with: .backgroundAccentBlue)
+        .init {
+            $0.layer.cornerRadius = 8.0
+            $0.clipsToBounds = true
+            $0.backgroundColor = UIConfig.accentBlue
+        }
     }
 }

@@ -86,7 +86,9 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
     /// optionButtonをTextField.rightViewにサイズ指定して表示するためのコンテナ
     private let optionButtonContainerView: UIView = .init()
     private let optionButton: UIButton = .init(
-        style: .accentBlue,
+        style: .init {
+            $0.setTitleColor(UIConfig.accentBlue, for: .normal)
+        },
         title: "表示",
         for: .normal
     )
@@ -135,7 +137,13 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
         case .text:
             break
         case let .date(type):
-            let picker = UIDatePicker(style: .someStyle)
+            let picker = UIDatePicker(style: .init {
+                $0.date = Date()
+                $0.datePickerMode = .date
+                if #available(iOS 13.4, *) {
+                    $0.preferredDatePickerStyle = .wheels
+                }
+            })
             if type == .birthday {
                 let befor55years = Date().year - 55
                 picker.date = "\(befor55years)/01/01".date(from: .yyyyMMddSlash) ?? Date()

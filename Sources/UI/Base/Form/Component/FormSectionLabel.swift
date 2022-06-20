@@ -6,7 +6,10 @@ public final class FormSectionLabel: UILabel {
     public init(title: String, leftInset: CGFloat = 0) {
         self.padding = .init(top: 40, left: leftInset, bottom: 16, right: 0)
         super.init(frame: .zero)
-        apply(.accentBlueBold)
+        apply(.init {
+            $0.textColor = UIConfig.accentBlue
+            $0.font = UIFont.boldSystemFont(ofSize: 16)
+        })
         self.text = title
     }
 

@@ -77,7 +77,10 @@ private extension FormSelectionView {
             view.tag = index
             self.itemViews.append(view)
         }
-        apply(.cornerRadius)
+        apply(.init {
+            $0.layer.cornerRadius = 8.0
+            $0.clipsToBounds = true
+        })
     }
 }
 

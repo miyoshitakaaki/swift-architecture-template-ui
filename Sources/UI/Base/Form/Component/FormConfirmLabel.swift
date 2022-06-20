@@ -6,7 +6,10 @@ public final class FormConfirmLabel: UILabel {
     public init(title: String, leftInset: CGFloat = 0) {
         self.padding = .init(top: 8, left: leftInset, bottom: 24, right: 32)
         super.init(frame: .zero)
-        apply(.darkGlay97MediumSize)
+        apply(.init {
+            $0.textColor = UIColor.rgba(97, 97, 97, 1)
+            $0.font = UIFont.systemFont(ofSize: 14)
+        })
         self.text = title
         self.numberOfLines = 0
     }

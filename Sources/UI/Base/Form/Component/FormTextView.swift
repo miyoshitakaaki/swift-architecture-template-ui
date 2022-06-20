@@ -17,7 +17,10 @@ public final class FormTextView: UITextView, UITextViewDelegate {
 
     public init(placeholder: String) {
         super.init(frame: .zero, textContainer: nil)
-        apply(.cornerRadius)
+        apply(.init {
+            $0.layer.cornerRadius = 8.0
+            $0.clipsToBounds = true
+        })
         self.delegate = self
         self.heightAnchor.constraint(equalToConstant: 160).isActive = true
         self.placeholderLabel.text = placeholder

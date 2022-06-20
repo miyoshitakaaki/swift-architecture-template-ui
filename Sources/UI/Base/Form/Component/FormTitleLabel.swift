@@ -3,10 +3,15 @@ import UIKit
 public final class FormTitleLabel: UILabel {
     public let padding: UIEdgeInsets
 
-    public init(title: String, leftInset: CGFloat = 8) {
+    public init(
+        title: String,
+        leftInset: CGFloat = 8,
+        titleColor: UIColor = UIColor.rgba(97, 97, 97, 1)
+    ) {
         self.padding = .init(top: 24, left: leftInset, bottom: 8, right: 0)
         super.init(frame: .zero)
-        apply(.darkGray700BoldSmallSize)
+        self.textColor = titleColor
+        self.font = UIFont.boldSystemFont(ofSize: 12)
         self.text = title
         self.numberOfLines = 0
     }

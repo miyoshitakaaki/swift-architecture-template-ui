@@ -7,6 +7,8 @@ public protocol FormUIProtocol {
     var title: String { get }
     var completionButtonTitle: String { get }
     var completionButtonPotition: CompletionButtonPosition { get }
+    var bottomCompletionButtonEnableBackgroundStyle: ViewStyle<UIButton> { get }
+    var bottomCompletionButtondisableBackgroundStyle: ViewStyle<UIButton> { get }
     var views: [UIView] { get }
     var isValid: AnyPublisher<Bool, Never> { get }
     var isOptional: Bool { get }
@@ -16,6 +18,10 @@ public protocol FormUIProtocol {
 
 public extension FormUIProtocol {
     var backgroundColor: UIColor { UIConfig.lightGray_100 }
+
+    var bottomCompletionButtonEnableBackgroundStyle: ViewStyle<UIButton> { .backgroundAccentBlue }
+
+    var bottomCompletionButtondisableBackgroundStyle: ViewStyle<UIButton> { .backgroundDarkGray }
 
     var isOptional: Bool { false }
 

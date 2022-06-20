@@ -11,8 +11,14 @@ public final class FormNoteView: UIView {
                 cornerRadius: 8,
                 backGroundColor: .white
             )
-            label.apply(.lightSmallSize)
-            label.apply(.cornerRadiusBoader)
+            label.apply(.init {
+                $0.backgroundColor = .white
+                $0.font = UIFont.systemFont(ofSize: 12)
+                $0.layer.borderColor = UIColor.rgba(224, 224, 224, 1).cgColor
+                $0.layer.borderWidth = 1.0
+                $0.layer.cornerRadius = 8.0
+                $0.clipsToBounds = true
+            })
             var attributes: [NSAttributedString.Key: Any] = [:]
             let paragraphStyle = NSMutableParagraphStyle()
             paragraphStyle.lineSpacing = 5.0

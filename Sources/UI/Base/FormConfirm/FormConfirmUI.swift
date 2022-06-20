@@ -19,7 +19,11 @@ public final class FormConfirmUI {
     private let form: FormConfirmUIProtocol
 
     public init(form: FormConfirmUIProtocol) {
-        self.scrollView = .init(style: .vertical)
+        self.scrollView = .init(style: .init {
+            $0.showsVerticalScrollIndicator = false
+            $0.scrollRectToVisible($0.frame, animated: true)
+            $0.backgroundColor = .clear
+        })
         self.form = form
         self.completionButton = .init(
             style: form.completionButtonStyle,

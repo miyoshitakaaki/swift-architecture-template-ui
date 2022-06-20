@@ -29,7 +29,11 @@ public final class FormUI {
         form: FormUIProtocol,
         hideCompletionButton: Bool = false
     ) {
-        self.scrollView = .init(style: .vertical)
+        self.scrollView = .init(style: .init {
+            $0.showsVerticalScrollIndicator = false
+            $0.scrollRectToVisible($0.frame, animated: true)
+            $0.backgroundColor = .clear
+        })
         self.form = form
         self.completionButton = .init(
             style: form.completionButtonPotition == .top
@@ -47,7 +51,11 @@ public final class FormUI {
         self.completionButton.isUserInteractionEnabled = enable
 
         if self.form.completionButtonPotition == .top {
-            self.completionButton.apply(enable ? .accentBlue : .darkGray600)
+            self.completionButton.apply(enable ? .init {
+                $0.setTitleColor(UIConfig.accentBlue, for: .normal)
+            } : .init {
+                $0.setTitleColor(UIConfig.darkGray_600, for: .normal)
+            })
         } else {
             self.completionButton.apply(
                 enable
@@ -120,7 +128,9 @@ private extension FormUI {
         let keyboardFrameTrackerView: AMKeyboardFrameTrackerView = .init(height: 44)
         keyboardFrameTrackerView.isUserInteractionEnabled = true
 
-        let button: UIButton = .init(style: .accentBlue, title: "次へ")
+        let button: UIButton = .init(style: .init {
+            $0.setTitleColor(UIConfig.accentBlue, for: .normal)
+        }, title: "次へ")
         button.addTarget(self, action: #selector(self.nextButtonTapped(_:)), for: .touchUpInside)
 
         let barButtonItem: UIBarButtonItem = .init(customView: button)

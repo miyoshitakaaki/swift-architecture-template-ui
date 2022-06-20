@@ -1,24 +1,6 @@
 import Foundation
 import UIKit
 
-extension ViewStyle where T: UIButton {
-    static var boldMidiumSize: ViewStyle<T> {
-        ViewStyle<T> {
-            $0.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-        }
-    }
-}
-
-extension ViewStyle where T: UIScrollView {
-    static var vertical: ViewStyle<T> {
-        ViewStyle<T> {
-            $0.showsVerticalScrollIndicator = false
-            $0.scrollRectToVisible($0.frame, animated: true)
-            $0.backgroundColor = .clear
-        }
-    }
-}
-
 public func create<T: Form>(
     form: T,
     hideCompletionButton: Bool = false

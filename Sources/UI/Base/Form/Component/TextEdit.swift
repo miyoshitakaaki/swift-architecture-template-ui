@@ -54,25 +54,37 @@ public final class TextEdit<T: UIControl>: Publisher where T: Publisher, T.Outpu
 
                 if self.allowEmpty == false, text.isEmpty, self.isEnabled {
                     self.titleLabel.text = self.initialTitle + "(必ず入力してください)"
-                    self.titleLabel.apply(.dangerRedBoldSmallSize)
+                    self.titleLabel.apply(.init {
+                        $0.textColor = UIConfig.dangerRed
+                        $0.font = UIFont.boldSystemFont(ofSize: 12)
+                    })
                     return
                 }
 
                 if self.isPhone, text.isValid(regex: .phone) == false, self.isEnabled {
                     self.titleLabel.text = self.initialTitle + "(正しい書式で入力してください)"
-                    self.titleLabel.apply(.dangerRedBoldSmallSize)
+                    self.titleLabel.apply(.init {
+                        $0.textColor = UIConfig.dangerRed
+                        $0.font = UIFont.boldSystemFont(ofSize: 12)
+                    })
                     return
                 }
 
                 if self.isEmail, text.isValid(regex: .email) == false {
                     self.titleLabel.text = self.initialTitle + "(正しい書式で入力してください)"
-                    self.titleLabel.apply(.dangerRedBoldSmallSize)
+                    self.titleLabel.apply(.init {
+                        $0.textColor = UIConfig.dangerRed
+                        $0.font = UIFont.boldSystemFont(ofSize: 12)
+                    })
                     return
                 }
 
                 if self.isPassword, text.isValid(regex: .password) == false {
                     self.titleLabel.text = self.initialTitle + "(半角英数字8文字以上で入力してください)"
-                    self.titleLabel.apply(.dangerRedBoldSmallSize)
+                    self.titleLabel.apply(.init {
+                        $0.textColor = UIConfig.dangerRed
+                        $0.font = UIFont.boldSystemFont(ofSize: 12)
+                    })
                     return
                 }
 

@@ -49,7 +49,13 @@ private extension FormSelectionItemView {
     }
 
     func setupView(title: String) {
-        let label: UILabel = .init(style: .darkGlay97SmallSize, title: title)
+        let label: UILabel = .init(
+            style: .init {
+                $0.textColor = UIConfig.darkGlay97
+                $0.font = UIFont.systemFont(ofSize: 12)
+            },
+            title: title
+        )
         self.addSubviews(
             label,
             constraints: label.leadingAnchor.constraint(

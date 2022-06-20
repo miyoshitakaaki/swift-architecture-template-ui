@@ -73,7 +73,11 @@ public final class FormUI {
         if self.form.completionButtonPotition == .top {
             self.completionButton.apply(enable ? .accentBlue : .darkGray600)
         } else {
-            self.completionButton.apply(enable ? .backgroundAccentBlue : .backgroundDarkGray)
+            self.completionButton.apply(
+                enable
+                    ? self.form.bottomCompletionButtonEnableBackgroundStyle
+                    : self.form.bottomCompletionButtondisableBackgroundStyle
+            )
         }
     }
 

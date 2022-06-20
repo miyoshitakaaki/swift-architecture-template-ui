@@ -3,6 +3,7 @@ import UIKit
 import Utility
 
 public protocol FormUIProtocol {
+    var backgroundColor: UIColor { get }
     var title: String { get }
     var completionButtonTitle: String { get }
     var completionButtonPotition: CompletionButtonPosition { get }
@@ -14,6 +15,8 @@ public protocol FormUIProtocol {
 }
 
 public extension FormUIProtocol {
+    var backgroundColor: UIColor { UIConfig.lightGray_100 }
+
     var isOptional: Bool { false }
 
     func focusNextResponder() {

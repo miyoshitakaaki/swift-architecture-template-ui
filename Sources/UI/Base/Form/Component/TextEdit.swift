@@ -8,13 +8,6 @@ public extension ViewStyle where T: UILabel {
             $0.font = UIFont.boldSystemFont(ofSize: 12)
         }
     }
-
-    static var darkGray700BoldSmallSize: ViewStyle<T> {
-        ViewStyle<T> {
-            $0.textColor = UIConfig.darkGray_700
-            $0.font = UIFont.boldSystemFont(ofSize: 12)
-        }
-    }
 }
 
 public final class TextEdit<T: UIControl>: Publisher where T: Publisher, T.Output == String,
@@ -23,6 +16,7 @@ public final class TextEdit<T: UIControl>: Publisher where T: Publisher, T.Outpu
     public typealias Output = String
     public typealias Failure = Never
 
+    private let titleColor: UIColor
     private let initialTitle: String
     private let allowEmpty: Bool
     private let isPhone: Bool
@@ -33,6 +27,7 @@ public final class TextEdit<T: UIControl>: Publisher where T: Publisher, T.Outpu
     public let edit: T
 
     public init(
+        titleColor: UIColor = UIColor.rgba(97, 97, 97, 1),
         title: String,
         edit: T,
         allowEmpty: Bool = true,
@@ -45,7 +40,8 @@ public final class TextEdit<T: UIControl>: Publisher where T: Publisher, T.Outpu
         self.isPhone = isPhone
         self.isEmail = isEmail
         self.isPassword = isPassword
-        self.titleLabel = .init(title: title)
+        self.titleLabel = .init(title: title, titleColor: titleColor)
+        self.titleColor = titleColor
         self.edit = edit
     }
 
@@ -90,7 +86,8 @@ public final class TextEdit<T: UIControl>: Publisher where T: Publisher, T.Outpu
                 }
 
                 self.titleLabel.text = self.initialTitle
-                self.titleLabel.apply(.darkGray700BoldSmallSize)
+                self.titleLabel.textColor = self.titleColor
+                self.titleLabel.font = UIFont.boldSystemFont(ofSize: 12)
             })
             .subscribe(subscriber)
     }

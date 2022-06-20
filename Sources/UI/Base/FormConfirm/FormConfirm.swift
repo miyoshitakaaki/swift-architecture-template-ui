@@ -12,6 +12,13 @@ public protocol FormConfirmProtocol: AnyObject {
 }
 
 public protocol FormConfirmUIProtocol {
+    var completionButtonStyle: ViewStyle<UIButton> { get }
     var completionButtonTitle: String { get }
     var views: [UIView] { get }
+}
+
+extension FormConfirmUIProtocol {
+    var completionButtonStyle: ViewStyle<UIButton> {
+        .cornerRadius.compose(with: .backgroundAccentBlue)
+    }
 }

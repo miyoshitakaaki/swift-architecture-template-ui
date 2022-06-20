@@ -47,17 +47,15 @@ public final class FormUI {
 
     public init(
         form: FormUIProtocol,
-        hideCompletionButton: Bool = false,
-        scrollViewStyle: ViewStyle<ScrollView>,
-        completionButtonTitle: String
+        hideCompletionButton: Bool = false
     ) {
-        self.scrollView = .init(style: scrollViewStyle)
+        self.scrollView = .init(style: .vertical)
         self.form = form
         self.completionButton = .init(
             style: form.completionButtonPotition == .top
                 ? form.completionButtonPotitionTopStyle
                 : form.completionButtonPotitionBottomStyle,
-            title: form.isOptional ? "後で回答する" : completionButtonTitle
+            title: form.isOptional ? "後で回答する" : form.completionButtonTitle
         )
         self.hideCompletionButton = hideCompletionButton
         self.completionButton.isHidden = hideCompletionButton

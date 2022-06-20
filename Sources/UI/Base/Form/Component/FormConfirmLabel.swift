@@ -1,14 +1,5 @@
 import UIKit
 
-public extension ViewStyle where T: UILabel {
-    static var darkGlay97MediumSize: ViewStyle<T> {
-        ViewStyle<T> {
-            $0.textColor = UIColor.rgba(97, 97, 97, 1)
-            $0.font = UIFont.systemFont(ofSize: 14)
-        }
-    }
-}
-
 public final class FormConfirmLabel: UILabel {
     public let padding: UIEdgeInsets
 

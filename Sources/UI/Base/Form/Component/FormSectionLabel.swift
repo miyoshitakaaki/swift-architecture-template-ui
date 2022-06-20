@@ -1,14 +1,5 @@
 import UIKit
 
-extension ViewStyle where T: UILabel {
-    static var accentBlueBold: ViewStyle<T> {
-        ViewStyle<T> {
-            $0.textColor = UIConfig.accentBlue
-            $0.font = UIFont.boldSystemFont(ofSize: 16)
-        }
-    }
-}
-
 public final class FormSectionLabel: UILabel {
     public let padding: UIEdgeInsets
 

@@ -1,15 +1,6 @@
 import Combine
 import UIKit
 
-extension ViewStyle where T: UILabel {
-    static var darkGlay97SmallSize: ViewStyle<T> {
-        ViewStyle<T> {
-            $0.textColor = UIConfig.darkGlay97
-            $0.font = UIFont.systemFont(ofSize: 12)
-        }
-    }
-}
-
 final class FormSelectionItemView: UIView {
     private let iconSize: CGFloat = 24
     private let top: CGFloat = 9

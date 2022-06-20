@@ -95,13 +95,6 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
         }
     }
 
-    override public var isEnabled: Bool {
-        didSet {
-            self.backgroundColor = self.isEnabled ? .white : UIConfig.lightGray_200
-            self.underArrowView.backgroundColor = self.isEnabled ? .white : UIConfig.lightGray_200
-        }
-    }
-
     private let toolBar: UIToolbar = {
         let toolbar = UIToolbar()
         toolbar.tintColor = UIConfig.accentBlue
@@ -122,6 +115,7 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
     private var picker: Picker
 
     public init(
+        backgroundColor: UIColor = .white,
         placeholder: String,
         placeholderColor: UIColor? = nil,
         picker: Picker = .text,
@@ -148,7 +142,7 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
         } else {
             self.placeholder = placeholder
         }
-        self.backgroundColor = .white
+        self.backgroundColor = self.isEnabled ? backgroundColor : UIConfig.lightGray_200
         self.textColor = UIConfig.darkGray_900
         self.textContentType = textContentType
         self.returnKeyType = returnKeyType
@@ -191,6 +185,9 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
         self.addTarget(self, action: #selector(self.didValueChanged), for: .editingChanged)
         self.optionButton.addTarget(self, action: #selector(self.secureToggle), for: .touchUpInside)
         self.optionButton.isHidden = !self.showOptionButton
+
+        self.underArrowView.backgroundColor = self.isEnabled ? backgroundColor : UIConfig
+            .lightGray_200
     }
 
     @available(*, unavailable)

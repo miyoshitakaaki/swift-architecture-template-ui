@@ -100,6 +100,8 @@ public final class FormUI {
 
 extension FormUI: UserInterface {
     public func setupView(rootview: UIView) {
+        rootview.backgroundColor = self.form.backgroundColor
+
         switch self.form.completionButtonPotition {
         case .top:
             self.inScrollView(rootview)

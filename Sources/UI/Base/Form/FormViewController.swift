@@ -36,8 +36,6 @@ public final class FormViewController<T: Form>: UIViewController, ActivityPresen
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = UIConfig.lightGray_100
-
         title = self.formType.title
 
         self.ui.setupView(rootview: view)

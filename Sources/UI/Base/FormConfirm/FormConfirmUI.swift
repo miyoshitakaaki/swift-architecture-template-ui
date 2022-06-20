@@ -18,17 +18,12 @@ public final class FormConfirmUI {
 
     private let form: FormConfirmUIProtocol
 
-    public init(
-        form: FormConfirmUIProtocol,
-        scrollViewStyle: ViewStyle<UIScrollView>,
-        completionButtonTitle: String,
-        completionButtonStyle: ViewStyle<UIButton>
-    ) {
-        self.scrollView = .init(style: scrollViewStyle)
+    public init(form: FormConfirmUIProtocol) {
+        self.scrollView = .init(style: .vertical)
         self.form = form
         self.completionButton = .init(
-            style: completionButtonStyle,
-            title: completionButtonTitle
+            style: form.completionButtonStyle,
+            title: form.completionButtonTitle
         )
     }
 }

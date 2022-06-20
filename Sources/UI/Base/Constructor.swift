@@ -32,9 +32,7 @@ public func create<T: Form>(
         ),
         ui: .init(
             form: form,
-            hideCompletionButton: hideCompletionButton,
-            scrollViewStyle: .vertical,
-            completionButtonTitle: form.completionButtonTitle
+            hideCompletionButton: hideCompletionButton
         )
     )
     return vc
@@ -46,12 +44,7 @@ public func create<T: FormConfirmUIProtocol & FormConfirmProtocol>(formConfirm: 
     let vc = FormConfirmController(form: formConfirm)
     vc.inject(
         viewModel: .init(complete: formConfirm.complete),
-        ui: .init(
-            form: formConfirm,
-            scrollViewStyle: .vertical,
-            completionButtonTitle: formConfirm.completionButtonTitle,
-            completionButtonStyle: .cornerRadius.compose(with: .backgroundAccentBlue)
-        )
+        ui: .init(form: formConfirm)
     )
     return vc
 }

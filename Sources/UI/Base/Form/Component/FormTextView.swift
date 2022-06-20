@@ -1,16 +1,6 @@
 import Combine
 import UIKit
 
-extension ViewStyle where T: UITextView {
-    static var cornerRadius: ViewStyle<T> {
-        ViewStyle<T> {
-            $0.backgroundColor = .white
-            $0.layer.cornerRadius = 8.0
-            $0.clipsToBounds = true
-        }
-    }
-}
-
 public final class FormTextView: UITextView, UITextViewDelegate {
     private let margin: CGFloat = 16
 

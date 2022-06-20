@@ -1,15 +1,6 @@
 import Combine
 import UIKit
 
-public extension ViewStyle where T: UILabel {
-    static var dangerRedBoldSmallSize: ViewStyle<T> {
-        ViewStyle<T> {
-            $0.textColor = UIConfig.dangerRed
-            $0.font = UIFont.boldSystemFont(ofSize: 12)
-        }
-    }
-}
-
 public final class TextEdit<T: UIControl>: Publisher where T: Publisher, T.Output == String,
     T.Failure == Never
 {

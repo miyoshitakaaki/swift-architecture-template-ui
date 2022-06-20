@@ -1,26 +1,6 @@
 import Combine
 import UIKit
 
-extension ViewStyle where T: UIButton {
-    static var darkGray600: ViewStyle<T> {
-        ViewStyle<T> {
-            $0.setTitleColor(UIConfig.darkGray_600, for: .normal)
-        }
-    }
-
-    static var backgroundAccentBlue: ViewStyle<T> {
-        ViewStyle<T> {
-            $0.backgroundColor = UIConfig.accentBlue
-        }
-    }
-
-    public static var backgroundDarkGray: ViewStyle<T> {
-        ViewStyle<T> {
-            $0.backgroundColor = UIConfig.darkGray
-        }
-    }
-}
-
 public final class FormUI {
     private let scrollView: ScrollView
 

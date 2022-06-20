@@ -17,7 +17,7 @@ public protocol FormConfirmUIProtocol {
     var views: [UIView] { get }
 }
 
-extension FormConfirmUIProtocol {
+public extension FormConfirmUIProtocol {
     var completionButtonStyle: ViewStyle<UIButton> {
         .init {
             $0.layer.cornerRadius = 8.0

@@ -81,8 +81,8 @@ public protocol Validatable {
     var isValid: Bool { get }
 }
 
-public enum CompletionButtonPosition {
-    case top, bottom, bottomFix
+public enum CompletionButtonPosition: Equatable {
+    case top, bottom(width: CGFloat), bottomFix
 
     var bottomFixedViewHeight: CGFloat {
         switch self {

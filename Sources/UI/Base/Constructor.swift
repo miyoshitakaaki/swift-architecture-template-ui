@@ -19,7 +19,12 @@ extension ViewStyle where T: UIScrollView {
     }
 }
 
-public func create<T: Form>(form: T, hideCompletionButton: Bool = false) -> FormViewController<T> {
+public func create<T: Form>(
+    form: T,
+    hideCompletionButton: Bool = false,
+    completionButtonPotitionBottomStyle: ViewStyle<UIButton> = .cornerRadius
+        .compose(with: .backgroundDarkGray)
+) -> FormViewController<T> {
     let vc = FormViewController(formType: form)
     vc.inject(
         viewModel: .init(
@@ -32,8 +37,7 @@ public func create<T: Form>(form: T, hideCompletionButton: Bool = false) -> Form
             hideCompletionButton: hideCompletionButton,
             scrollViewStyle: .vertical,
             completionButtonPotitionTopStyle: .boldMidiumSize.compose(with: .accentBlue),
-            completionButtonPotitionBottomStyle: .cornerRadius
-                .compose(with: .backgroundDarkGray),
+            completionButtonPotitionBottomStyle: completionButtonPotitionBottomStyle,
             completionButtonTitle: form.completionButtonTitle
         )
     )

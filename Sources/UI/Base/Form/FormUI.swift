@@ -14,7 +14,7 @@ extension ViewStyle where T: UIButton {
         }
     }
 
-    static var backgroundDarkGray: ViewStyle<T> {
+    public static var backgroundDarkGray: ViewStyle<T> {
         ViewStyle<T> {
             $0.backgroundColor = UIConfig.darkGray
         }
@@ -107,11 +107,11 @@ extension FormUI: UserInterface {
             self.inScrollView(rootview)
             self.inStackView()
             self.form.views.forEach(addStackView)
-        case .bottom:
+        case let .bottom(width):
             self.inScrollView(rootview)
             self.inStackView()
             self.form.views.forEach(addStackView)
-            self.setupCompletionButton()
+            self.setupCompletionButton(width: width)
         case .bottomFix:
             self.setupFixedCompletionButton(rootview: rootview)
             self.inScrollView(rootview)
@@ -223,20 +223,12 @@ private extension FormUI {
         )
     }
 
-    private func setupCompletionButton() {
+    private func setupCompletionButton(width: CGFloat) {
         self.verticalStackView.addArrangedSubviews(
             self.completionButton,
             constraints:
-            self.completionButton.leadingAnchor
-                .constraint(
-                    equalTo: self.verticalStackView.leadingAnchor,
-                    constant: 16
-                ),
-            self.completionButton.trailingAnchor
-                .constraint(
-                    equalTo: self.verticalStackView.trailingAnchor,
-                    constant: -16
-                ),
+            self.completionButton.widthAnchor
+                .constraint(equalToConstant: width),
             self.completionButton.heightAnchor
                 .constraint(equalToConstant: 48)
         )

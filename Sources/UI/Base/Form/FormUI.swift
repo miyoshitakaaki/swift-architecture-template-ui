@@ -14,7 +14,7 @@ extension ViewStyle where T: UIButton {
         }
     }
 
-    static var backgroundDarkGray: ViewStyle<T> {
+    public static var backgroundDarkGray: ViewStyle<T> {
         ViewStyle<T> {
             $0.backgroundColor = UIConfig.darkGray
         }

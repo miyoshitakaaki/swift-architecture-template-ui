@@ -1,7 +1,7 @@
 import Combine
 import UIKit
 
-extension ViewStyle where T: UIView {
+public extension ViewStyle where T: UIView {
     static var cornerRadius: ViewStyle<T> {
         ViewStyle<T> {
             $0.layer.cornerRadius = 8.0

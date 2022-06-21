@@ -2,7 +2,7 @@ import UIKit
 
 public final class LinkTextView: UITextView {
     public init(style: ViewStyle<LinkTextView>, title: String) {
-        self.init()
+        super.init(frame: .zero, textContainer: nil)
         self.text = title
         self.apply(style)
     }

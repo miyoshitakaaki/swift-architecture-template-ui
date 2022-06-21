@@ -1,6 +1,17 @@
 import UIKit
 
 public final class LinkTextView: UITextView {
+    public init(style: ViewStyle<LinkTextView>, title: String) {
+        self.init()
+        self.text = title
+        self.apply(style)
+    }
+
+    @available(*, unavailable)
+    public required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override public func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         guard
             let position = closestPosition(to: point),

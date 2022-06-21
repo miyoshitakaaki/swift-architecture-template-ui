@@ -17,10 +17,6 @@ public protocol CollectionList: List {
         -> AnyPublisher<Items, AppError> { get }
 }
 
-public extension CollectionList {
-    var backgroundColor: UIColor { UIColor.rgba(244, 244, 244, 1) }
-}
-
 public protocol CollectionLayout: UICollectionViewCell {
     associatedtype ViewData: Hashable
     var viewData: ViewData? { get set }

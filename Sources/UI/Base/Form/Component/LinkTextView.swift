@@ -1,11 +1,10 @@
 import UIKit
 
 public final class LinkTextView: UITextView {
-    
     override public init(frame: CGRect, textContainer: NSTextContainer?) {
         super.init(frame: frame, textContainer: textContainer)
     }
-    
+
     public init(style: ViewStyle<LinkTextView>, title: String) {
         super.init(frame: .zero, textContainer: nil)
         self.text = title

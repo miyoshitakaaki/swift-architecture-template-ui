@@ -9,14 +9,14 @@ public final class PaddingLabel: UILabel {
         frame: CGRect = .zero,
         text: String,
         cornerRadius: CGFloat = 16,
-        backGroundColor: UIColor = .clear,
-        padding: UIEdgeInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+        padding: UIEdgeInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8),
+        style: ViewStyle<PaddingLabel>
     ) {
         self.cornerRadius = cornerRadius
         self.padding = padding
         super.init(frame: frame)
         self.text = text
-        self.backgroundColor = backGroundColor
+        self.apply(style)
     }
 
     @available(*, unavailable)

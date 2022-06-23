@@ -1,11 +1,5 @@
 import UIKit
 
-public protocol SegmentedControl: UIControl {
-    init(items: [Any]?)
-    var selectedSegmentIndex: Int { get set }
-    func showBadge(show: Bool, index: Int)
-}
-
 public final class BadgeSegmentedControl: UISegmentedControl, SegmentedControl {
     private var badgeViewLeft: UIView = .init(frame: .zero)
     private var badgeViewRight: UIView = .init(frame: .zero)

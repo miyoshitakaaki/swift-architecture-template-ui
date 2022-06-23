@@ -1,6 +1,12 @@
 import Foundation
 import UIKit
 
+public protocol SegmentedControl: UIControl {
+    init(items: [Any]?)
+    var selectedSegmentIndex: Int { get set }
+    func showBadge(show: Bool, index: Int)
+}
+
 public protocol SegmentedPageContainerProtocol {
     func adjustInsetForSegmentedPageContainer(
         scrollView: UIScrollView,

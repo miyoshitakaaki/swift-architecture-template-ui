@@ -78,7 +78,8 @@ public final class TableViewController<T: Table>: UIViewController, ActivityPres
     private func setupNavigationItemIfNeeded() {
         guard self.table.showSearchBar else { return }
 
-        let navigationItem = ((self.parent as? SegmentedPageContainer) ?? self).navigationItem
+        let navigationItem =
+            ((self.parent as? SegmentedPageContainer<BadgeSegmentedControl>) ?? self).navigationItem
         navigationItem.setRightBarButtonItems(nil, animated: true)
         navigationItem.titleView = self.searchBar
         navigationItem.titleView?.frame = self.searchBar.frame

@@ -1,6 +1,12 @@
 import Foundation
 import UIKit
 
+public protocol SegmentedControl: UIControl {
+    init(items: [Any]?)
+    var selectedSegmentIndex: Int { get set }
+    func showBadge(show: Bool, index: Int)
+}
+
 public protocol SegmentedPageContainerProtocol {
     func adjustInsetForSegmentedPageContainer(
         scrollView: UIScrollView,
@@ -20,12 +26,14 @@ public extension SegmentedPageContainerProtocol {
     }
 }
 
-public final class SegmentedPageContainer: UIPageViewController {
+public final class SegmentedPageContainer<T: SegmentedControl>: UIPageViewController,
+    UIPageViewControllerDataSource, UIPageViewControllerDelegate
+{
     private let tabHeight: CGFloat = 32
     private let margin: CGFloat = 16
 
     private var vcs: [UIViewController]
-    private let tab: BadgeSegmentedControl
+    private let tab: T
 
     private let tabview: UIView = {
         let view = UIView()
@@ -46,7 +54,7 @@ public final class SegmentedPageContainer: UIPageViewController {
         hidesBarsOnSwipe: Bool = true
     ) {
         self.vcs = viewControllers
-        self.tab = BadgeSegmentedControl(items: tabItems)
+        self.tab = T(items: tabItems)
         self.hidesBarsOnSwipe = hidesBarsOnSwipe
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
     }
@@ -146,9 +154,7 @@ public final class SegmentedPageContainer: UIPageViewController {
     public func showBadge(show: Bool, index: Int) {
         self.tab.showBadge(show: show, index: index)
     }
-}
 
-extension SegmentedPageContainer: UIPageViewControllerDataSource, UIPageViewControllerDelegate {
     public func presentationCount(for pageViewController: UIPageViewController) -> Int { self.vcs
         .count
     }

@@ -1,10 +1,16 @@
 import UIKit
 
-final class BadgeSegmentedControl: UISegmentedControl {
+public protocol SegmentedControl: UIControl {
+    init(items: [Any]?)
+    var selectedSegmentIndex: Int { get set }
+    func showBadge(show: Bool, index: Int)
+}
+
+public final class BadgeSegmentedControl: UISegmentedControl, SegmentedControl {
     private var badgeViewLeft: UIView = .init(frame: .zero)
     private var badgeViewRight: UIView = .init(frame: .zero)
 
-    override init(items: [Any]?) {
+    override public init(items: [Any]?) {
         super.init(items: items)
 
         self.backgroundColor = UIColor.rgba(238, 238, 238, 1)
@@ -50,14 +56,14 @@ final class BadgeSegmentedControl: UISegmentedControl {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func layoutSubviews() {
+    override public func layoutSubviews() {
         super.layoutSubviews()
 
         self.badgeViewRight.frame = .init(x: self.frame.width - 16, y: 10, width: 8, height: 8)
         self.badgeViewLeft.frame = .init(x: self.frame.width / 2 - 16, y: 10, width: 8, height: 8)
     }
 
-    func showBadge(show: Bool, index: Int) {
+    public func showBadge(show: Bool, index: Int) {
         if index == 0 {
             self.badgeViewLeft.isHidden = !show
         } else if index == 1 {

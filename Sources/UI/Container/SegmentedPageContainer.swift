@@ -134,7 +134,7 @@ public final class SegmentedPageContainer<T: SegmentedControl>: UIPageViewContro
 
     @objc func segmentChanged(sender: AnyObject) {
         guard
-            let selectedIndex = sender.selectedSegmentIndex else { return }
+            let selectedIndex = (sender as? SegmentedControl)?.selectedSegmentIndex else { return }
         let direction: UIPageViewController
             .NavigationDirection = selectedIndex > self.currentIndex ? .forward : .reverse
         self.setViewControllers([self.vcs[selectedIndex]], direction: direction, animated: true)

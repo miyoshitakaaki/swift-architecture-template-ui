@@ -15,6 +15,12 @@ public protocol CollectionList: List {
     var topViewSubject: PassthroughSubject<Parameter, Never> { get }
     var fetchPublisher: ((parameter: Parameter?, isAdditional: Bool))
         -> AnyPublisher<Items, AppError> { get }
+
+    var floatingButton: UIButton? { get }
+}
+
+public extension CollectionList {
+    var floatingButton: UIButton? { nil }
 }
 
 public extension CollectionList {

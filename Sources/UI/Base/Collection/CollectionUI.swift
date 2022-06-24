@@ -107,6 +107,7 @@ extension CollectionUI: UserInterface {
         setupEmptyView(rootview: rootview)
         setupCollectionView(rootview: rootview)
         setupTopView(view: self.collectionView)
+        setupFloatingButton(rootView: rootview)
     }
 
     func reload(items: OrderedDictionary<String, [T.Cell.ViewData]>) {
@@ -156,5 +157,26 @@ private extension CollectionUI {
         )
         self.collectionView.dataSource = self.dataSource
         self.collectionView.delegate = self
+    }
+
+    private func setupFloatingButton(rootView: UIView) {
+        guard let button = self.collection.floatingButton else { return }
+        rootView.addSubviews(
+            button,
+            constraints:
+            button.bottomAnchor.constraint(
+                equalTo: rootView.safeAreaLayoutGuide.bottomAnchor,
+                constant: -40
+            ),
+            button.leadingAnchor.constraint(
+                equalTo: rootView.safeAreaLayoutGuide.leadingAnchor,
+                constant: 16
+            ),
+            button.trailingAnchor.constraint(
+                equalTo: rootView.safeAreaLayoutGuide.trailingAnchor,
+                constant: -16
+            ),
+            button.heightAnchor.constraint(equalToConstant: 56)
+        )
     }
 }

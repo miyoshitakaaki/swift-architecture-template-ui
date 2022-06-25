@@ -19,31 +19,6 @@ public protocol FormUIProtocol {
 }
 
 public extension FormUIProtocol {
-    var backgroundColor: UIColor { UIConfig.lightGray_100 }
-
-    var completionButtonPotitionTopStyle: ViewStyle<UIButton> {
-        .init {
-            $0.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-            $0.setTitleColor(UIConfig.accentBlue, for: .normal)
-        }
-    }
-
-    var completionButtonPotitionBottomStyle: ViewStyle<UIButton> {
-        .init {
-            $0.layer.cornerRadius = 8.0
-            $0.clipsToBounds = true
-            $0.backgroundColor = UIConfig.darkGray
-        }
-    }
-
-    var bottomCompletionButtonEnableBackgroundStyle: ViewStyle<UIButton> { .init {
-        $0.backgroundColor = UIConfig.accentBlue
-    } }
-
-    var bottomCompletionButtondisableBackgroundStyle: ViewStyle<UIButton> { .init {
-        $0.backgroundColor = UIConfig.darkGray
-    } }
-
     var isOptional: Bool { false }
 
     func focusNextResponder() {

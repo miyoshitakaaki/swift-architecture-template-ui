@@ -10,8 +10,12 @@ public final class NavigationController: UINavigationController {
 
     private let showCloseButton: Bool
 
-    public init(showCloseButton: Bool = false) {
+    public init(
+        showCloseButton: Bool = false,
+        closeButtonColor: UIColor? = nil
+    ) {
         self.showCloseButton = showCloseButton
+        self.closeButton.setTitleColor(closeButtonColor, for: .normal)
         super.init(nibName: nil, bundle: nil)
     }
 

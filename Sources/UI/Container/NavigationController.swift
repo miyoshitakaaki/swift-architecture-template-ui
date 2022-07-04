@@ -10,22 +10,28 @@ public final class NavigationController: UINavigationController {
 
     private let showCloseButton: Bool
 
+    private let navigationTintColor: UIColor
+
     public init(
         showCloseButton: Bool = false,
-        closeButtonColor: UIColor? = nil
+        closeButtonColor: UIColor? = nil,
+        navigationTintColor: UIColor = UIColor.rgba(17, 76, 190, 1)
     ) {
         self.showCloseButton = showCloseButton
         self.closeButton.setTitleColor(closeButtonColor, for: .normal)
+        self.navigationTintColor = navigationTintColor
         super.init(nibName: nil, bundle: nil)
     }
 
     public init(
         rootViewController: UIViewController,
         showCloseButton: Bool = false,
-        closeButtonColor: UIColor = .black
+        closeButtonColor: UIColor = .black,
+        navigationTintColor: UIColor = UIColor.rgba(17, 76, 190, 1)
     ) {
         self.showCloseButton = showCloseButton
         self.closeButton.setTitleColor(closeButtonColor, for: .normal)
+        self.navigationTintColor = navigationTintColor
         super.init(rootViewController: rootViewController)
     }
 
@@ -37,7 +43,7 @@ public final class NavigationController: UINavigationController {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        self.navigationBar.tintColor = UIConfig.accentBlue
+        self.navigationBar.tintColor = self.navigationTintColor
         self.closeButton.addTarget(self, action: #selector(self.close), for: .touchUpInside)
     }
 

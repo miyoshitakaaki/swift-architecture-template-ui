@@ -8,15 +8,19 @@ public final class NavigationController: UINavigationController {
         return button
     }()
 
+    private let hideBackButtonText: Bool
+
     private let showCloseButton: Bool
 
     private let navigationTintColor: UIColor
 
     public init(
+        hideBackButtonText: Bool = false,
         showCloseButton: Bool = false,
         closeButtonColor: UIColor? = nil,
         navigationTintColor: UIColor = UIColor.rgba(17, 76, 190, 1)
     ) {
+        self.hideBackButtonText = hideBackButtonText
         self.showCloseButton = showCloseButton
         self.closeButton.setTitleColor(closeButtonColor, for: .normal)
         self.navigationTintColor = navigationTintColor
@@ -25,10 +29,12 @@ public final class NavigationController: UINavigationController {
 
     public init(
         rootViewController: UIViewController,
+        hideBackButtonText: Bool = false,
         showCloseButton: Bool = false,
         closeButtonColor: UIColor = .black,
         navigationTintColor: UIColor = UIColor.rgba(17, 76, 190, 1)
     ) {
+        self.hideBackButtonText = hideBackButtonText
         self.showCloseButton = showCloseButton
         self.closeButton.setTitleColor(closeButtonColor, for: .normal)
         self.navigationTintColor = navigationTintColor
@@ -43,6 +49,7 @@ public final class NavigationController: UINavigationController {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
+        self.delegate = self
         self.navigationBar.tintColor = self.navigationTintColor
         self.closeButton.addTarget(self, action: #selector(self.close), for: .touchUpInside)
     }
@@ -58,5 +65,18 @@ public final class NavigationController: UINavigationController {
 
     @objc func close() {
         self.dismiss(animated: true)
+    }
+}
+
+extension NavigationController: UINavigationControllerDelegate {
+    public func navigationController(
+        _ navigationController: UINavigationController,
+        willShow viewController: UIViewController,
+        animated: Bool
+    ) {
+        if self.hideBackButtonText {
+            let item = UIBarButtonItem(title: " ", style: .plain, target: nil, action: nil)
+            viewController.navigationItem.backBarButtonItem = item
+        }
     }
 }

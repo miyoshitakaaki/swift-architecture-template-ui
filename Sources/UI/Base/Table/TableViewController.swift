@@ -3,6 +3,7 @@ import UIKit
 
 public protocol TableViewControllerDelegate: AnyObject {
     func didItemSelected<T: Table>(indexPath: IndexPath, table: T, cellData: T.Cell.ViewData?)
+    func didCellDequeued<T: Table>(indexPath: IndexPath, table: T, cell: T.Cell)
     func didSearchCancelButtonTapped()
     func didSearchTextUpdated(text: String?)
 }
@@ -96,6 +97,13 @@ public final class TableViewController<T: Table>: UIViewController, ActivityPres
                     cellData: self.viewModel.loadingState.value.value?
                         .elements[indexPath.section].value[indexPath.row]
                 )
+            }
+            .store(in: &self.cancellables)
+
+        self.ui.didCellDequeuedPublisher
+            .sink { [weak self] cell, indexPath in
+                guard let self = self else { return }
+                self.delegate?.didCellDequeued(indexPath: indexPath, table: self.table, cell: cell)
             }
             .store(in: &self.cancellables)
 

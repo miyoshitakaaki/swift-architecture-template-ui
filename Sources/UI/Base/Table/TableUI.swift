@@ -7,6 +7,7 @@ public final class TableUI<T: Table>: ListUI<T>, UITableViewDataSource, UITableV
 
     private var viewDataItems: OrderedDictionary<String, [T.Cell.ViewData]>
 
+    let didCellDequeuedPublisher = PassthroughSubject<(T.Cell, IndexPath), Never>()
     let didItemSelectedPublisher = PassthroughSubject<IndexPath, Never>()
     let additionalLoadingIndexPathPublisher = PassthroughSubject<IndexPath, Never>()
 
@@ -38,6 +39,7 @@ public final class TableUI<T: Table>: ListUI<T>, UITableViewDataSource, UITableV
         else { return .init() }
         cell.viewData = self.viewDataItems.elements[indexPath.section].value[indexPath.row]
         cell.selectionStyle = .none
+        self.didCellDequeuedPublisher.send((cell, indexPath))
         return cell
     }
 

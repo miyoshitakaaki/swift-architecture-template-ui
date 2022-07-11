@@ -16,7 +16,8 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
     )
 
     private var cellProvider: (UICollectionView, IndexPath, T.Cell.ViewData)
-        -> UICollectionViewCell? {{ collectionView, indexPath, viewData in
+        -> UICollectionViewCell?
+    {{ collectionView, indexPath, viewData in
 
         let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: T.Cell.className,
@@ -30,7 +31,8 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
     }}
 
     private var supplementaryViewProvider: (UICollectionView, String, IndexPath)
-        -> UICollectionReusableView? {
+        -> UICollectionReusableView?
+    {
         { [weak self] collectionView, kind, indexPath in
 
             guard let self = self else { return .init() }

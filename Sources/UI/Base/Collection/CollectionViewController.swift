@@ -4,6 +4,7 @@ import UIKit
 public protocol CollectionViewControllerDelegate: AnyObject {
     // TODO: should not use generic parameter
     func didItemSelected<T: CollectionList>(selectedInfo: SelectedCellInfo<T>)
+    func didSupplementaryViewDequeued(supplementaryView: UICollectionReusableView?)
 }
 
 extension CollectionViewController: VCInjectable {
@@ -77,6 +78,11 @@ public final class CollectionViewController<T: CollectionList>: UIViewController
         self.ui.didItemSelectedPublisher
             .sink { [weak self] selectedInfo in
                 self?.delegate?.didItemSelected(selectedInfo: selectedInfo)
+            }.store(in: &self.cancellables)
+
+        self.ui.didSupplementaryViewDequeuePublisher
+            .sink { [weak self] supplementaryView in
+                self?.delegate?.didSupplementaryViewDequeued(supplementaryView: supplementaryView)
             }.store(in: &self.cancellables)
 
         self.viewModel.loadingState

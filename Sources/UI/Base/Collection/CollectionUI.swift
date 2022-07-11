@@ -37,16 +37,33 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
 
             guard let self = self else { return .init() }
 
-            let header = collectionView.dequeueReusableSupplementaryView(
-                ofKind: kind,
-                withReuseIdentifier: T.Header.className,
-                for: indexPath
-            ) as? T.Header
+            if kind == UICollectionView.elementKindSectionHeader {
+                let header = collectionView.dequeueReusableSupplementaryView(
+                    ofKind: kind,
+                    withReuseIdentifier: T.Header.className,
+                    for: indexPath
+                ) as? T.Header
 
-            let text = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
-            header?.updateHeader(text: text)
+                let text = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
+                header?.updateHeader(text: text)
 
-            return header
+                self.didSupplementaryViewDequeuePublisher.send(header)
+
+                return header
+
+            } else if kind == UICollectionView.elementKindSectionFooter {
+                let footer = collectionView.dequeueReusableSupplementaryView(
+                    ofKind: kind,
+                    withReuseIdentifier: T.Footer.className,
+                    for: indexPath
+                ) as? T.Footer
+
+                self.didSupplementaryViewDequeuePublisher.send(footer)
+
+                return footer
+            } else {
+                return nil
+            }
         }
     }
 
@@ -60,6 +77,10 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
     }()
 
     let didItemSelectedPublisher = PassthroughSubject<SelectedCellInfo<T>, Never>()
+    let didSupplementaryViewDequeuePublisher = PassthroughSubject<
+        UICollectionReusableView?,
+        Never
+    >()
     let additionalLoadingIndexPathPublisher = PassthroughSubject<IndexPath, Never>()
     let refreshPublisher = PassthroughSubject<Void, Never>()
 
@@ -156,6 +177,12 @@ private extension CollectionUI {
             T.Header.self,
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
             withReuseIdentifier: T.Header.className
+        )
+
+        self.collectionView.register(
+            T.Footer.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
+            withReuseIdentifier: T.Footer.className
         )
         self.collectionView.dataSource = self.dataSource
         self.collectionView.delegate = self

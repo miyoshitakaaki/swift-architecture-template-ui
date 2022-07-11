@@ -6,6 +6,7 @@ import Utility
 public protocol CollectionList: List {
     associatedtype Cell: CollectionLayout
     associatedtype Header: CollectionHeaderLayout
+    associatedtype Footer: CollectionFooterLayout
     associatedtype Parameter
 
     typealias Items = OrderedDictionary<String, [Cell.ViewData]>
@@ -31,3 +32,5 @@ public protocol CollectionLayout: UICollectionViewCell {
 public protocol CollectionHeaderLayout: UICollectionReusableView {
     func updateHeader(text: String)
 }
+
+public protocol CollectionFooterLayout: UICollectionReusableView {}

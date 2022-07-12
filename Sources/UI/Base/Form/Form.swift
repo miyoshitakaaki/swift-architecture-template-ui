@@ -80,6 +80,17 @@ public extension Form {
     func complete(_ input: Input) -> AnyPublisher<Input, AppError> {
         Just(input).setFailureType(to: AppError.self).eraseToAnyPublisher()
     }
+
+    func stack(views: [UIView], space: CGFloat = 16) -> UIStackView {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        stackView.spacing = space
+        views.forEach { view in
+            stackView.addArrangedSubview(view)
+        }
+        return stackView
+    }
 }
 
 public protocol Validatable {

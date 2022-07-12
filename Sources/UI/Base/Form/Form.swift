@@ -22,10 +22,12 @@ public extension FormUIProtocol {
     var isOptional: Bool { false }
 
     func focusNextResponder() {
-        guard let currentResponder = self.views.first(where: \.isFirstResponder) else { return }
+        guard
+            let currentResponder = self.views.combineStackView()
+                .first(where: \.isFirstResponder) else { return }
 
         func findNextResponder(nextTag: Int = 1) -> UIView? {
-            let nextResponder = self.views
+            let nextResponder = self.views.combineStackView()
                 .first(where: { $0.tag == currentResponder.tag + nextTag })
 
             if (nextResponder as? UITextField)?.isEnabled == false {
@@ -45,6 +47,7 @@ public extension FormUIProtocol {
 
     func set(inputAccessoryView: AMKeyboardFrameTrackerView) {
         views
+            .combineStackView()
             .filter { $0 is UITextField || $0 is UITextView || $0 is FormSelectionView }
             .enumerated()
             .forEach {
@@ -92,6 +95,18 @@ public enum CompletionButtonPosition: Equatable {
             return 0
         case .bottomFix:
             return 76
+        }
+    }
+}
+
+private extension Collection where Element: UIView {
+    func combineStackView() -> [UIView] {
+        self.reduce([UIView]()) { partialResult, view in
+            if let view = view as? UIStackView {
+                return partialResult + view.arrangedSubviews
+            } else {
+                return partialResult + [view]
+            }
         }
     }
 }

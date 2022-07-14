@@ -26,6 +26,8 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
 
         cell?.viewData = viewData
 
+        self.didCellDequeuePublisher.send(cell)
+
         return cell
 
     }}
@@ -76,6 +78,7 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
         return dataSource
     }()
 
+    let didCellDequeuePublisher = PassthroughSubject<T.Cell?, Never>()
     let didItemSelectedPublisher = PassthroughSubject<SelectedCellInfo<T>, Never>()
     let didSupplementaryViewDequeuePublisher = PassthroughSubject<
         UICollectionReusableView?,

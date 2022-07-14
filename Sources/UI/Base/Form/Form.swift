@@ -34,7 +34,7 @@ public extension FormUIProtocol {
                 return findNextResponder(nextTag: nextTag + 1)
             }
 
-            if nextResponder is FormSelectionView || nextResponder == nil {
+            if nextResponder is FormSelectionView<FormSelectionItemView> || nextResponder == nil {
                 currentResponder.endEditing(true)
                 return nil
             }
@@ -48,12 +48,15 @@ public extension FormUIProtocol {
     func set(inputAccessoryView: AMKeyboardFrameTrackerView) {
         views
             .combineStackView()
-            .filter { $0 is UITextField || $0 is UITextView || $0 is FormSelectionView }
+            .filter {
+                $0 is UITextField || $0 is UITextView ||
+                    $0 is FormSelectionView<FormSelectionItemView>
+            }
             .enumerated()
             .forEach {
                 ($1 as? UITextField)?.tag = $0
                 ($1 as? UITextView)?.tag = $0
-                ($1 as? FormSelectionView)?.tag = $0
+                ($1 as? FormSelectionView<FormSelectionItemView>)?.tag = $0
                 ($1 as? UITextField)?.inputAccessoryView = inputAccessoryView
                 ($1 as? UITextView)?.inputAccessoryView = inputAccessoryView
             }

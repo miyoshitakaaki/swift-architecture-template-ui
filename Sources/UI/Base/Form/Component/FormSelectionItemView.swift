@@ -1,14 +1,14 @@
 import Combine
 import UIKit
 
-final class FormSelectionItemView: UIView {
+public final class FormSelectionItemView: UIView, Selection {
     private let iconSize: CGFloat = 24
     private let top: CGFloat = 9
     private let bottom: CGFloat = 9
 
     private let togglePublisher = CurrentValueSubject<Bool, Never>(false)
 
-    init(title: String, dottedLine: Bool) {
+    public init(title: String, dottedLine: Bool) {
         super.init(frame: .zero)
         let tapGestureRecognizer = UITapGestureRecognizer(
             target: self,
@@ -25,7 +25,7 @@ final class FormSelectionItemView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    var isEnabled = true {
+    public var isEnabled = true {
         didSet {
             self.backgroundColor = self.isEnabled ? .white : UIConfig.lightGray_200
         }
@@ -103,7 +103,7 @@ private extension FormSelectionItemView {
 
 // MARK: - public method
 
-extension FormSelectionItemView {
+public extension FormSelectionItemView {
     func changeButtonFlag(_ flag: Bool) {
         self.subviews.forEach { view in
             if let button = view as? CheckMarkButton {
@@ -116,10 +116,10 @@ extension FormSelectionItemView {
 }
 
 extension FormSelectionItemView: Publisher {
-    typealias Output = Bool
-    typealias Failure = Never
+    public typealias Output = Bool
+    public typealias Failure = Never
 
-    func receive<S>(subscriber: S) where S: Subscriber, Never == S.Failure, Bool == S.Input {
+    public func receive<S>(subscriber: S) where S: Subscriber, Never == S.Failure, Bool == S.Input {
         self.togglePublisher.subscribe(subscriber)
     }
 }

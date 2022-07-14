@@ -1,7 +1,13 @@
 import Combine
 import UIKit
 
-public final class FormSelectionView: UIView {
+public protocol Selection: UIView, Publisher where Output == Bool, Failure == Never {
+    var isEnabled: Bool { get set }
+    init(title: String, dottedLine: Bool)
+    func changeButtonFlag(_ flag: Bool)
+}
+
+public final class FormSelectionView<T: Selection>: UIView {
     private let padding: UIEdgeInsets
     private let iconSize: CGFloat = 24
     private let top: CGFloat = 9
@@ -10,12 +16,15 @@ public final class FormSelectionView: UIView {
     var cancellables = Set<AnyCancellable>()
 
     private let textPublisher = CurrentValueSubject<String, Never>("")
-    private var itemViews = [FormSelectionItemView]()
+    private var itemViews = [T]()
 
     public lazy var checkButtonPublishers: [AnyPublisher<Bool, Never>] = itemViews
         .map { $0.eraseToAnyPublisher() }
 
-    public init(contents: [String]) {
+    private let stackSpace: CGFloat
+
+    public init(stackSpace: CGFloat = 0, contents: [String]) {
+        self.stackSpace = stackSpace
         self.padding = .init(top: 15, left: 0, bottom: 15, right: 0)
         super.init(frame: .zero)
         self.backgroundColor = .white
@@ -42,18 +51,12 @@ public final class FormSelectionView: UIView {
 private extension FormSelectionView {
     /// 選択肢の追加
     func setupView(_ contents: [String]) {
-        heightAnchor
-            .constraint(
-                equalToConstant: CGFloat(contents.count) *
-                    (self.iconSize + self.top + self.bottom) + 30
-            ).isActive = true
-
         let stackView: UIStackView = {
             let view: UIStackView = .init()
             view.axis = .vertical
             view.distribution = .equalSpacing
             view.alignment = .fill
-            view.spacing = 0
+            view.spacing = stackSpace
             view.backgroundColor = .clear
             return view
         }()
@@ -62,10 +65,11 @@ private extension FormSelectionView {
             stackView,
             constraints: stackView.topAnchor.constraint(equalTo: self.topAnchor, constant: 15),
             stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+            stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         )
         contents.enumerated().forEach { index, content in
-            let view: FormSelectionItemView = .init(
+            let view: T = .init(
                 title: content,
                 dottedLine: index < contents.count - 1
             )

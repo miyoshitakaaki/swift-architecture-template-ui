@@ -152,6 +152,11 @@ extension CollectionUI: UserInterface {
 
 private extension CollectionUI {
     private func setupCollectionView(rootview: UIView) {
+        
+        let bottom = collection.hideTabbar
+            ? rootview.bottomAnchor
+            : rootview.safeAreaLayoutGuide.bottomAnchor
+        
         rootview.addSubviews(
             self.collectionView,
             constraints:
@@ -160,7 +165,7 @@ private extension CollectionUI {
             self.collectionView.leadingAnchor
                 .constraint(equalTo: rootview.safeAreaLayoutGuide.leadingAnchor),
             self.collectionView.bottomAnchor
-                .constraint(equalTo: rootview.safeAreaLayoutGuide.bottomAnchor),
+                .constraint(equalTo: bottom),
             self.collectionView.trailingAnchor
                 .constraint(equalTo: rootview.safeAreaLayoutGuide.trailingAnchor)
         )

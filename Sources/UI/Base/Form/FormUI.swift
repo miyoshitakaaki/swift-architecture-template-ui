@@ -156,7 +156,7 @@ private extension FormUI {
             } else {
                 let bottomAndhor = self.form.completionButtonPotition == .bottomFix
                     ? self.bottomFixedView.topAnchor
-                    : rootview.safeAreaLayoutGuide.bottomAnchor
+                    : rootview.bottomAnchor
 
                 self.scrollView.bottomAnchor.constraint(
                     equalTo: bottomAndhor
@@ -175,7 +175,7 @@ private extension FormUI {
 
         let bottomAndhor = self.form.completionButtonPotition == .bottomFix
             ? self.bottomFixedView.topAnchor
-            : rootview.safeAreaLayoutGuide.bottomAnchor
+            : rootview.bottomAnchor
 
         rootview.addSubviews(
             self.scrollView,

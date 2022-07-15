@@ -53,10 +53,18 @@ public final class CollectionViewController<T: CollectionList>: UIViewController
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        self.tabBarController?.tabBar.isHidden = self.collection.hideTabbar
+
         navigationController?.setNavigationBarHidden(
             self.collection.hideNavigationBar,
             animated: true
         )
+    }
+
+    override public func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        self.tabBarController?.tabBar.isHidden = false
     }
 
     private func setupEvent() {

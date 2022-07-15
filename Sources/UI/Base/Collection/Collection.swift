@@ -12,6 +12,7 @@ public protocol CollectionList: List {
     typealias Items = OrderedDictionary<String, [Cell.ViewData]>
 
     var screenTitle: String { get }
+    var hideTabbar: Bool { get }
     var composableLayout: UICollectionViewCompositionalLayout { get }
     var topViewSubject: PassthroughSubject<Parameter, Never> { get }
     var fetchPublisher: ((parameter: Parameter?, isAdditional: Bool))
@@ -22,6 +23,7 @@ public protocol CollectionList: List {
 
 public extension CollectionList {
     var floatingButton: UIButton? { nil }
+    var hideTabbar: Bool { false }
 }
 
 public protocol CollectionLayout: UICollectionViewCell {

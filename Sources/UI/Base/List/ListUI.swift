@@ -30,11 +30,13 @@ open class ListUI<T: List>: NSObject, SegmentedPageContainerProtocol {
     }
 
     public func setupEmptyView(rootview: UIView) {
-        rootview.addSubviews(
-            self.list.emptyView,
-            constraints:
-            self.list.emptyView.centerXAnchor.constraint(equalTo: rootview.centerXAnchor),
-            self.list.emptyView.centerYAnchor.constraint(equalTo: rootview.centerYAnchor)
-        )
+        if let emptyView = self.list.emptyView {
+            rootview.addSubviews(
+                emptyView,
+                constraints:
+                emptyView.centerXAnchor.constraint(equalTo: rootview.centerXAnchor),
+                emptyView.centerYAnchor.constraint(equalTo: rootview.centerYAnchor)
+            )
+        }
     }
 }

@@ -137,6 +137,8 @@ extension CollectionUI: UserInterface {
     }
 
     func reload(items: OrderedDictionary<String, [T.Cell.ViewData]>) {
+        self.collectionView.isHidden = items.elements.isEmpty
+
         var snapshot = NSDiffableDataSourceSnapshot<String, T.Cell.ViewData>()
 
         items.enumerated().forEach { offset, element in
@@ -193,6 +195,7 @@ private extension CollectionUI {
         )
         self.collectionView.dataSource = self.dataSource
         self.collectionView.delegate = self
+        self.collectionView.isHidden = true
     }
 
     private func setupFloatingButton(rootView: UIView) {

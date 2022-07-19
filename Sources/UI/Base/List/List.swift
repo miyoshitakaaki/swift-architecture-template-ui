@@ -14,4 +14,7 @@ public protocol List: AnyObject {
 public extension List {
     var hideNavigationBar: Bool { false }
     var emptyView: UIView? { nil }
+    var topView: UIView? { nil }
+    var topViewHeight: CGFloat { 0 }
+    var hasSegmentedPageContainer: Bool { false }
 }

@@ -24,6 +24,7 @@ public protocol CollectionList: List {
 public extension CollectionList {
     var floatingButton: UIButton? { nil }
     var hideTabbar: Bool { false }
+    var topViewSubject: PassthroughSubject<String, Never> { .init() }
 }
 
 public protocol CollectionLayout: UICollectionViewCell {

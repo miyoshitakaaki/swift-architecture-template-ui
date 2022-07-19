@@ -4,7 +4,7 @@ public protocol List: AnyObject {
     associatedtype T: UIView
 
     var hideNavigationBar: Bool { get }
-    var emptyView: UIView { get }
+    var emptyView: UIView? { get }
     var topView: T? { get }
     var topViewHeight: CGFloat { get }
     var hasSegmentedPageContainer: Bool { get }
@@ -13,4 +13,5 @@ public protocol List: AnyObject {
 
 public extension List {
     var hideNavigationBar: Bool { false }
+    var emptyView: UIView? { nil }
 }

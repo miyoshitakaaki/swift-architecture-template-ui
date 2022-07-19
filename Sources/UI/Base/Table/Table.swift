@@ -19,6 +19,10 @@ public protocol Table: List {
     func mapper(entities: [[Entity]]) -> OrderedDictionary<String, [Cell.ViewData]>
 }
 
+public extension Table {
+    var showSearchBar: Bool { false }
+}
+
 public protocol TableViewCell: UITableViewCell {
     associatedtype ViewData: Hashable
     var viewData: ViewData? { get set }

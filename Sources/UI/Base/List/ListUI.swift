@@ -33,10 +33,8 @@ open class ListUI<T: List>: NSObject, SegmentedPageContainerProtocol {
         rootview.addSubviews(
             self.list.emptyView,
             constraints:
-            self.list.emptyView.topAnchor.constraint(equalTo: rootview.topAnchor),
-            self.list.emptyView.bottomAnchor.constraint(equalTo: rootview.bottomAnchor),
-            self.list.emptyView.leadingAnchor.constraint(equalTo: rootview.leadingAnchor),
-            self.list.emptyView.trailingAnchor.constraint(equalTo: rootview.trailingAnchor)
+            self.list.emptyView.centerXAnchor.constraint(equalTo: rootview.centerXAnchor),
+            self.list.emptyView.centerYAnchor.constraint(equalTo: rootview.centerYAnchor)
         )
     }
 }

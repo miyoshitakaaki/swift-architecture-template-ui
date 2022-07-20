@@ -1,6 +1,6 @@
 import UIKit
 
-public final class NavigationController: UINavigationController {
+open class NavigationController: UINavigationController {
     private let closeButton: UIButton = {
         let button = UIButton()
         button.titleLabel?.font = .systemFont(ofSize: 24)
@@ -42,7 +42,7 @@ public final class NavigationController: UINavigationController {
     }
 
     @available(*, unavailable)
-    required init?(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 

@@ -2,6 +2,7 @@ import UIKit
 
 public protocol List: AnyObject {
     associatedtype T: UIView
+    associatedtype Usecase
 
     var hideNavigationBar: Bool { get }
     var emptyView: UIView? { get }
@@ -9,6 +10,7 @@ public protocol List: AnyObject {
     var topViewHeight: CGFloat { get }
     var hasSegmentedPageContainer: Bool { get }
     var backgroundColor: UIColor { get }
+    var listUsecase: Usecase { get }
 }
 
 public extension List {

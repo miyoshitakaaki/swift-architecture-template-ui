@@ -1,9 +1,5 @@
 import UIKit
 
-public struct EmptyUsecase {
-    public init() {}
-}
-
 public protocol List: AnyObject {
     associatedtype T: UIView
     associatedtype Usecase

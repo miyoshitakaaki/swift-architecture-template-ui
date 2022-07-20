@@ -65,9 +65,11 @@ public extension FormUIProtocol {
 
 public protocol Form: AnyObject, FormUIProtocol {
     associatedtype Input: Initializable, Equatable, Validatable
+    associatedtype CompleteUsecase
 
     var data: AnyPublisher<Input, Never> { get }
     var fetch: AnyPublisher<Input, AppError> { get }
+    var completeUsecase: CompleteUsecase { get }
     func complete(_ input: Input) -> AnyPublisher<Input, AppError>
 }
 
@@ -79,6 +81,8 @@ public extension Form {
     var isValid: AnyPublisher<Bool, Never> {
         data.map(\.isValid).eraseToAnyPublisher()
     }
+
+    var completeUsecase: EmptyUsecase { .init() }
 
     func complete(_ input: Input) -> AnyPublisher<Input, AppError> {
         Just(input).setFailureType(to: AppError.self).eraseToAnyPublisher()

@@ -1,5 +1,9 @@
 import UIKit
 
+public struct EmptyUsecase {
+    public init() {}
+}
+
 public protocol List: AnyObject {
     associatedtype T: UIView
     associatedtype Usecase
@@ -19,4 +23,5 @@ public extension List {
     var topView: UIView? { nil }
     var topViewHeight: CGFloat { 0 }
     var hasSegmentedPageContainer: Bool { false }
+    var listUsecase: EmptyUsecase { .init() }
 }

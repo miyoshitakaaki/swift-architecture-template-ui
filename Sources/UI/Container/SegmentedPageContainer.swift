@@ -26,7 +26,7 @@ public extension SegmentedPageContainerProtocol {
     }
 }
 
-public final class SegmentedPageContainer<T: SegmentedControl>: UIPageViewController,
+open class SegmentedPageContainer<T: SegmentedControl>: UIPageViewController,
     UIPageViewControllerDataSource, UIPageViewControllerDelegate
 {
     private let tabHeight: CGFloat = 32
@@ -60,7 +60,7 @@ public final class SegmentedPageContainer<T: SegmentedControl>: UIPageViewContro
     }
 
     @available(*, unavailable)
-    required init?(coder: NSCoder) {
+    public required init?(coder: NSCoder) {
         fatalError("no need to implement")
     }
 

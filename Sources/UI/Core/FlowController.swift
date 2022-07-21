@@ -28,3 +28,9 @@ public extension FlowController where T == NavigationController {
         self.navigation.viewControllers = []
     }
 }
+
+public extension FlowController where T == TabBarController {
+    func clear() {
+        self.navigation.viewControllers = []
+    }
+}

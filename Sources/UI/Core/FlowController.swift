@@ -1,6 +1,11 @@
 import UIKit
 
+public protocol FlowDelegate: AnyObject {
+    func didFinished()
+}
+
 public protocol FlowController: UIViewController {
+    var delegate: FlowDelegate? { get set }
     func start()
 }
 

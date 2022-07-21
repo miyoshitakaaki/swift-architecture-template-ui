@@ -6,7 +6,7 @@ public protocol FlowDelegate: AnyObject {
 
 public protocol FlowController: UIViewController {
     associatedtype T
-    var navigation: T! { get set }
+    var navigation: T { get }
     var delegate: FlowDelegate? { get set }
     func start()
     func clear()

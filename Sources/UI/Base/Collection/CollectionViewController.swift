@@ -74,7 +74,9 @@ public final class CollectionViewController<T: CollectionList>: UIViewController
             }.store(in: &self.cancellables)
 
         self.ui.additionalLoadingIndexPathPublisher
-            .sink { indexPath in
+            .sink { [weak self] indexPath in
+                
+                guard let self = self else { return }
 
                 let current = self.viewModel.loadingState.value.value?.flatMap { $0 }.count ?? 0
 

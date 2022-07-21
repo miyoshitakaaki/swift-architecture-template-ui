@@ -17,7 +17,7 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
 
     private var cellProvider: (UICollectionView, IndexPath, T.Cell.ViewData)
         -> UICollectionViewCell?
-    {{ collectionView, indexPath, viewData in
+    {{ [weak self] collectionView, indexPath, viewData in
 
         let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: T.Cell.className,
@@ -26,7 +26,7 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
 
         cell?.viewData = viewData
 
-        self.didCellDequeuePublisher.send(cell)
+        self?.didCellDequeuePublisher.send(cell)
 
         return cell
 

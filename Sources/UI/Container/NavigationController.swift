@@ -1,3 +1,4 @@
+import Combine
 import UIKit
 
 open class NavigationController: UINavigationController {
@@ -12,7 +13,7 @@ open class NavigationController: UINavigationController {
     /// storeをFlowControllerのself.cancellableで実装するとまずい場合がある
     /// 例)pushViewControllerを行うNavigationControllerだと別画面の閉じるイベントが通知される可能性がある
     /// そのときはView側にcancellableを作成する必要がある
-    public lazy var didTapCloseButtonPublisher: UIControl.Publisher<UIButton> = self.closeButton.publisher(for: .touchUpInside)
+    public lazy var didTapCloseButtonPublisher: PassthroughSubject<Void, Never> = .init()
 
     private let hideBackButtonText: Bool
 
@@ -69,7 +70,18 @@ open class NavigationController: UINavigationController {
         }
     }
 
+    open override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        // モーダル表示で全画面表示しなかったときプルダウンで閉じるパターン
+        if self.isBeingDismissed {
+            didTapCloseButtonPublisher.send()
+        }
+    }
+
     @objc func close() {
+        // 閉じるボタンをタップしたパターン
+        didTapCloseButtonPublisher.send()
         self.dismiss(animated: true)
     }
 }

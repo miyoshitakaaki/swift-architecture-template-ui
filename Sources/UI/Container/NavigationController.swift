@@ -73,15 +73,14 @@ open class NavigationController: UINavigationController {
     open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
-        // モーダル表示で全画面表示しなかったときプルダウンで閉じるパターン
+        // モーダル表示で全画面表示しなかったときプルダウンで閉じる
+        // close() でイベントを発行すると重複するためviewWillDisappearで統一
         if self.isBeingDismissed {
             didTapCloseButtonPublisher.send()
         }
     }
 
     @objc func close() {
-        // 閉じるボタンをタップしたパターン
-        didTapCloseButtonPublisher.send()
         self.dismiss(animated: true)
     }
 }

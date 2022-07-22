@@ -19,6 +19,10 @@ public final class FormViewController<T: Form>: UIViewController, ActivityPresen
     public var ui: UI!
     public var cancellables: Set<AnyCancellable> = []
 
+    /// 画面を閉じる時に呼ばれる
+    /// 戻るボタンのイベントとして扱う 閉じるボタンは拾えない
+    public let willDismissFromParent: PassthroughSubject<Void, Never> = .init()
+
     public weak var delegate: FormViewControllerDelegate?
 
     private let formType: T!
@@ -56,6 +60,10 @@ public final class FormViewController<T: Form>: UIViewController, ActivityPresen
         super.viewWillDisappear(animated)
 
         self.tabBarController?.tabBar.isHidden = false
+
+        if self.isMovingFromParent {
+            self.willDismissFromParent.send(())
+        }
     }
 }
 

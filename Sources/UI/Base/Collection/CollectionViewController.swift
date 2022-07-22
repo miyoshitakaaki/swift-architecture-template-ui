@@ -25,6 +25,10 @@ public final class CollectionViewController<T: CollectionList>: UIViewController
 
     public weak var delegate: CollectionViewControllerDelegate?
 
+    /// 画面を閉じる時に呼ばれる
+    /// 戻るボタンのイベントとして扱う 閉じるボタンは拾えない
+    public let willDismissFromParent: PassthroughSubject<Void, Never> = .init()
+
     private let collection: T
 
     public init(collection: T) {
@@ -65,6 +69,10 @@ public final class CollectionViewController<T: CollectionList>: UIViewController
         super.viewWillDisappear(animated)
 
         self.tabBarController?.tabBar.isHidden = false
+
+        if self.isMovingFromParent {
+            self.willDismissFromParent.send(())
+        }
     }
 
     private func setupEvent() {

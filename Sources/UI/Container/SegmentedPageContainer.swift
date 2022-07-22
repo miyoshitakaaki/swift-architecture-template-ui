@@ -36,6 +36,8 @@ open class SegmentedPageContainer<T: SegmentedControl>: UIPageViewController,
     private var vcs: [UIViewController]
     private let tab: T
 
+    public var cancellable = Set<AnyCancellable>()
+
     private let tabview: UIView = {
         let view = UIView()
         view.backgroundColor = .white

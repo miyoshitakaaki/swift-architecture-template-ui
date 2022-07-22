@@ -8,6 +8,12 @@ open class NavigationController: UINavigationController {
         return button
     }()
 
+    /// 閉じるボタンのイベント通知用
+    /// storeをFlowControllerのself.cancellableで実装するとまずい場合がある
+    /// 例)pushViewControllerを行うNavigationControllerだと別画面の閉じるイベントが通知される可能性がある
+    /// そのときはView側にcancellableを作成する必要がある
+    public lazy var didTapCloseButtonPublisher: UIControl.Publisher<UIButton> = self.closeButton.publisher(for: .touchUpInside)
+
     private let hideBackButtonText: Bool
 
     private let showCloseButton: Bool

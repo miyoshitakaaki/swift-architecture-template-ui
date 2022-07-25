@@ -73,14 +73,18 @@ open class NavigationController: UINavigationController {
     open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
-        // モーダル表示で全画面表示しなかったときプルダウンで閉じる
-        // close() でイベントを発行すると重複するためviewWillDisappearで統一
-        if self.isBeingDismissed {
-            didTapCloseButtonPublisher.send()
-        }
+        // TODO: モーダル画面で全画面表示しなかったときプルダウンで閉じるイベントの取り方要検討
+        /*
+         モーダル画面で全画面表示しなかったときプルダウンで閉じるイベントも閉じるイベントと同じ扱いにするべき？
+         その場合はcloseボタンのタップとイベントが重複しないように制御する必要がある
+         */
+//        if self.isBeingDismissed {
+//            didTapCloseButtonPublisher.send()
+//        }
     }
 
     @objc func close() {
+        didTapCloseButtonPublisher.send()
         self.dismiss(animated: true)
     }
 }

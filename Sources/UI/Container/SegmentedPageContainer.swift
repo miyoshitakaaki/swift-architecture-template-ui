@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 import UIKit
 
 public protocol SegmentedControl: UIControl {
@@ -35,6 +36,8 @@ open class SegmentedPageContainer<T: SegmentedControl>: UIPageViewController,
     private var vcs: [UIViewController]
     private let tab: T
 
+    public var cancellable = Set<AnyCancellable>()
+
     private let tabview: UIView = {
         let view = UIView()
         view.backgroundColor = .white
@@ -45,6 +48,20 @@ open class SegmentedPageContainer<T: SegmentedControl>: UIPageViewController,
         guard let viewController = viewControllers?.first else { return 0 }
         return self.vcs.firstIndex(of: viewController) ?? 0
     }
+
+    /// 表示中の画面インデックスが変わったとき、新しいIndexを通知する
+    /// UISegmentControlとUIPageControllerどちらのイベントも流れる
+    ///
+    /// e.g.
+    /// ```
+    /// didChangeSelectedIndexSubject
+    ///     .removeDuplicates() // 同じ値の通知重複は無視
+    ///     .sink { newIndex in
+    ///         print("新しいindexは\(newIndex)")
+    ///     }
+    ///     .store(in: &self.cancellable)
+    ///
+    public var didChangeSelectedIndexSubject: PassthroughSubject<Int, Never> = .init()
 
     private let hidesBarsOnSwipe: Bool
 
@@ -138,6 +155,8 @@ open class SegmentedPageContainer<T: SegmentedControl>: UIPageViewController,
         let direction: UIPageViewController
             .NavigationDirection = selectedIndex > self.currentIndex ? .forward : .reverse
         self.setViewControllers([self.vcs[selectedIndex]], direction: direction, animated: true)
+        // UISegmentControlによってページを切り替えられた
+        self.didChangeSelectedIndexSubject.send(selectedIndex)
     }
 
     public func selectTab(index: Int, animated: Bool) {
@@ -191,5 +210,8 @@ open class SegmentedPageContainer<T: SegmentedControl>: UIPageViewController,
             let vc = viewControllers?.first,
             let index = self.vcs.firstIndex(of: vc) else { return }
         self.tab.selectedSegmentIndex = index
+
+        // 画面のスワイプでページが切り替えられた
+        self.didChangeSelectedIndexSubject.send(index)
     }
 }

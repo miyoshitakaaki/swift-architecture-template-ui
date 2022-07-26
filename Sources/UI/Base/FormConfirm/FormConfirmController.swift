@@ -20,6 +20,10 @@ public final class FormConfirmController<T: FormConfirmProtocol>: UIViewControll
     public var ui: UI!
     public var cancellables: Set<AnyCancellable> = []
 
+    /// 画面を閉じる時に呼ばれる
+    /// 戻るボタンのイベントとして扱う 閉じるボタンは拾えない
+    public let willDismissFromParent: PassthroughSubject<Void, Never> = .init()
+
     public weak var delegate: FormConfirmControllerDelegate?
 
     private let form: T
@@ -82,5 +86,9 @@ public final class FormConfirmController<T: FormConfirmProtocol>: UIViewControll
         super.viewWillDisappear(animated)
 
         self.tabBarController?.tabBar.isHidden = false
+
+        if self.isMovingFromParent {
+            self.willDismissFromParent.send(())
+        }
     }
 }

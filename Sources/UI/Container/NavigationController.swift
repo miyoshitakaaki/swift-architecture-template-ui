@@ -1,3 +1,4 @@
+import Combine
 import UIKit
 
 open class NavigationController: UINavigationController {
@@ -7,6 +8,12 @@ open class NavigationController: UINavigationController {
         button.setTitle("✗", for: .normal)
         return button
     }()
+
+    /// 閉じるボタンのイベント通知用
+    /// storeをFlowControllerのself.cancellableで実装するとまずい場合がある
+    /// 例)pushViewControllerを行うNavigationControllerだと別画面の閉じるイベントが通知される可能性がある
+    /// そのときはView側にcancellableを作成する必要がある
+    public lazy var didTapCloseButtonPublisher: PassthroughSubject<Void, Never> = .init()
 
     private let hideBackButtonText: Bool
 
@@ -63,7 +70,21 @@ open class NavigationController: UINavigationController {
         }
     }
 
+    open override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        // TODO: モーダル画面で全画面表示しなかったときプルダウンで閉じるイベントの取り方要検討
+        /*
+         モーダル画面で全画面表示しなかったときプルダウンで閉じるイベントも閉じるイベントと同じ扱いにするべき？
+         その場合はcloseボタンのタップとイベントが重複しないように制御する必要がある
+         */
+//        if self.isBeingDismissed {
+//            didTapCloseButtonPublisher.send()
+//        }
+    }
+
     @objc func close() {
+        didTapCloseButtonPublisher.send()
         self.dismiss(animated: true)
     }
 }

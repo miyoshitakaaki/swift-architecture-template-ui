@@ -13,6 +13,12 @@ public protocol CollectionList: List {
 
     var screenTitle: String { get }
     var hideTabbar: Bool { get }
+    /// 表示する要素が0件のときCollectionView.backgroundViewに設定されるView
+    ///
+    /// UICollectionViewの仕様でAutoLayoutがきかない
+    /// subviewをする場合はあらかじめframeを確定してビューを生成するか
+    /// UIView.AutoresizingMaskを指定する等が必要
+    var emptyBackgroundView: UIView? { get }
     var composableLayout: UICollectionViewCompositionalLayout { get }
     var topViewSubject: PassthroughSubject<Parameter, Never> { get }
     var fetchPublisher: ((parameter: Parameter?, isAdditional: Bool))

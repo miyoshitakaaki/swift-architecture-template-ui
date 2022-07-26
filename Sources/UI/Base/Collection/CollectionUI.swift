@@ -15,6 +15,9 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
         collectionViewLayout: collection.composableLayout
     )
 
+    // CollectionListのemptyBackgroundViewを弱参照でキャッシュする
+    private(set) weak var emptyBackgroundView: UIView?
+
     private var cellProvider: (UICollectionView, IndexPath, T.Cell.ViewData)
         -> UICollectionViewCell?
     {{ [weak self] collectionView, indexPath, viewData in
@@ -136,6 +139,10 @@ extension CollectionUI: UserInterface {
         setupFloatingButton(rootView: rootview)
     }
 
+    func setupEmptyBackgroundView(_ view: UIView) {
+        self.emptyBackgroundView = view
+    }
+
     func reload(items: OrderedDictionary<String, [T.Cell.ViewData]>) {
         self.collectionView.isHidden = items.elements.isEmpty
 
@@ -147,6 +154,22 @@ extension CollectionUI: UserInterface {
         }
 
         self.dataSource.apply(snapshot, animatingDifferences: false)
+
+        // 表示するセルが0件のときbackgroundViewにemptyBackgroundViewを表示する
+        if let emptyBackgroundView = emptyBackgroundView {
+            let count = self.dataSource.snapshot()
+                .sectionIdentifiers
+                .map { identifier -> Int in
+                    self.dataSource.snapshot().numberOfItems(inSection: identifier)
+                }
+                .reduce(0, +)
+            if count == 0 {
+                emptyBackgroundView.frame = self.collectionView.bounds
+                self.collectionView.backgroundView = emptyBackgroundView
+            } else {
+                self.collectionView.backgroundView = nil
+            }
+        }
 
         self.collectionView.reloadData()
     }

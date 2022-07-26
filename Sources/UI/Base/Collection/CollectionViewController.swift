@@ -48,6 +48,9 @@ public final class CollectionViewController<T: CollectionList>: UIViewController
         view.backgroundColor = self.collection.backgroundColor
 
         self.ui.setupView(rootview: view)
+        if let emptyBackgroundView = self.collection.emptyBackgroundView {
+            self.ui.setupEmptyBackgroundView(emptyBackgroundView)
+        }
 
         self.setupEvent()
 

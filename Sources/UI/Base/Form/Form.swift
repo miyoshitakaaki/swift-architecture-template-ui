@@ -12,6 +12,7 @@ public protocol FormUIProtocol {
     var bottomCompletionButtonEnableBackgroundStyle: ViewStyle<UIButton> { get }
     var bottomCompletionButtondisableBackgroundStyle: ViewStyle<UIButton> { get }
     var views: [UIView] { get }
+    var titleView: UIView? { get }
     var isValid: AnyPublisher<Bool, Never> { get }
     var isOptional: Bool { get }
     func set(inputAccessoryView: AMKeyboardFrameTrackerView)
@@ -20,6 +21,8 @@ public protocol FormUIProtocol {
 
 public extension FormUIProtocol {
     var isOptional: Bool { false }
+
+    var titleView: UIView? { nil }
 
     func focusNextResponder() {
         guard

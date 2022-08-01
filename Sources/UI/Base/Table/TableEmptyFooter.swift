@@ -1,6 +1,6 @@
 import UIKit
 
-public final class TableEmptyHeader: UITableViewHeaderFooterView, TableViewHeaderFooter {
+public final class TableEmptyFooter: UITableViewHeaderFooterView, TableViewHeaderFooter {
     public var viewData: String? {
         didSet {}
     }

@@ -64,15 +64,32 @@ public final class TableUI<T: Table>: ListUI<T>, UITableViewDataSource, UITableV
 
     public func tableView(
         _ tableView: UITableView,
+        heightForFooterInSection section: Int
+    ) -> CGFloat {
+        if T.Footer.self == TableEmptyFooter.self {
+            return 0
+        } else {
+            return 142
+        }
+    }
+
+    public func tableView(
+        _ tableView: UITableView,
         viewForHeaderInSection section: Int
     ) -> UIView? {
         let header = tableView
             .dequeueReusableHeaderFooterView(withIdentifier: T.Header.className) as? T.Header
-        header?.configure(
-            title: self.viewDataItems.keys.isEmpty
-                ? ""
-                : self.viewDataItems.keys[section]
-        )
+
+        return header
+    }
+
+    public func tableView(
+        _ tableView: UITableView,
+        viewForFooterInSection section: Int
+    ) -> UIView? {
+        let header = tableView
+            .dequeueReusableHeaderFooterView(withIdentifier: T.Footer.className) as? T.Footer
+
         return header
     }
 
@@ -114,6 +131,10 @@ extension TableUI: UserInterface {
         self.tableView.register(
             T.Header.self,
             forHeaderFooterViewReuseIdentifier: T.Header.className
+        )
+        self.tableView.register(
+            T.Footer.self,
+            forHeaderFooterViewReuseIdentifier: T.Footer.className
         )
         self.tableView.dataSource = self
         self.tableView.delegate = self

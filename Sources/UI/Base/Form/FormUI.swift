@@ -120,6 +120,10 @@ extension FormUI: UserInterface {
         if self.form.completionButtonPotition == .top {
             setupRightBarButtonItem(navigationItem: navigationItem)
         }
+
+        if let view = self.form.titleView {
+            navigationItem.titleView = view
+        }
     }
 }
 

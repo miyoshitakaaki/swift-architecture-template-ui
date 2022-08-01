@@ -5,7 +5,8 @@ import Utility
 
 public protocol Table: List {
     associatedtype Cell: TableViewCell
-    associatedtype Header: TableViewHeader
+    associatedtype Header: TableViewHeaderFooter
+    associatedtype Footer: TableViewHeaderFooter
     associatedtype Entity
     associatedtype Parameter
 
@@ -28,6 +29,7 @@ public protocol TableViewCell: UITableViewCell {
     var viewData: ViewData? { get set }
 }
 
-public protocol TableViewHeader: UITableViewHeaderFooterView {
-    func configure(title: String)
+public protocol TableViewHeaderFooter: UITableViewHeaderFooterView {
+    associatedtype ViewData: Hashable
+    var viewData: ViewData? { get set }
 }

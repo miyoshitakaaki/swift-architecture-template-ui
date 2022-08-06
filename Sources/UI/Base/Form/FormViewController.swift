@@ -2,7 +2,7 @@ import Combine
 import UIKit
 
 public protocol FormViewControllerDelegate: AnyObject {
-    func didCompletionButtonTapped<T>(data: T)
+    func didCompletionButtonTapped<F: Form>(data: F.Input, form: F)
 }
 
 extension FormViewController: VCInjectable {
@@ -99,7 +99,7 @@ private extension FormViewController {
 
                 case let .done(value):
                     self.dismissActivity()
-                    self.delegate?.didCompletionButtonTapped(data: value)
+                    self.delegate?.didCompletionButtonTapped(data: value, form: self.formType)
 
                 case .addtionalDone:
                     break

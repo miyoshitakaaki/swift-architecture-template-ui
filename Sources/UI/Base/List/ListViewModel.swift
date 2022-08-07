@@ -45,7 +45,7 @@ public final class ListViewModel<T, Parameter>: ViewModel where T: Hashable {
                         let current = self.loadingState.value.value ?? [:]
 
                         guard new.isEmpty == false else {
-                            return LoadingState<Items, AppError>.standby
+                            return LoadingState<Items, AppError>.done(current)
                         }
 
                         if query.isAdditional {

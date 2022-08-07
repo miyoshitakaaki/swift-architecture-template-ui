@@ -37,6 +37,7 @@ open class ListUI<T: List>: NSObject, SegmentedPageContainerProtocol {
                 emptyView.centerXAnchor.constraint(equalTo: rootview.centerXAnchor),
                 emptyView.centerYAnchor.constraint(equalTo: rootview.centerYAnchor)
             )
+            emptyView.isHidden = true
         }
     }
 }

@@ -4,10 +4,6 @@ import OrderedCollections
 import UIKit
 import Utility
 
-public protocol DeletableCollectionViewCell: UICollectionViewCell {
-    var delete: ((IndexPath) -> Void)? { get set }
-}
-
 public struct SelectedCellInfo<T: CollectionList> {
     public let indexPath: IndexPath
     public let viewData: T.Cell.ViewData?
@@ -29,10 +25,7 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
         ) as? T.Cell
 
         cell?.viewData = viewData
-
-        if let cell = cell as? DeletableCollectionViewCell {
-            cell.delete = self?.deleteItem
-        }
+        cell?.delete = self?.deleteItem
 
         self?.didCellDequeuePublisher.send((cell, indexPath))
 

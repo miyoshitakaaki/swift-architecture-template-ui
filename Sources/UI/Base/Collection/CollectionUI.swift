@@ -155,6 +155,8 @@ extension CollectionUI: UserInterface {
 
     func reload(items: OrderedDictionary<String, [T.Cell.ViewData]>) {
         self.collectionView.isHidden = items.elements.isEmpty
+        self.collection.emptyView?.isHidden = !items.elements.isEmpty
+        self.collection.floatingButton?.isHidden = items.elements.isEmpty
 
         var snapshot = NSDiffableDataSourceSnapshot<String, T.Cell.ViewData>()
 
@@ -217,6 +219,7 @@ private extension CollectionUI {
 
     private func setupFloatingButton(rootView: UIView) {
         guard let button = self.collection.floatingButton else { return }
+        button.isHidden = true
         rootView.addSubviews(
             button,
             constraints:

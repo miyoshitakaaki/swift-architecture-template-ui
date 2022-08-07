@@ -34,7 +34,7 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
             cell.delete = self?.deleteItem
         }
 
-        self?.didCellDequeuePublisher.send(cell)
+        self?.didCellDequeuePublisher.send((cell, indexPath))
 
         return cell
 
@@ -86,7 +86,7 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
         return dataSource
     }()
 
-    let didCellDequeuePublisher = PassthroughSubject<T.Cell?, Never>()
+    let didCellDequeuePublisher = PassthroughSubject<(T.Cell?, IndexPath), Never>()
     let didItemSelectedPublisher = PassthroughSubject<SelectedCellInfo<T>, Never>()
     let didSupplementaryViewDequeuePublisher = PassthroughSubject<
         UICollectionReusableView?,
@@ -149,7 +149,8 @@ extension CollectionUI: UserInterface {
         var snapshot = self.dataSource.snapshot()
         guard let identifier = self.dataSource.itemIdentifier(for: indexPath) else { return }
         snapshot.deleteItems([identifier])
-        self.dataSource.apply(snapshot, animatingDifferences: true)
+        self.dataSource.apply(snapshot, animatingDifferences: false)
+        self.collectionView.reloadData()
     }}
 
     func reload(items: OrderedDictionary<String, [T.Cell.ViewData]>) {

@@ -30,6 +30,14 @@ public extension CollectionList {
 public protocol CollectionLayout: UICollectionViewCell {
     associatedtype ViewData: Hashable
     var viewData: ViewData? { get set }
+    var delete: ((IndexPath) -> Void)? { get set }
+}
+
+public extension CollectionLayout {
+    var delete: ((IndexPath) -> Void)? {
+        get { nil }
+        set {}
+    }
 }
 
 public protocol CollectionHeaderLayout: UICollectionReusableView {

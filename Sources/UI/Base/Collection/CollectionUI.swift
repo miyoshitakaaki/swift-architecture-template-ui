@@ -144,6 +144,10 @@ extension CollectionUI: UserInterface {
         snapshot.deleteItems([identifier])
         self.dataSource.apply(snapshot, animatingDifferences: false)
         self.collectionView.reloadData()
+
+        self.collectionView.isHidden = snapshot.itemIdentifiers.isEmpty
+        self.collection.emptyView?.isHidden = !snapshot.itemIdentifiers.isEmpty
+        self.collection.floatingButton?.isHidden = snapshot.itemIdentifiers.isEmpty
     }}
 
     func reload(items: OrderedDictionary<String, [T.Cell.ViewData]>) {

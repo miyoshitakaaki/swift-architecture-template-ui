@@ -42,14 +42,14 @@ public final class FormViewController<T: Form>: UIViewController, ActivityPresen
         self.ui.setupNavigationBar(navigationBar: nil, navigationItem: navigationItem)
 
         setupEvent()
+        
+        self.viewModel.loadSubject.send()
     }
 
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
         self.tabBarController?.tabBar.isHidden = true
-
-        self.viewModel.loadSubject.send()
     }
 
     override public func viewWillDisappear(_ animated: Bool) {

@@ -218,7 +218,7 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
     }
 
     @objc func didDatePickerSelected(sender: UIDatePicker) {
-        self.text = sender.date.dateJp
+        self.text = sender.date.dateHyphen
     }
 
     public func insertListData(_ data: [String]) {

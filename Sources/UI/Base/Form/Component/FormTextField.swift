@@ -6,6 +6,18 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
         case birthday, normal
     }
 
+    /// 入力制御用オプション
+    public enum InputOption {
+        /// 指定無し
+        case none
+        /// 数値
+        ///
+        /// digit: 0のとき入力桁数に制限無し
+        case number(digit: Int)
+        /// Eメール
+        case email
+    }
+
     public enum Picker {
         case text, date(DatePicker), list([String]), doubleList([String], [String]),
              dateTime(() -> Void)
@@ -82,6 +94,8 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
     }()
 
     private let underArrowView: UnderArrowView = .init()
+    /// 入力制限
+    private let inputOption: FormTextField.InputOption
 
     /// optionButtonをTextField.rightViewにサイズ指定して表示するためのコンテナ
     private let optionButtonContainerView: UIView = .init()
@@ -105,12 +119,12 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
         returnKeyType: UIReturnKeyType = .next,
         showOptionButton: Bool = false,
         isSecureTextEntry: Bool = false,
-        isNumberKeyBoard: Bool = false,
-        dummyText: String = ""
+        dummyText: String = "",
+        inputOption: FormTextField.InputOption = .none
     ) {
         self.picker = picker
         self.showOptionButton = showOptionButton
-
+        self.inputOption = inputOption
         super.init(frame: .zero)
 
         self.text = dummyText
@@ -129,8 +143,13 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
         self.textContentType = textContentType
         self.returnKeyType = returnKeyType
 
-        if isNumberKeyBoard {
+        switch self.inputOption {
+        case .number:
             self.keyboardType = .numberPad
+        case .email:
+            self.keyboardType = .emailAddress
+        case .none:
+            break
         }
 
         switch picker {
@@ -200,7 +219,30 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
     }
 
     @objc func didValueChanged(_ sender: UITextField) {
-        self.textPublisher.send(sender.text ?? "")
+        switch self.inputOption {
+        case .number(digit: let digit):
+            // 自身の桁数が指定の桁数を超えていないかチェック
+            let original = self.text ?? ""
+            // 数値だけを取り出す
+            let filtered = original
+                .components(separatedBy: CharacterSet.decimalDigits.inverted)
+                .joined()
+                .split(by: digit)
+                .first ?? ""
+
+            guard original != filtered else {
+                // 値が等しいので通知を発行する
+                self.textPublisher.send(self.text ?? "")
+                return
+            }
+
+            // 値が異なるときは更新する
+            // イベントの重複発行を回避するためtextPublisher.sendはself.textに任せる
+            self.text = filtered
+
+        default:
+            self.textPublisher.send(self.text ?? "")
+        }
     }
 
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -329,5 +371,28 @@ extension FormTextField: UIPickerViewDelegate, UIPickerViewDataSource {
 
             self.text = doubleList.0 + "." + doubleList.1
         }
+    }
+}
+
+extension String {
+    /// 文字数による文字列分割
+    ///
+    /// lengthに1より小さい値を指定したとき、自身をそのまま帰す
+    /// https://stackoverflow.com/questions/32212220/how-to-split-a-string-into-substrings-of-equal-length
+    func split(by length: Int) -> [String] {
+        if length < 1 {
+            return [self]
+        }
+
+        var startIndex = self.startIndex
+        var results = [Substring]()
+
+        while startIndex < self.endIndex {
+            let endIndex = self.index(startIndex, offsetBy: length, limitedBy: self.endIndex) ?? self.endIndex
+            results.append(self[startIndex..<endIndex])
+            startIndex = endIndex
+        }
+
+        return results.map { String($0) }
     }
 }

@@ -24,14 +24,20 @@ public final class TextEdit<T: UIControl>: Publisher where T: Publisher, T.Outpu
         allowEmpty: Bool = true,
         isPhone: Bool = false,
         isEmail: Bool = false,
-        isPassword: Bool = false
+        isPassword: Bool = false,
+        isRequired: Bool = false,
+        requireColor: UIColor = .red
     ) {
         self.initialTitle = title
         self.allowEmpty = allowEmpty
         self.isPhone = isPhone
         self.isEmail = isEmail
         self.isPassword = isPassword
-        self.titleLabel = .init(style: titleStyle, title: title)
+        self.titleLabel = .init(
+            style: titleStyle,
+            title: isRequired ? title + "＊" : title
+        )
+        self.titleLabel.setSubTextColor(text: "＊", color: requireColor)
         self.edit = edit
         self.titleStyle = titleStyle
     }

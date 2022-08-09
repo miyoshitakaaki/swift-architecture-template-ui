@@ -7,18 +7,18 @@ public final class TextEdit<T: UIControl>: Publisher where T: Publisher, T.Outpu
     public typealias Output = String
     public typealias Failure = Never
 
-    private let titleColor: UIColor
+    private let titleStyle: ViewStyle<UILabel>
     private let initialTitle: String
     private let allowEmpty: Bool
     private let isPhone: Bool
     private let isEmail: Bool
     private let isPassword: Bool
 
-    public let titleLabel: FormTitleLabel
+    public let titleLabel: UILabel
     public let edit: T
 
     public init(
-        titleColor: UIColor = UIColor.rgba(97, 97, 97, 1),
+        titleStyle: ViewStyle<UILabel>,
         title: String,
         edit: T,
         allowEmpty: Bool = true,
@@ -31,9 +31,9 @@ public final class TextEdit<T: UIControl>: Publisher where T: Publisher, T.Outpu
         self.isPhone = isPhone
         self.isEmail = isEmail
         self.isPassword = isPassword
-        self.titleLabel = .init(title: title, titleColor: titleColor)
-        self.titleColor = titleColor
+        self.titleLabel = .init(style: titleStyle, title: title)
         self.edit = edit
+        self.titleStyle = titleStyle
     }
 
     public var isEnabled = true {
@@ -89,8 +89,7 @@ public final class TextEdit<T: UIControl>: Publisher where T: Publisher, T.Outpu
                 }
 
                 self.titleLabel.text = self.initialTitle
-                self.titleLabel.textColor = self.titleColor
-                self.titleLabel.font = UIFont.boldSystemFont(ofSize: 12)
+                self.titleLabel.apply(self.titleStyle)
             })
             .subscribe(subscriber)
     }

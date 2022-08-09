@@ -42,7 +42,7 @@ public final class FormViewController<T: Form>: UIViewController, ActivityPresen
         self.ui.setupNavigationBar(navigationBar: nil, navigationItem: navigationItem)
 
         setupEvent()
-        
+
         self.viewModel.loadSubject.send()
     }
 

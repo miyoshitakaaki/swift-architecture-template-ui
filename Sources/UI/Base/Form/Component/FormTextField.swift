@@ -105,7 +105,7 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
         returnKeyType: UIReturnKeyType = .next,
         showOptionButton: Bool = false,
         isSecureTextEntry: Bool = false,
-        isNumberKeyBoard: Bool = false,
+        keyboardType: UIKeyboardType = .default,
         dummyText: String = ""
     ) {
         self.picker = picker
@@ -128,10 +128,7 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
         self.textColor = UIConfig.darkGray_900
         self.textContentType = textContentType
         self.returnKeyType = returnKeyType
-
-        if isNumberKeyBoard {
-            self.keyboardType = .numberPad
-        }
+        self.keyboardType = keyboardType
 
         switch picker {
         case .text:

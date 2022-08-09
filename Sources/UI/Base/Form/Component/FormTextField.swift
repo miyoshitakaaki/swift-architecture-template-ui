@@ -21,7 +21,7 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
     private var doubleList = ("", "")
 
     /// テキストフィールド内のinset
-    private let inset: CGFloat = 16
+    private let inset: CGFloat
     /// 表示ボタンの横幅
     private let optionButtonWidth: CGFloat = 90
 
@@ -97,6 +97,7 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
     private var picker: Picker
 
     public init(
+        inset: CGFloat,
         backgroundColor: UIColor = .white,
         placeholder: String,
         placeholderColor: UIColor? = nil,
@@ -108,6 +109,7 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
         keyboardType: UIKeyboardType = .default,
         dummyText: String = ""
     ) {
+        self.inset = inset
         self.picker = picker
         self.showOptionButton = showOptionButton
 

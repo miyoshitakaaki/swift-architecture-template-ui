@@ -29,8 +29,8 @@ public extension AlertPresentable where Self: UIViewController {
             self.present(alert, animated: true)
         case let .invalid(message):
             let alert = UIAlertController(
-                title: message,
-                message: nil,
+                title: "入力に不備があります。",
+                message: message,
                 preferredStyle: .alert
             )
             alert.addAction(.init(title: "OK", style: .cancel))

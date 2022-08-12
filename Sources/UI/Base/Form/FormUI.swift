@@ -47,8 +47,8 @@ public final class FormUI {
     }
 
     func enableCompleteButton(enable: Bool) {
-        self.completionButton.isEnabled = enable
-        self.completionButton.isUserInteractionEnabled = enable
+        self.completionButton.isEnabled = enable || self.form.showInvalidAlert
+        self.completionButton.isUserInteractionEnabled = enable || self.form.showInvalidAlert
 
         if self.form.completionButtonPotition == .top {
             self.completionButton.apply(enable ? .init {

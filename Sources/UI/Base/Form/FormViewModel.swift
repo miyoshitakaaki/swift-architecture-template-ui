@@ -72,6 +72,11 @@ public final class FormViewModel<T: Form>: ViewModel {
                         .eraseToAnyPublisher()
                 }
 
+                if self.input.value.isValid == false {
+                    return Just(LoadingState<T.Input, AppError>.failed(.invalid))
+                        .eraseToAnyPublisher()
+                }
+
                 return self.complete(self.input.value)
                     .map(LoadingState<T.Input, AppError>.done)
                     .catch { error in

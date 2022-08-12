@@ -27,9 +27,9 @@ public extension AlertPresentable where Self: UIViewController {
                 self?.didAuthErrorOccured()
             }))
             self.present(alert, animated: true)
-        case .invalid:
+        case let .invalid(message):
             let alert = UIAlertController(
-                title: "バリデーションエラー",
+                title: message,
                 message: nil,
                 preferredStyle: .alert
             )

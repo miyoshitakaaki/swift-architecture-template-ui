@@ -23,7 +23,7 @@ public extension AlertPresentable where Self: UIViewController {
                 message: nil,
                 preferredStyle: .alert
             )
-            alert.addAction(.init(title: "はい", style: .default, handler: { [weak self] _ in
+            alert.addAction(.init(title: "OK", style: .default, handler: { [weak self] _ in
                 self?.didAuthErrorOccured()
             }))
             self.present(alert, animated: true)
@@ -33,9 +33,7 @@ public extension AlertPresentable where Self: UIViewController {
                 message: nil,
                 preferredStyle: .alert
             )
-            alert.addAction(.init(title: "はい", style: .default, handler: { [weak self] _ in
-                self?.didAuthErrorOccured()
-            }))
+            alert.addAction(.init(title: "OK", style: .cancel))
             self.present(alert, animated: true)
 
         case .unknown, .hms, .empty:

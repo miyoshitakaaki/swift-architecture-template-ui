@@ -109,6 +109,11 @@ public extension Form {
 
 public protocol Validatable {
     var isValid: Bool { get }
+    var invalidMessage: String { get }
+}
+
+public extension Validatable {
+    var invalidMessage: String { "バリデーションエラー" }
 }
 
 public enum CompletionButtonPosition: Equatable {

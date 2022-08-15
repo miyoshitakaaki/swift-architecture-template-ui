@@ -142,11 +142,10 @@ extension TableUI: UserInterface {
         )
         self.tableView.dataSource = self
         self.tableView.delegate = self
-        self.tableView.isHidden = self.viewDataItems.elements.isEmpty
     }
 
     func reload(items: OrderedDictionary<String, [T.Cell.ViewData]>) {
-        self.tableView.isHidden = items.elements.isEmpty
+        self.table.emptyView?.isHidden = !items.elements.isEmpty
         self.viewDataItems = items
         self.tableView.reloadData()
     }

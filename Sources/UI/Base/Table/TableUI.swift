@@ -10,6 +10,7 @@ public final class TableUI<T: Table>: ListUI<T>, UITableViewDataSource, UITableV
     let didCellDequeuedPublisher = PassthroughSubject<(T.Cell, IndexPath), Never>()
     let didItemSelectedPublisher = PassthroughSubject<IndexPath, Never>()
     let additionalLoadingIndexPathPublisher = PassthroughSubject<IndexPath, Never>()
+    let refreshPublisher = PassthroughSubject<Void, Never>()
 
     private let table: T
 
@@ -106,6 +107,14 @@ public final class TableUI<T: Table>: ListUI<T>, UITableViewDataSource, UITableV
     private func setupEmptyView() {
         self.tableView.backgroundView = self.table.emptyView
     }
+
+    @objc private func refresh() {
+        self.refreshPublisher.send()
+    }
+
+    func endRefresh() {
+        self.tableView.refreshControl?.endRefreshing()
+    }
 }
 
 extension TableUI: UserInterface {
@@ -131,6 +140,12 @@ extension TableUI: UserInterface {
 
         self.tableView.backgroundColor = self.table.backgroundColor
         self.tableView.separatorStyle = .none
+        self.tableView.refreshControl = UIRefreshControl()
+        self.tableView.refreshControl?.addTarget(
+            self,
+            action: #selector(self.refresh),
+            for: .valueChanged
+        )
         self.tableView.register(T.Cell.self, forCellReuseIdentifier: T.Cell.className)
         self.tableView.register(
             T.Header.self,

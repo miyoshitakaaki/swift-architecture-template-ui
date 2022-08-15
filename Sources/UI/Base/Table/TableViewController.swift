@@ -88,6 +88,11 @@ public final class TableViewController<T: Table>: UIViewController, ActivityPres
     }
 
     private func bind() {
+        self.ui.refreshPublisher
+            .sink { [weak self] _ in
+                self?.viewModel.loadSubject.send((nil, false))
+            }.store(in: &self.cancellables)
+
         self.ui.didItemSelectedPublisher
             .sink { [weak self] indexPath in
                 guard let self = self else { return }
@@ -115,16 +120,19 @@ public final class TableViewController<T: Table>: UIViewController, ActivityPres
                 guard let self = self else { return }
                 switch state {
                 case .standby:
+                    self.ui.endRefresh()
                     self.dismissActivity()
 
                 case .loading:
                     self.presentActivity()
 
                 case let .failed(error):
+                    self.ui.endRefresh()
                     self.dismissActivity()
                     self.present(error)
 
                 case let .done(value):
+                    self.ui.endRefresh()
                     self.dismissActivity()
                     if self.table.reloadable {
                         self.ui.reload(items: value)

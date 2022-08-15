@@ -102,13 +102,17 @@ public final class TableUI<T: Table>: ListUI<T>, UITableViewDataSource, UITableV
             self.additionalLoadingIndexPathPublisher.send(indexPath)
         }
     }
+
+    private func setupEmptyView() {
+        self.tableView.backgroundView = self.table.emptyView
+    }
 }
 
 extension TableUI: UserInterface {
     public func setupView(rootview: UIView) {
-        self.setupEmptyView(rootview: rootview)
         self.setupTableView(rootview: rootview)
         self.setupTopView(view: self.tableView)
+        self.setupEmptyView()
     }
 
     func setupTableView(rootview: UIView) {

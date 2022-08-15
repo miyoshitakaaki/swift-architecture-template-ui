@@ -5,6 +5,7 @@ import Utility
 
 public protocol Table: List {
     associatedtype Cell: TableViewCell
+    associatedtype EmptyCell: UITableViewCell
     associatedtype Header: TableViewHeaderFooter
     associatedtype Footer: TableViewHeaderFooter
     associatedtype Entity

@@ -30,12 +30,25 @@ public final class TableUI<T: Table>: ListUI<T>, UITableViewDataSource, UITableV
     public func tableView(
         _ tableView: UITableView,
         numberOfRowsInSection section: Int
-    ) -> Int { self.viewDataItems.elements[section].value.count }
+    ) -> Int {
+        if self.viewDataItems.isEmpty {
+            return 1
+        } else {
+            return self.viewDataItems.elements[section].value.count
+        }
+    }
 
     public func tableView(
         _ tableView: UITableView,
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
+        if self.viewDataItems.values.isEmpty {
+            return tableView.dequeueReusableCell(
+                withIdentifier: T.EmptyCell.className,
+                for: indexPath
+            )
+        }
+
         guard let cell = tableView.dequeueReusableCell(withIdentifier: T.Cell.className) as? T.Cell
         else { return .init() }
         cell.viewData = self.viewDataItems.elements[indexPath.section].value[indexPath.row]
@@ -49,7 +62,11 @@ public final class TableUI<T: Table>: ListUI<T>, UITableViewDataSource, UITableV
     }
 
     public func numberOfSections(in tableView: UITableView) -> Int {
-        self.viewDataItems.count
+        if self.viewDataItems.isEmpty {
+            return 1
+        } else {
+            return self.viewDataItems.count
+        }
     }
 
     public func tableView(
@@ -147,6 +164,7 @@ extension TableUI: UserInterface {
             for: .valueChanged
         )
         self.tableView.register(T.Cell.self, forCellReuseIdentifier: T.Cell.className)
+        self.tableView.register(T.EmptyCell.self, forCellReuseIdentifier: T.EmptyCell.className)
         self.tableView.register(
             T.Header.self,
             forHeaderFooterViewReuseIdentifier: T.Header.className

@@ -131,10 +131,10 @@ extension CollectionUI: UserInterface {
 
     public func setupView(rootview: UIView) {
         rootview.backgroundColor = .white
-        setupEmptyView(rootview: rootview)
         setupCollectionView(rootview: rootview)
         setupTopView(view: self.collectionView)
         setupFloatingButton(rootView: rootview)
+        setupEmptyView()
     }
 
     var deleteItem: (IndexPath) -> Void {{ [weak self] indexPath in
@@ -145,13 +145,11 @@ extension CollectionUI: UserInterface {
         self.dataSource.apply(snapshot, animatingDifferences: false)
         self.collectionView.reloadData()
 
-        self.collectionView.isHidden = snapshot.itemIdentifiers.isEmpty
         self.collection.emptyView?.isHidden = !snapshot.itemIdentifiers.isEmpty
         self.collection.floatingButton?.isHidden = snapshot.itemIdentifiers.isEmpty
     }}
 
     func reload(items: OrderedDictionary<String, [T.Cell.ViewData]>) {
-        self.collectionView.isHidden = items.elements.isEmpty
         self.collection.emptyView?.isHidden = !items.elements.isEmpty
         self.collection.floatingButton?.isHidden = items.elements.isEmpty
 
@@ -211,7 +209,6 @@ private extension CollectionUI {
         )
         self.collectionView.dataSource = self.dataSource
         self.collectionView.delegate = self
-        self.collectionView.isHidden = true
     }
 
     private func setupFloatingButton(rootView: UIView) {
@@ -234,5 +231,9 @@ private extension CollectionUI {
             ),
             button.heightAnchor.constraint(equalToConstant: 56)
         )
+    }
+
+    private func setupEmptyView() {
+        self.collectionView.backgroundView = self.collection.emptyView
     }
 }

@@ -13,9 +13,7 @@ public protocol Table: List {
 
     typealias Items = OrderedDictionary<String, [Cell.ViewData]>
 
-    var viewDidLoadFetch: Bool { get }
     var showSearchBar: Bool { get }
-    var reloadable: Bool { get }
     var fetchPublisher: ((parameter: Parameter?, isAdditional: Bool))
         -> AnyPublisher<Items, AppError> { get }
     func mapper(entities: [[Entity]]) -> OrderedDictionary<String, [Cell.ViewData]>

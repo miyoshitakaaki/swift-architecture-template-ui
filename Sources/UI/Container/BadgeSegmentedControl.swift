@@ -57,7 +57,7 @@ public final class BadgeSegmentedControl: UISegmentedControl, SegmentedControl {
         self.badgeViewLeft.frame = .init(x: self.frame.width / 2 - 16, y: 10, width: 8, height: 8)
     }
 
-    public func showBadge(show: Bool, index: Int) {
+    public func showBadge(show: Bool, index: Int, number: Int) {
         if index == 0 {
             self.badgeViewLeft.isHidden = !show
         } else if index == 1 {

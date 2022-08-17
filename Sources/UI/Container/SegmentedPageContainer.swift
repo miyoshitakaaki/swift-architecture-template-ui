@@ -4,7 +4,7 @@ import UIKit
 public protocol SegmentedControl: UIControl {
     init(items: [Any]?)
     var selectedSegmentIndex: Int { get set }
-    func showBadge(show: Bool, index: Int)
+    func showBadge(show: Bool, index: Int, number: Int)
 }
 
 public protocol SegmentedPageContainerProtocol {
@@ -151,8 +151,8 @@ open class SegmentedPageContainer<T: SegmentedControl>: UIPageViewController,
         self.vcs = vcs
     }
 
-    public func showBadge(show: Bool, index: Int) {
-        self.tab.showBadge(show: show, index: index)
+    public func showBadge(show: Bool, index: Int, number: Int) {
+        self.tab.showBadge(show: show, index: index, number: number)
     }
 
     public func presentationCount(for pageViewController: UIPageViewController) -> Int { self.vcs

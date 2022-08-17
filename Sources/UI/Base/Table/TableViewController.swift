@@ -59,9 +59,7 @@ public final class TableViewController<T: Table>: UIViewController, ActivityPres
 
         self.bind()
 
-        if self.table.viewDidLoadFetch {
-            self.viewModel.loadSubject.send((nil, false))
-        }
+        self.viewModel.loadSubject.send((nil, false))
     }
 
     override public func viewWillAppear(_ animated: Bool) {
@@ -134,9 +132,7 @@ public final class TableViewController<T: Table>: UIViewController, ActivityPres
                 case let .done(value):
                     self.ui.endRefresh()
                     self.dismissActivity()
-                    if self.table.reloadable {
-                        self.ui.reload(items: value)
-                    }
+                    self.ui.reload(items: value)
 
                 case .addtionalDone:
                     break

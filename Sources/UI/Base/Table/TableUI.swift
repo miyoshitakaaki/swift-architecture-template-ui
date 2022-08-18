@@ -135,8 +135,16 @@ public final class TableUI<T: Table>: ListUI<T>, UITableViewDataSource, UITableV
     }
 
     var deleteItem: (IndexPath) -> Void { { [weak self] indexPath in
-        self?.viewDataItems.remove(at: indexPath.row)
-        self?.tableView.reloadData()
+        guard let self = self else { return }
+        var values = self.viewDataItems.elements[indexPath.section].value
+        values.remove(at: indexPath.row)
+        if values.isEmpty {
+            self.viewDataItems = [:]
+        } else {
+            let key = self.viewDataItems.keys[indexPath.section]
+            self.viewDataItems[key] = values
+        }
+        self.tableView.reloadData()
     }}
 }
 

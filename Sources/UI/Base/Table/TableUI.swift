@@ -52,6 +52,7 @@ public final class TableUI<T: Table>: ListUI<T>, UITableViewDataSource, UITableV
         guard let cell = tableView.dequeueReusableCell(withIdentifier: T.Cell.className) as? T.Cell
         else { return .init() }
         cell.viewData = self.viewDataItems.elements[indexPath.section].value[indexPath.row]
+        cell.deleteItem = self.deleteItem
         cell.selectionStyle = .none
         self.didCellDequeuedPublisher.send((cell, indexPath))
         return cell
@@ -132,6 +133,11 @@ public final class TableUI<T: Table>: ListUI<T>, UITableViewDataSource, UITableV
     func endRefresh() {
         self.tableView.refreshControl?.endRefreshing()
     }
+
+    var deleteItem: (IndexPath) -> Void { { [weak self] indexPath in
+        self?.viewDataItems.remove(at: indexPath.row)
+        self?.tableView.reloadData()
+    }}
 }
 
 extension TableUI: UserInterface {

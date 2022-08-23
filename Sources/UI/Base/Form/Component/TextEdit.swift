@@ -17,6 +17,7 @@ public final class TextEdit<T: UIControl>: Publisher where T: Publisher, T.Outpu
     private let inputType: InputType
     private let isRequired: Bool
     private let requireColor: UIColor
+    private let showValidationError: Bool
 
     public let titleLabel: UILabel
     public let edit: T
@@ -28,7 +29,8 @@ public final class TextEdit<T: UIControl>: Publisher where T: Publisher, T.Outpu
         edit: T,
         inputType: InputType = .normal,
         isRequired: Bool = false,
-        requireColor: UIColor = .red
+        requireColor: UIColor = .red,
+        showValidationError: Bool = false
     ) {
         self.titleStyle = titleStyle
         self.inValidTitleStyle = inValidTitleStyle
@@ -43,6 +45,7 @@ public final class TextEdit<T: UIControl>: Publisher where T: Publisher, T.Outpu
         )
         self.titleLabel.setSubTextColor(text: "＊", color: requireColor)
         self.edit = edit
+        self.showValidationError = showValidationError
     }
 
     public var isEnabled = true {
@@ -56,10 +59,11 @@ public final class TextEdit<T: UIControl>: Publisher where T: Publisher, T.Outpu
         String == S.Input
     {
         self.edit
-            .dropFirst()
             .handleEvents(receiveOutput: { [weak self] text in
 
                 guard let self = self else { return }
+
+                guard self.showValidationError else { return }
 
                 if self.isRequired, text.isEmpty, self.isEnabled {
                     self.titleLabel.text = self.initialTitle + "(必ず入力してください)"

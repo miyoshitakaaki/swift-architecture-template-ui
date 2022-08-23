@@ -8,6 +8,8 @@ public final class TableUI<T: Table>: ListUI<T>, UITableViewDataSource, UITableV
     private var viewDataItems: OrderedDictionary<String, [T.Cell.ViewData]>
 
     let didCellDequeuedPublisher = PassthroughSubject<(T.Cell, IndexPath), Never>()
+    let didHeaderDequeuedPublisher = PassthroughSubject<(T.Header, Int), Never>()
+    let didFooterDequeuedPublisher = PassthroughSubject<(T.Footer, Int), Never>()
     let didItemSelectedPublisher = PassthroughSubject<IndexPath, Never>()
     let additionalLoadingIndexPathPublisher = PassthroughSubject<IndexPath, Never>()
     let refreshPublisher = PassthroughSubject<Void, Never>()
@@ -96,9 +98,12 @@ public final class TableUI<T: Table>: ListUI<T>, UITableViewDataSource, UITableV
         _ tableView: UITableView,
         viewForHeaderInSection section: Int
     ) -> UIView? {
-        let header = tableView
-            .dequeueReusableHeaderFooterView(withIdentifier: T.Header.className) as? T.Header
+        guard
+            let header = tableView
+                .dequeueReusableHeaderFooterView(withIdentifier: T.Header.className) as? T.Header
+        else { return nil }
 
+        self.didHeaderDequeuedPublisher.send((header, section))
         return header
     }
 
@@ -106,10 +111,14 @@ public final class TableUI<T: Table>: ListUI<T>, UITableViewDataSource, UITableV
         _ tableView: UITableView,
         viewForFooterInSection section: Int
     ) -> UIView? {
-        let header = tableView
-            .dequeueReusableHeaderFooterView(withIdentifier: T.Footer.className) as? T.Footer
+        guard
+            let footer = tableView
+                .dequeueReusableHeaderFooterView(withIdentifier: T.Footer.className) as? T.Footer
+        else { return nil }
 
-        return header
+        self.didFooterDequeuedPublisher.send((footer, section))
+
+        return footer
     }
 
     public func tableView(

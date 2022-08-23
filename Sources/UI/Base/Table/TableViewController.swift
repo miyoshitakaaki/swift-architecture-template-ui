@@ -4,6 +4,10 @@ import UIKit
 public protocol TableViewControllerDelegate: AnyObject {
     func didItemSelected<T: Table>(indexPath: IndexPath, table: T, cellData: T.Cell.ViewData?)
     func didCellDequeued<T: Table>(indexPath: IndexPath, table: T, cell: T.Cell)
+    func didHeaderFooterDequeued(
+        tableViewHeaderFooterView: UITableViewHeaderFooterView?,
+        section: Int
+    )
     func didSearchCancelButtonTapped()
     func didSearchTextUpdated(text: String?)
 }
@@ -107,6 +111,26 @@ public final class TableViewController<T: Table>: UIViewController, ActivityPres
             .sink { [weak self] cell, indexPath in
                 guard let self = self else { return }
                 self.delegate?.didCellDequeued(indexPath: indexPath, table: self.table, cell: cell)
+            }
+            .store(in: &self.cancellables)
+
+        self.ui.didHeaderDequeuedPublisher
+            .sink { [weak self] header, section in
+                guard let self = self else { return }
+                self.delegate?.didHeaderFooterDequeued(
+                    tableViewHeaderFooterView: header,
+                    section: section
+                )
+            }
+            .store(in: &self.cancellables)
+
+        self.ui.didFooterDequeuedPublisher
+            .sink { [weak self] footer, section in
+                guard let self = self else { return }
+                self.delegate?.didHeaderFooterDequeued(
+                    tableViewHeaderFooterView: footer,
+                    section: section
+                )
             }
             .store(in: &self.cancellables)
 

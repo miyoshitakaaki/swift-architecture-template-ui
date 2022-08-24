@@ -50,7 +50,6 @@ public final class TextEdit<T: UIControl>: Publisher where T: Publisher, T.Outpu
 
     public var isEnabled = true {
         didSet {
-            self.titleLabel.isEnabled = self.isEnabled
             self.edit.isEnabled = self.isEnabled
         }
     }

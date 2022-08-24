@@ -71,32 +71,6 @@ public final class TextEdit<T: UIControl>: Publisher where T: Publisher, T.Outpu
                     return
                 }
 
-                switch self.inputType {
-                case .normal:
-                    break
-
-                case .phone where text.isValid(regex: .phone) == false && self.isEnabled:
-                    self.titleLabel.text = self.initialTitle + "(正しい書式で入力してください)"
-                    self.titleLabel.apply(self.inValidTitleStyle)
-                    return
-
-                case .email where text.isValid(regex: .email) == false:
-                    self.titleLabel.text = self.initialTitle + "(正しい書式で入力してください)"
-                    self.titleLabel.apply(self.inValidTitleStyle)
-                    return
-
-                case .password where text.isValid(regex: .password) == false:
-                    self.titleLabel.text = self.initialTitle + "(半角英数字8文字以上で入力してください)"
-                    self.titleLabel.apply(self.inValidTitleStyle)
-                    return
-
-                case .postalCode:
-                    break
-
-                default:
-                    break
-                }
-
                 self.titleLabel.text = self.initialTitle
                 self.titleLabel.apply(self.titleStyle)
                 self.titleLabel.setSubTextColor(text: "＊", color: self.requireColor)

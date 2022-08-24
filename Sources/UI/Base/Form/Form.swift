@@ -75,10 +75,13 @@ public protocol Form: AnyObject, FormUIProtocol {
     var isEdit: Bool { get }
     var data: AnyPublisher<Input, Never> { get }
     var fetch: AnyPublisher<Input, AppError> { get }
+    var confirmAlertTitle: String? { get }
     func complete(_ input: Input) -> AnyPublisher<Input, AppError>
 }
 
 public extension Form {
+    var confirmAlertTitle: String? { nil }
+
     var fetch: AnyPublisher<Input, AppError> {
         Just(Input()).setFailureType(to: AppError.self).eraseToAnyPublisher()
     }

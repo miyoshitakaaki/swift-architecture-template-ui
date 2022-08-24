@@ -56,39 +56,47 @@ public final class FormViewModel<T: Form>: ViewModel {
         data.print().subscribe(self.input)
     }
 
-    func bind(buttonPublisher: AnyPublisher<UIButton, Never>) -> AnyCancellable {
+    func bind(buttonPublisher: AnyPublisher<Bool, Never>) -> AnyCancellable {
         buttonPublisher
             .handleEvents(receiveOutput: { _ in
                 self.loadingState.send(.loading())
             })
-            .flatMap { [weak self] _ -> AnyPublisher<LoadingState<T.Input, AppError>, Never> in
-                guard let self = self else {
-                    return Just(LoadingState<T.Input, AppError>.done(T.Input()))
-                        .eraseToAnyPublisher()
-                }
-
-                if self.isOptional, self.input.value == T.Input() {
-                    return Just(LoadingState<T.Input, AppError>.done(T.Input()))
-                        .eraseToAnyPublisher()
-                }
-
-                if self.input.value.isValid == false {
-                    return Just(
-                        LoadingState<T.Input, AppError>
-                            .failed(
-                                .invalid(
-                                    self.input.value.invalidMessage
-                                )
-                            )
-                    )
+            .flatMap { [weak self] requestable -> AnyPublisher<
+                LoadingState<T.Input, AppError>,
+                Never
+            > in
+            guard let self = self else {
+                return Just(LoadingState<T.Input, AppError>.done(T.Input()))
                     .eraseToAnyPublisher()
-                }
+            }
 
-                return self.complete(self.input.value)
-                    .map(LoadingState<T.Input, AppError>.done)
-                    .catch { error in
-                        Just(LoadingState<T.Input, AppError>.failed(error))
-                    }.eraseToAnyPublisher()
+            guard requestable else {
+                return Just(LoadingState<T.Input, AppError>.failed(.unknown))
+                    .eraseToAnyPublisher()
+            }
+
+            if self.isOptional, self.input.value == T.Input() {
+                return Just(LoadingState<T.Input, AppError>.done(T.Input()))
+                    .eraseToAnyPublisher()
+            }
+
+            if self.input.value.isValid == false {
+                return Just(
+                    LoadingState<T.Input, AppError>
+                        .failed(
+                            .invalid(
+                                self.input.value.invalidMessage
+                            )
+                        )
+                )
+                .eraseToAnyPublisher()
+            }
+
+            return self.complete(self.input.value)
+                .map(LoadingState<T.Input, AppError>.done)
+                .catch { error in
+                    Just(LoadingState<T.Input, AppError>.failed(error))
+                }.eraseToAnyPublisher()
             }
             .subscribe(self.loadingState)
     }

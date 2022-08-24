@@ -1,5 +1,6 @@
 import Combine
 import UIKit
+import Utility
 
 public protocol FormViewControllerDelegate: AnyObject {
     func didCompletionButtonTapped<F: Form>(data: F.Input, form: F)
@@ -75,8 +76,38 @@ private extension FormViewController {
         self.viewModel.bind(data: self.formType.data)
             .store(in: &self.cancellables)
 
-        self.viewModel.bind(buttonPublisher: self.ui.completionButtonPublisher)
-            .store(in: &self.cancellables)
+        self.viewModel.bind(
+            buttonPublisher: self.ui.completionButtonPublisher
+                .flatMap { [weak self] _ -> AnyPublisher<Bool, Never> in
+
+                    if let title = self?.formType.confirmAlertTitle {
+                        return Future { promise in
+                            let alert = UIAlertController(
+                                title: title,
+                                message: "",
+                                preferredStyle: .alert
+                            )
+                            alert.addAction(UIAlertAction(
+                                title: "OK",
+                                style: .default
+                            ) { _ in
+                                promise(.success(true))
+                            })
+                            alert.addAction(UIAlertAction(
+                                title: "キャンセル",
+                                style: .default
+                            ) { _ in
+                                promise(.success(false))
+                            })
+                            self?.present(alert, animated: true)
+                        }.eraseToAnyPublisher()
+                    } else {
+                        return Just(true).eraseToAnyPublisher()
+                    }
+                }
+                .eraseToAnyPublisher()
+        )
+        .store(in: &self.cancellables)
 
         self.viewModel.bind()
             .store(in: &self.cancellables)

@@ -44,15 +44,19 @@ public final class ListViewModel<T, Parameter>: ViewModel where T: Hashable {
                     .map { new in
                         let current = self.loadingState.value.value ?? [:]
 
-                        guard new.isEmpty == false else {
-                            return LoadingState<Items, AppError>.done(current)
-                        }
-
                         if query.isAdditional {
-                            let result = current.merging(new, uniquingKeysWith: +)
-                            return LoadingState<Items, AppError>.done(result)
+                            if new.isEmpty {
+                                return LoadingState<Items, AppError>.done(current)
+                            } else {
+                                let result = current.merging(new, uniquingKeysWith: +)
+                                return LoadingState<Items, AppError>.done(result)
+                            }
                         } else {
-                            return LoadingState<Items, AppError>.done(new)
+                            if new.isEmpty {
+                                return LoadingState<Items, AppError>.done([:])
+                            } else {
+                                return LoadingState<Items, AppError>.done(new)
+                            }
                         }
                     }
                     .catch { error in

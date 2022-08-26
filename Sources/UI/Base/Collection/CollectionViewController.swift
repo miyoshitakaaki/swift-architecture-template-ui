@@ -17,7 +17,9 @@ extension CollectionViewController: VCInjectable {
 
 public final class CollectionViewController<T: CollectionList>: UIViewController,
     ActivityPresentable,
-    AlertPresentable
+    AlertPresentable,
+    Refreshable
+
 {
     public var viewModel: VM!
     public var ui: UI!
@@ -26,6 +28,8 @@ public final class CollectionViewController<T: CollectionList>: UIViewController
     public weak var delegate: CollectionViewControllerDelegate?
 
     private let collection: T
+
+    private var needReflesh = false
 
     public init(collection: T) {
         self.collection = collection
@@ -59,12 +63,21 @@ public final class CollectionViewController<T: CollectionList>: UIViewController
             self.collection.hideNavigationBar,
             animated: true
         )
+
+        if self.needReflesh {
+            self.viewModel.loadSubject.send((nil, false))
+            self.needReflesh = false
+        }
     }
 
     override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
         self.tabBarController?.tabBar.isHidden = false
+    }
+
+    public func setNeedRefresh() {
+        self.needReflesh = true
     }
 
     private func setupEvent() {

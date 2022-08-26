@@ -21,7 +21,8 @@ extension TableViewController: VCInjectable {
 
 public final class TableViewController<T: Table>: UIViewController, ActivityPresentable,
     AlertPresentable,
-    UISearchBarDelegate
+    UISearchBarDelegate,
+    Refreshable
 {
     public var viewModel: VM!
     public var ui: UI!
@@ -33,6 +34,8 @@ public final class TableViewController<T: Table>: UIViewController, ActivityPres
     private var searchBar: UISearchBar!
 
     private let table: T
+
+    private var needReflesh = false
 
     public init(table: T) {
         self.table = table
@@ -70,12 +73,21 @@ public final class TableViewController<T: Table>: UIViewController, ActivityPres
         super.viewWillAppear(animated)
 
         self.setupNavigationItemIfNeeded()
+
+        if self.needReflesh {
+            self.viewModel.loadSubject.send((nil, false))
+            self.needReflesh = false
+        }
     }
 
     override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
         self.view.endEditing(true)
+    }
+
+    public func setNeedRefresh() {
+        self.needReflesh = true
     }
 
     private func setupNavigationItemIfNeeded() {

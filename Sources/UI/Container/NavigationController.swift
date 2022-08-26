@@ -1,5 +1,9 @@
 import UIKit
 
+public protocol NavigationControllerDelegate: AnyObject {
+    func didPopViewController(viewController: UIViewController?)
+}
+
 open class NavigationController: UINavigationController {
     private let closeButton: UIButton = {
         let button = UIButton()
@@ -13,6 +17,8 @@ open class NavigationController: UINavigationController {
     private let showCloseButton: Bool
 
     private let navigationTintColor: UIColor
+
+    public weak var navigationControllerDelegate: NavigationControllerDelegate?
 
     public init(
         hideBackButtonText: Bool = false,
@@ -61,6 +67,12 @@ open class NavigationController: UINavigationController {
             let closeButtonItem = UIBarButtonItem(customView: closeButton)
             self.viewControllers.first?.navigationItem.leftBarButtonItem = closeButtonItem
         }
+    }
+
+    override open func popViewController(animated: Bool) -> UIViewController? {
+        let vc = super.popViewController(animated: animated)
+        self.navigationControllerDelegate?.didPopViewController(viewController: vc)
+        return vc
     }
 
     @objc func close() {

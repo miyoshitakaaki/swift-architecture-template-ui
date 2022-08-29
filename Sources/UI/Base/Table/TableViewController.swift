@@ -176,8 +176,8 @@ public final class TableViewController<T: Table>: UIViewController, ActivityPres
             }.store(in: &self.cancellables)
 
         self.ui.additionalLoadingIndexPathPublisher
-            .sink { indexPath in
-                print(indexPath)
+            .sink {
+                self.viewModel.loadSubject.send((nil, true))
             }.store(in: &self.cancellables)
     }
 

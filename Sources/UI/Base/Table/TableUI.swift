@@ -11,7 +11,7 @@ public final class TableUI<T: Table>: ListUI<T>, UITableViewDataSource, UITableV
     let didHeaderDequeuedPublisher = PassthroughSubject<(T.Header, Int), Never>()
     let didFooterDequeuedPublisher = PassthroughSubject<(T.Footer, Int), Never>()
     let didItemSelectedPublisher = PassthroughSubject<IndexPath, Never>()
-    let additionalLoadingIndexPathPublisher = PassthroughSubject<IndexPath, Never>()
+    let additionalLoadingIndexPathPublisher = PassthroughSubject<Void, Never>()
     let refreshPublisher = PassthroughSubject<Void, Never>()
 
     private let table: T
@@ -121,13 +121,15 @@ public final class TableUI<T: Table>: ListUI<T>, UITableViewDataSource, UITableV
         return footer
     }
 
-    public func tableView(
-        _ tableView: UITableView,
-        willDisplay cell: UITableViewCell,
-        forRowAt indexPath: IndexPath
-    ) {
-        if indexPath.row > 20, indexPath.row % 20 == 10 {
-            self.additionalLoadingIndexPathPublisher.send(indexPath)
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard scrollView == self.tableView else { return }
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let viewHeight = scrollView.frame.height
+        let contentInset = scrollView.contentInset
+        let viewedHeight = offsetY + viewHeight - contentInset.bottom
+        if viewedHeight > contentHeight {
+            self.additionalLoadingIndexPathPublisher.send(())
         }
     }
 

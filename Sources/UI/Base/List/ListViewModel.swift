@@ -46,7 +46,7 @@ public final class ListViewModel<T, Parameter>: ViewModel where T: Hashable {
 
                         if query.isAdditional {
                             if new.isEmpty {
-                                return LoadingState<Items, AppError>.done(current)
+                                return LoadingState<Items, AppError>.standby
                             } else {
                                 let result = current.merging(new, uniquingKeysWith: +)
                                 return LoadingState<Items, AppError>.done(result)

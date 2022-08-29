@@ -85,7 +85,7 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
         UICollectionReusableView?,
         Never
     >()
-    let additionalLoadingIndexPathPublisher = PassthroughSubject<IndexPath, Never>()
+    let additionalLoadingIndexPathPublisher = PassthroughSubject<Void, Never>()
     let refreshPublisher = PassthroughSubject<Void, Never>()
 
     private let collection: T
@@ -114,12 +114,16 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
         self.collectionView.refreshControl?.endRefreshing()
     }
 
-    public func collectionView(
-        _ collectionView: UICollectionView,
-        willDisplay cell: UICollectionViewCell,
-        forItemAt indexPath: IndexPath
-    ) {
-        self.additionalLoadingIndexPathPublisher.send(indexPath)
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard scrollView == self.collectionView else { return }
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let viewHeight = scrollView.frame.height
+        let contentInset = scrollView.contentInset
+        let viewedHeight = offsetY + viewHeight - contentInset.bottom
+        if viewedHeight > contentHeight {
+            self.additionalLoadingIndexPathPublisher.send(())
+        }
     }
 }
 

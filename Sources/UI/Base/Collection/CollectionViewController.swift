@@ -87,16 +87,8 @@ public final class CollectionViewController<T: CollectionList>: UIViewController
             }.store(in: &self.cancellables)
 
         self.ui.additionalLoadingIndexPathPublisher
-            .sink { [weak self] indexPath in
-
-                guard let self = self else { return }
-
-                let current = self.viewModel.loadingState.value.value?.flatMap { $0 }.count ?? 0
-
-                // TODO: condider section
-                if current >= 20, indexPath.row == (current - 10) {
-                    self.viewModel.loadSubject.send((nil, true))
-                }
+            .sink { [weak self] _ in
+                self?.viewModel.loadSubject.send((nil, true))
             }.store(in: &self.cancellables)
 
         self.ui.didItemSelectedPublisher

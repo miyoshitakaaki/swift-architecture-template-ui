@@ -7,7 +7,7 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
              date(
                  initial: Date = .init(),
                  minDate: Date? = nil,
-                 maxDate: Date = .init(),
+                 maxDate: Date? = nil,
                  dateFormat: String
              ),
              list([String]),

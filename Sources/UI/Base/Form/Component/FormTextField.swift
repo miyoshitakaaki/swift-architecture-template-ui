@@ -4,7 +4,12 @@ import UIKit
 public final class FormTextField: UITextField, UITextFieldDelegate {
     public enum Picker {
         case text,
-             date(initial: Date = .init(), dateFormat: String),
+             date(
+                 initial: Date = .init(),
+                 minDate: Date? = nil,
+                 maxDate: Date = .init(),
+                 dateFormat: String
+             ),
              list([String]),
              doubleList([String], [String]),
              dateTime(() -> Void)
@@ -134,7 +139,7 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
         switch picker {
         case .text:
             break
-        case let .date(initial, dateFormat):
+        case let .date(initial, minDate, maxDate, dateFormat):
             let dateFormat = dateFormat
             let picker = UIDatePicker(style: .init {
                 $0.date = Date()
@@ -144,6 +149,8 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
                 }
             })
             picker.date = initial
+            picker.minimumDate = minDate
+            picker.maximumDate = maxDate
 
             if #available(iOS 14.0, *) {
                 picker.addAction(.init(handler: { _ in

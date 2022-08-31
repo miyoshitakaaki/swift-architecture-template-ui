@@ -2,12 +2,11 @@ import Combine
 import UIKit
 
 public final class FormTextField: UITextField, UITextFieldDelegate {
-    public enum DatePicker {
-        case birthday, normal
-    }
-
     public enum Picker {
-        case text, date(DatePicker), list([String]), doubleList([String], [String]),
+        case text,
+             date(initial: Date = .init(), dateFormat: String),
+             list([String]),
+             doubleList([String], [String]),
              dateTime(() -> Void)
     }
 
@@ -135,7 +134,8 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
         switch picker {
         case .text:
             break
-        case let .date(type):
+        case let .date(initial, dateFormat):
+            let dateFormat = dateFormat
             let picker = UIDatePicker(style: .init {
                 $0.date = Date()
                 $0.datePickerMode = .date
@@ -143,15 +143,21 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
                     $0.preferredDatePickerStyle = .wheels
                 }
             })
-            if type == .birthday {
-                let befor55years = Date().year - 55
-                picker.date = "\(befor55years)/01/01".date(from: .yyyyMMddSlash) ?? Date()
+            picker.date = initial
+
+            if #available(iOS 14.0, *) {
+                picker.addAction(.init(handler: { _ in
+                    let format = DateFormatter()
+                    format.dateFormat = dateFormat
+                    self.text = format.string(from: picker.date)
+                }), for: .valueChanged)
+            } else {
+                picker.addTarget(
+                    self,
+                    action: #selector(self.didDatePickerSelected(sender:)),
+                    for: .valueChanged
+                )
             }
-            picker.addTarget(
-                self,
-                action: #selector(self.didDatePickerSelected(sender:)),
-                for: .valueChanged
-            )
             self.inputView = picker
 
             addArrowButton()
@@ -217,7 +223,9 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
     }
 
     @objc func didDatePickerSelected(sender: UIDatePicker) {
-        self.text = sender.date.dateHyphen
+        let format = DateFormatter()
+        format.dateFormat = "yyyy-MM-dd"
+        self.text = format.string(from: sender.date)
     }
 
     public func insertListData(_ data: [String]) {

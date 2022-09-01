@@ -79,23 +79,6 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
         }
     }
 
-    public func textFieldDidChangeSelection(_ textField: UITextField) {
-        guard let text = textField.text else { return }
-
-        switch self.picker {
-        case let .text(maxCount, allowSpace):
-            if text.count > maxCount {
-                self.text = String(text.prefix(maxCount))
-            }
-
-            if allowSpace == false {
-                self.text = text.removingWhiteSpace()
-            }
-        default:
-            break
-        }
-    }
-
     private let toolBar: UIToolbar = {
         let toolbar = UIToolbar()
         toolbar.tintColor = UIConfig.accentBlue
@@ -229,7 +212,28 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
     }
 
     @objc func didValueChanged(_ sender: UITextField) {
-        self.textPublisher.send(sender.text ?? "")
+        guard let text = sender.text else { return }
+
+        switch self.picker {
+        case let .text(maxCount, allowSpace):
+
+            let string: String = {
+                if text.count > maxCount {
+                    return String(text.prefix(maxCount))
+                }
+
+                if allowSpace == false {
+                    return text.removingWhiteSpace()
+                }
+
+                return text
+            }()
+
+            self.text = string
+
+        default:
+            self.text = text
+        }
     }
 
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {

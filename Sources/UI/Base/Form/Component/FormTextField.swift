@@ -3,7 +3,7 @@ import UIKit
 
 public final class FormTextField: UITextField, UITextFieldDelegate {
     public enum Picker {
-        case text,
+        case text(maxCount: Int),
              date(
                  initial: Date = .init(),
                  minDate: Date? = nil,
@@ -79,6 +79,19 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
         }
     }
 
+    public func textFieldDidChangeSelection(_ textField: UITextField) {
+        guard let text = textField.text else { return }
+
+        switch self.picker {
+        case let .text(maxCount):
+            if text.count > maxCount {
+                self.text = String(text.prefix(maxCount))
+            }
+        default:
+            break
+        }
+    }
+
     private let toolBar: UIToolbar = {
         let toolbar = UIToolbar()
         toolbar.tintColor = UIConfig.accentBlue
@@ -105,7 +118,7 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
         backgroundColor: UIColor = .white,
         placeholder: String,
         placeholderColor: UIColor? = nil,
-        picker: Picker = .text,
+        picker: Picker = .text(maxCount: .max),
         textContentType: UITextContentType? = nil,
         returnKeyType: UIReturnKeyType = .next,
         showOptionButton: Bool = false,

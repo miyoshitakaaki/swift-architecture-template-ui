@@ -3,7 +3,7 @@ import UIKit
 
 public final class FormTextField: UITextField, UITextFieldDelegate {
     public enum Picker {
-        case text(maxCount: Int),
+        case text(maxCount: Int, allowSpace: Bool),
              date(
                  initial: Date = .init(),
                  minDate: Date? = nil,
@@ -83,9 +83,13 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
         guard let text = textField.text else { return }
 
         switch self.picker {
-        case let .text(maxCount):
+        case let .text(maxCount, allowSpace):
             if text.count > maxCount {
                 self.text = String(text.prefix(maxCount))
+            }
+
+            if allowSpace == false {
+                self.text = text.removingWhiteSpace()
             }
         default:
             break
@@ -118,7 +122,7 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
         backgroundColor: UIColor = .white,
         placeholder: String,
         placeholderColor: UIColor? = nil,
-        picker: Picker = .text(maxCount: .max),
+        picker: Picker = .text(maxCount: .max, allowSpace: true),
         textContentType: UITextContentType? = nil,
         returnKeyType: UIReturnKeyType = .next,
         showOptionButton: Bool = false,
@@ -356,5 +360,12 @@ extension FormTextField: UIPickerViewDelegate, UIPickerViewDataSource {
 
             self.text = doubleList.0 + "." + doubleList.1
         }
+    }
+}
+
+private extension String {
+    func removingWhiteSpace() -> String {
+        let whiteSpaces: CharacterSet = [" ", "　"]
+        return self.trimmingCharacters(in: whiteSpaces)
     }
 }

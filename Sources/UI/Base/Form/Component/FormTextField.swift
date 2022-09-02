@@ -10,7 +10,7 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
                  maxDate: Date? = nil,
                  dateFormat: String
              ),
-             list([String]),
+             list(initial: String, list: [String]),
              doubleList([String], [String]),
              dateTime(() -> Void)
     }
@@ -178,7 +178,19 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
             self.inputView = picker
 
             addArrowButton()
-        case .list, .doubleList:
+        case let .list(initial, list):
+            let pickerView = UIPickerView()
+            pickerView.delegate = self
+            pickerView.dataSource = self
+
+            if let index = list.firstIndex(of: initial) {
+                pickerView.selectRow(index, inComponent: 0, animated: true)
+            }
+            self.inputView = pickerView
+
+            addArrowButton()
+
+        case .doubleList:
             let pickerView = UIPickerView()
             pickerView.delegate = self
             pickerView.dataSource = self
@@ -268,7 +280,7 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
 
     public func insertListData(_ data: [String]) {
         if case .list = self.picker {
-            self.picker = .list(data)
+            self.picker = .list(initial: "", list: data)
             if let pickerView = self.inputView as? UIPickerView {
                 pickerView.reloadAllComponents()
             }
@@ -321,7 +333,7 @@ extension FormTextField: UIPickerViewDelegate, UIPickerViewDataSource {
         _ pickerView: UIPickerView,
         numberOfRowsInComponent component: Int
     ) -> Int {
-        if case let .list(data) = self.picker {
+        if case let .list(_, data) = self.picker {
             return data.count
         } else if case let .doubleList(data1, data2) = self.picker {
             if component == 0 {
@@ -341,7 +353,7 @@ extension FormTextField: UIPickerViewDelegate, UIPickerViewDataSource {
         titleForRow row: Int,
         forComponent component: Int
     ) -> String? {
-        if case let .list(data) = self.picker {
+        if case let .list(_, data) = self.picker {
             return data[row]
         } else if case let .doubleList(data1, data2) = self.picker {
             if component == 0 {
@@ -361,7 +373,7 @@ extension FormTextField: UIPickerViewDelegate, UIPickerViewDataSource {
         didSelectRow row: Int,
         inComponent component: Int
     ) {
-        if case let .list(data) = self.picker {
+        if case let .list(_, data) = self.picker {
             self.text = data[row]
         } else if case let .doubleList(data1, data2) = self.picker {
             if component == 0 {

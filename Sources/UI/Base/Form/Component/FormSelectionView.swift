@@ -15,7 +15,6 @@ public final class FormSelectionView<T: Selection>: UIView {
 
     var cancellables = Set<AnyCancellable>()
 
-    private let textPublisher = CurrentValueSubject<String, Never>("")
     private var itemViews = [T]()
 
     public lazy var checkButtonPublishers: [AnyPublisher<Bool, Never>] = itemViews
@@ -98,16 +97,5 @@ public extension FormSelectionView {
         self.itemViews.enumerated().forEach { index, view in
             view.changeButtonFlag(flags[index])
         }
-    }
-}
-
-extension FormSelectionView: Publisher {
-    public typealias Output = String
-    public typealias Failure = Never
-
-    public func receive<S>(subscriber: S) where S: Subscriber, Never == S.Failure,
-        String == S.Input
-    {
-        self.textPublisher.subscribe(subscriber)
     }
 }

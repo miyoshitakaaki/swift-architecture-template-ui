@@ -17,15 +17,15 @@ public final class FormSelectionView<T: Selection>: UIView {
 
     private var itemViews = [T]()
 
-    public lazy var checkButtonPublishers: AnyPublisher<(Int, Bool), Never> = {
+    private lazy var checkButtonPublishers: AnyPublisher<(Int, Bool), Never> = {
         let p = itemViews.enumerated().map { index, item in
             item.map { flag in (index, flag) }.eraseToAnyPublisher()
         }
         return Publishers.MergeMany(p)
             .eraseToAnyPublisher()
-            .handleEvents(receiveOutput: { index, _ in
-                if self.singleSelect {
-                    self.itemViews.enumerated().filter { offset, _ in
+            .handleEvents(receiveOutput: { [weak self] index, _ in
+                if self?.singleSelect == true {
+                    self?.itemViews.enumerated().filter { offset, _ in
                         index != offset
                     }.forEach { _, element in
                         element.changeButtonFlag(false)
@@ -115,5 +115,16 @@ public extension FormSelectionView {
         self.itemViews.enumerated().forEach { index, view in
             view.changeButtonFlag(flags[index])
         }
+    }
+}
+
+extension FormSelectionView: Publisher {
+    public typealias Output = (Int, Bool)
+    public typealias Failure = Never
+
+    public func receive<S>(subscriber: S) where S: Subscriber, Never == S.Failure,
+        (Int, Bool) == S.Input
+    {
+        self.checkButtonPublishers.subscribe(subscriber)
     }
 }

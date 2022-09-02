@@ -17,13 +17,31 @@ public final class FormSelectionView<T: Selection>: UIView {
 
     private var itemViews = [T]()
 
-    public lazy var checkButtonPublishers: [AnyPublisher<Bool, Never>] = itemViews
-        .map { $0.eraseToAnyPublisher() }
+    public lazy var checkButtonPublishers: AnyPublisher<(Int, Bool), Never> = {
+        let p = itemViews.enumerated().map { index, item in
+            item.map { flag in (index, flag) }.eraseToAnyPublisher()
+        }
+        return Publishers.MergeMany(p)
+            .eraseToAnyPublisher()
+            .handleEvents(receiveOutput: { index, _ in
+                if self.singleSelect {
+                    self.itemViews.enumerated().filter { offset, _ in
+                        index != offset
+                    }.forEach { _, element in
+                        element.changeButtonFlag(false)
+                    }
+                }
+            })
+            .eraseToAnyPublisher()
+    }()
 
     private let stackSpace: CGFloat
 
-    public init(stackSpace: CGFloat = 0, contents: [String]) {
+    private let singleSelect: Bool
+
+    public init(stackSpace: CGFloat = 0, contents: [String], singleSelect: Bool) {
         self.stackSpace = stackSpace
+        self.singleSelect = singleSelect
         self.padding = .init(top: 15, left: 0, bottom: 15, right: 0)
         super.init(frame: .zero)
         self.backgroundColor = .white

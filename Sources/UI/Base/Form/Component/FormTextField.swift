@@ -18,6 +18,16 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
     override public var text: String? {
         didSet {
             self.textPublisher.send(self.text ?? "")
+
+            switch self.picker {
+            case let .date(_, _, _, dateFormat):
+                if let picker = self.inputView as? UIDatePicker {
+                    let date = self.text?.date(from: dateFormat) ?? .init()
+                    picker.setDate(date, animated: true)
+                }
+            default:
+                break
+            }
         }
     }
 
@@ -371,5 +381,20 @@ private extension String {
     func removingWhiteSpace() -> String {
         let whiteSpaces: CharacterSet = [" ", "　"]
         return self.trimmingCharacters(in: whiteSpaces)
+    }
+}
+
+// TODO: move Utility package
+private extension String {
+    func date(from originallyType: String) -> Date? {
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone(identifier: "Asia/Tokyo")!
+        formatter.locale = Locale(identifier: "ja_jp")
+        formatter.calendar = Calendar(identifier: .gregorian)
+        formatter.dateFormat = originallyType
+
+        guard let date = formatter.date(from: self) else { return nil }
+
+        return date
     }
 }

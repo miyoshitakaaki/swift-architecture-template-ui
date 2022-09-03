@@ -3,7 +3,7 @@ import UIKit
 
 extension DiffableCollectionViewController: VCInjectable {
     public typealias VM = NoViewModel
-    public typealias UI = DiffableCollectionUI<S, C>
+    public typealias UI = DiffableCollectionUI<S>
 }
 
 // MARK: - stored properties
@@ -35,10 +35,7 @@ public final class DiffableCollectionViewController<
 
         view.backgroundColor = .white
 
-        self.ui.setupNavigationBar(
-            navigationBar: self.navigationController?.navigationBar,
-            navigationItem: self.navigationItem
-        )
+        self.setupNavigationBar(content: self.content)
 
         self.ui.setupView(rootview: view)
 

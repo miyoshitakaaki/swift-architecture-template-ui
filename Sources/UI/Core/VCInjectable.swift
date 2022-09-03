@@ -26,4 +26,17 @@ public extension VCInjectable {
         self.ui = ui
         self.cancellables = cancellables
     }
+
+    func setupNavigationBar(content: NavigationContent) {
+        self.navigationItem.rightBarButtonItems = content.rightNavigationItems
+        self.navigationItem.leftBarButtonItems = content.leftNavigationItems
+
+        if let title = content.title {
+            self.title = title
+        } else {
+            self.navigationItem.titleView = UIView()
+        }
+
+        self.navigationItem.leftBarButtonItem?.tintColor = content.leftBarButtonItemTintColor
+    }
 }

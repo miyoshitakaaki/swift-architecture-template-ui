@@ -3,8 +3,7 @@ import Foundation
 import UIKit
 
 public final class DiffableCollectionUI<
-    S: DiffableCollectionSection,
-    C: NavigationContent
+    S: DiffableCollectionSection
 >: NSObject,
     UICollectionViewDelegate
 {
@@ -15,7 +14,6 @@ public final class DiffableCollectionUI<
 
     private let cellRegistration: S.CellRegistration
     private let supplementaryRegistration: S.SupplementaryRegistration
-    private let content: C
 
     private var cancellables: Set<AnyCancellable> = []
 
@@ -75,12 +73,10 @@ public final class DiffableCollectionUI<
 
     public init(
         cellRegistration: S.CellRegistration,
-        supplementaryRegistration: S.SupplementaryRegistration,
-        content: C
+        supplementaryRegistration: S.SupplementaryRegistration
     ) {
         self.cellRegistration = cellRegistration
         self.supplementaryRegistration = supplementaryRegistration
-        self.content = content
 
         self.composableLayout = .init(
             sectionProvider: { section, environment in
@@ -99,56 +95,44 @@ public final class DiffableCollectionUI<
 }
 
 extension DiffableCollectionUI: UserInterface {
-    public func setupNavigationBar(
-        navigationBar: UINavigationBar?,
-        navigationItem: UINavigationItem?
-    ) {
-        navigationItem?.rightBarButtonItems = self.content.rightNavigationItems
-        navigationItem?.leftBarButtonItems = self.content.leftNavigationItems
-
-        if self.content.title == nil {
-            navigationItem?.titleView = UIView()
-        }
-
-        navigationItem?.leftBarButtonItem?.tintColor = self.content.leftBarButtonItemTintColor
-    }
-
     public func setupView(rootview: UIView) {
         setupCollectionView(rootview: rootview)
     }
 
     func reload() {
-        S.fetchAll.sink { _ in
-            print("finished")
-        } receiveValue: { [weak self] allCases in
+        S.fetchAll
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+                print("finished")
+            } receiveValue: { [weak self] allCases in
 
-            guard let self = self else { return }
+                guard let self = self else { return }
 
-            var snapshot = NSDiffableDataSourceSnapshot<S, S.Item>()
-            snapshot.appendSections(allCases)
-            self.dataSource.apply(snapshot, animatingDifferences: true)
+                var snapshot = NSDiffableDataSourceSnapshot<S, S.Item>()
+                snapshot.appendSections(allCases)
+                self.dataSource.apply(snapshot, animatingDifferences: true)
 
-            allCases.forEach { section in
-                section.fetch
-                    .receive(on: DispatchQueue.main)
-                    .sink { _ in
-                        print("finished")
-                    } receiveValue: { result in
-                        if #available(iOS 14.0, *) {
-                            var sectionSnapshot = NSDiffableDataSourceSectionSnapshot<S.Item>()
-                            sectionSnapshot.append(result)
-                            self.dataSource.apply(
-                                sectionSnapshot,
-                                to: section,
-                                animatingDifferences: true
-                            )
-                            self.collectionView.refreshControl?.endRefreshing()
-                        } else {
-                            fatalError("not supprt under ios 14")
-                        }
-                    }.store(in: &self.cancellables)
-            }
-        }.store(in: &self.cancellables)
+                allCases.forEach { section in
+                    section.fetch
+                        .receive(on: DispatchQueue.main)
+                        .sink { _ in
+                            print("finished")
+                        } receiveValue: { result in
+                            if #available(iOS 14.0, *) {
+                                var sectionSnapshot = NSDiffableDataSourceSectionSnapshot<S.Item>()
+                                sectionSnapshot.append(result)
+                                self.dataSource.apply(
+                                    sectionSnapshot,
+                                    to: section,
+                                    animatingDifferences: true
+                                )
+                                self.collectionView.refreshControl?.endRefreshing()
+                            } else {
+                                fatalError("not supprt under ios 14")
+                            }
+                        }.store(in: &self.cancellables)
+                }
+            }.store(in: &self.cancellables)
     }
 }
 

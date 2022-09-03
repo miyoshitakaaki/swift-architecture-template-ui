@@ -4,7 +4,7 @@ import UIKit
 
 public final class DiffableCollectionUI<
     S: DiffableCollectionSection,
-    C: DiffableCollectionContent
+    C: NavigationContent
 >: NSObject,
     UICollectionViewDelegate
 {

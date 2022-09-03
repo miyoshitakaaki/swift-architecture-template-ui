@@ -10,7 +10,7 @@ extension DiffableCollectionViewController: VCInjectable {
 
 public final class DiffableCollectionViewController<
     S: DiffableCollectionSection,
-    C: DiffableCollectionContent
+    C: NavigationContent
 >: UIViewController, Refreshable {
     public var viewModel: VM!
     public var ui: UI!

@@ -1,6 +1,6 @@
 import UIKit
 
-public protocol DiffableCollectionContent {
+public protocol NavigationContent {
     var rightNavigationItems: [UIBarButtonItem] { get }
     var leftNavigationItems: [UIBarButtonItem] { get }
     var title: String? { get }

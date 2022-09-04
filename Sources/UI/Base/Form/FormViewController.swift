@@ -22,10 +22,12 @@ public final class FormViewController<T: Form>: UIViewController, ActivityPresen
 
     public weak var delegate: FormViewControllerDelegate?
 
-    private let formType: T!
+    private let formType: T
+    private let content: T.NavContent
 
-    public init(formType: T) {
+    public init(formType: T, content: T.NavContent) {
         self.formType = formType
+        self.content = content
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -37,8 +39,7 @@ public final class FormViewController<T: Form>: UIViewController, ActivityPresen
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        title = self.formType.title
-
+        self.setupNavigationBar(content: self.content)
         self.ui.setupView(rootview: view)
         self.ui.setupNavigationBar(navigationBar: nil, navigationItem: navigationItem)
 

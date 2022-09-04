@@ -4,7 +4,6 @@ import Utility
 
 public protocol FormUIProtocol {
     var backgroundColor: UIColor { get }
-    var title: String { get }
     var completionButtonTitle: String { get }
     var completionButtonPotition: CompletionButtonPosition { get }
     var completionButtonPotitionTopStyle: ViewStyle<UIButton> { get }
@@ -70,6 +69,7 @@ public extension FormUIProtocol {
 }
 
 public protocol Form: AnyObject, FormUIProtocol {
+    associatedtype NavContent: NavigationContent
     associatedtype Input: Initializable, Equatable, Validatable
 
     var isEdit: Bool { get }

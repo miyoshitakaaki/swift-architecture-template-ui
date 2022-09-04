@@ -3,9 +3,10 @@ import UIKit
 
 public func create<T: Form>(
     form: T,
+    navContent: T.NavContent,
     hideCompletionButton: Bool = false
 ) -> FormViewController<T> {
-    let vc = FormViewController(formType: form)
+    let vc = FormViewController(formType: form, content: navContent)
     vc.inject(
         viewModel: .init(
             isOptional: form.isOptional,

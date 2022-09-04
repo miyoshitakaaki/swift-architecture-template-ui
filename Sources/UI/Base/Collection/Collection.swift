@@ -4,6 +4,7 @@ import UIKit
 import Utility
 
 public protocol CollectionList: List {
+    associatedtype NavContent: NavigationContent
     associatedtype Cell: CollectionLayout
     associatedtype Header: CollectionHeaderLayout
     associatedtype Footer: CollectionFooterLayout
@@ -11,7 +12,6 @@ public protocol CollectionList: List {
 
     typealias Items = OrderedDictionary<String, [Cell.ViewData]>
 
-    var screenTitle: String { get }
     var hideTabbar: Bool { get }
     var composableLayout: UICollectionViewCompositionalLayout { get }
     var topViewSubject: PassthroughSubject<Parameter, Never> { get }

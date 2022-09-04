@@ -13,7 +13,13 @@ public protocol FlowController: UIViewController {
 }
 
 public extension FlowController {
-    func show(navigation: NavigationController, vc: UIViewController) {
+    func show(
+        navigation: NavigationController,
+        vc: UIViewController,
+        navContent: NavigationContent = NoNavigationContent()
+    ) {
+        self.title = navContent.title
+
         if navigation.viewControllers.isEmpty {
             add(navigation)
             navigation.viewControllers = [vc]

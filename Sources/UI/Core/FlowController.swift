@@ -16,7 +16,7 @@ public extension FlowController {
     func show(
         navigation: NavigationController,
         vc: UIViewController,
-        navContent: NavigationContent = NoNavigationContent()
+        navContent: NavigationContent
     ) {
         self.title = navContent.title
 

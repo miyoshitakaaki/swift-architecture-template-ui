@@ -128,11 +128,6 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
 }
 
 extension CollectionUI: UserInterface {
-    public func setupNavigationBar(
-        navigationBar: UINavigationBar?,
-        navigationItem: UINavigationItem?
-    ) {}
-
     public func setupView(rootview: UIView) {
         rootview.backgroundColor = .white
         setupCollectionView(rootview: rootview)

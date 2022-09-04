@@ -31,8 +31,11 @@ public func create<T: FormConfirmUIProtocol & FormConfirmProtocol>(formConfirm: 
     return vc
 }
 
-public func create<T: CollectionList>(collection: T) -> CollectionViewController<T> {
-    let vc = CollectionViewController(collection: collection)
+public func create<T: CollectionList>(
+    collection: T,
+    content: T.NavContent
+) -> CollectionViewController<T, T.NavContent> {
+    let vc = CollectionViewController(collection: collection, content: content)
     vc.inject(
         viewModel: .init(fetchPublisher: collection.fetchPublisher),
         ui: .init(collection: collection)

@@ -15,7 +15,10 @@ extension CollectionViewController: VCInjectable {
 
 // MARK: - stored properties
 
-public final class CollectionViewController<T: CollectionList>: UIViewController,
+public final class CollectionViewController<
+    T: CollectionList,
+    C: NavigationContent
+>: UIViewController,
     ActivityPresentable,
     AlertPresentable,
     Refreshable
@@ -28,13 +31,14 @@ public final class CollectionViewController<T: CollectionList>: UIViewController
     public weak var delegate: CollectionViewControllerDelegate?
 
     private let collection: T
+    private let content: C
 
     private var needReflesh = false
 
-    public init(collection: T) {
+    public init(collection: T, content: C) {
         self.collection = collection
+        self.content = content
         super.init(nibName: nil, bundle: nil)
-        title = collection.screenTitle
     }
 
     @available(*, unavailable)
@@ -46,6 +50,8 @@ public final class CollectionViewController<T: CollectionList>: UIViewController
         super.viewDidLoad()
 
         view.backgroundColor = self.collection.backgroundColor
+
+        self.setupNavigationBar(content: self.content)
 
         self.ui.setupView(rootview: view)
 

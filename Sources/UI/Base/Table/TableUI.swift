@@ -182,7 +182,11 @@ extension TableUI: UserInterface {
 
         self.tableView.backgroundColor = self.table.backgroundColor
         self.tableView.separatorStyle = .none
-        self.tableView.refreshControl = UIRefreshControl()
+
+        if self.table.pullToRefreshable {
+            self.tableView.refreshControl = UIRefreshControl()
+        }
+
         self.tableView.refreshControl?.addTarget(
             self,
             action: #selector(self.refresh),

@@ -198,7 +198,11 @@ private extension CollectionUI {
 
         self.collectionView.backgroundColor = self.collection.backgroundColor
         self.collectionView.register(T.Cell.self, forCellWithReuseIdentifier: T.Cell.className)
-        self.collectionView.refreshControl = RefreshControl(moveY: -self.collection.topViewHeight)
+
+        if self.collection.pullToRefreshable {
+            self.collectionView
+                .refreshControl = RefreshControl(moveY: -self.collection.topViewHeight)
+        }
         self.collectionView.refreshControl?.addTarget(
             self,
             action: #selector(self.refresh),

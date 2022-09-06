@@ -4,6 +4,7 @@ public protocol List: AnyObject {
     associatedtype T: UIView
     associatedtype Usecase
 
+    var pullToRefreshable: Bool { get }
     var hideNavigationBar: Bool { get }
     var emptyView: UIView? { get }
     var topView: T? { get }
@@ -14,6 +15,7 @@ public protocol List: AnyObject {
 }
 
 public extension List {
+    var pullToRefreshable: Bool { false }
     var hideNavigationBar: Bool { false }
     var emptyView: UIView? { nil }
     var topView: UIView? { nil }

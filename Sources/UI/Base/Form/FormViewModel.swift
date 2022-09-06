@@ -3,7 +3,8 @@ import UIKit
 import Utility
 
 public final class FormViewModel<T: Form>: ViewModel {
-    let loadingState: CurrentValueSubject<LoadingState<T.Input, AppError>, Never> = .init(.standby)
+    let loadingState: CurrentValueSubject<LoadingState<T.Input, AppError>, Never> =
+        .init(.standby())
     let loadSubject: PassthroughSubject<Void, Never> = .init()
 
     private let input: CurrentValueSubject<T.Input, Never> = .init(.init())
@@ -37,7 +38,7 @@ public final class FormViewModel<T: Form>: ViewModel {
             .flatMap { _ in
                 self.fetch
                     .handleEvents(receiveOutput: { _ in
-                        self.loadingState.send(.standby)
+                        self.loadingState.send(.standby())
                     }, receiveCompletion: { complete in
                         switch complete {
                         case let .failure(error):
@@ -48,7 +49,7 @@ public final class FormViewModel<T: Form>: ViewModel {
                     })
                     .replaceError(with: .init())
             }
-            .handleEvents(receiveOutput: { _ in self.loadingState.send(.standby) })
+            .handleEvents(receiveOutput: { _ in self.loadingState.send(.standby()) })
             .subscribe(self.input)
     }
 

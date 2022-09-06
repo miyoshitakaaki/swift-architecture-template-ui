@@ -3,7 +3,7 @@ import UIKit
 import Utility
 
 public final class FormConfirmViewModel<T: Equatable>: ViewModel {
-    let loadingState: CurrentValueSubject<LoadingState<T, AppError>, Never> = .init(.standby)
+    let loadingState: CurrentValueSubject<LoadingState<T, AppError>, Never> = .init(.standby())
 
     private let complete: AnyPublisher<T, AppError>
 

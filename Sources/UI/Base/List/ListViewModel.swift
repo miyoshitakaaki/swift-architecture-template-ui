@@ -9,7 +9,7 @@ public final class ListViewModel<T, Parameter>: ViewModel where T: Hashable {
     public let loadSubject: PassthroughSubject<(parameter: Parameter?, isAdditional: Bool), Never> =
         .init()
     public let loadingState: CurrentValueSubject<LoadingState<Items, AppError>, Never> =
-        .init(.standby)
+        .init(.standby())
 
     private let fetchPublisher: ((parameter: Parameter?, isAdditional: Bool))
         -> AnyPublisher<Items, AppError>
@@ -46,7 +46,7 @@ public final class ListViewModel<T, Parameter>: ViewModel where T: Hashable {
 
                         if query.isAdditional {
                             if new.isEmpty {
-                                return LoadingState<Items, AppError>.standby
+                                return LoadingState<Items, AppError>.standby(current)
                             } else {
                                 let result = current.merging(new, uniquingKeysWith: +)
                                 return LoadingState<Items, AppError>.done(result)

@@ -5,16 +5,17 @@ public protocol NavigationControllerDelegate: AnyObject {
 }
 
 open class NavigationController: UINavigationController {
-    private let closeButton: UIButton = {
-        let button = UIButton()
-        button.titleLabel?.font = .systemFont(ofSize: 24)
-        button.setTitle("✗", for: .normal)
-        return button
-    }()
+    public enum CloseButtonPosition {
+        case left, right
+    }
+
+    private let closeButton: UIButton
 
     private let hideBackButtonText: Bool
 
     private let showCloseButton: Bool
+
+    private let closeButtonPosition: CloseButtonPosition
 
     private let navigationTintColor: UIColor
 
@@ -23,13 +24,24 @@ open class NavigationController: UINavigationController {
     public init(
         hideBackButtonText: Bool = false,
         showCloseButton: Bool = false,
-        closeButtonColor: UIColor? = nil,
-        navigationTintColor: UIColor = UIColor.rgba(17, 76, 190, 1)
+        closeButtonTitle: String,
+        closeButtonFontSize: CGFloat,
+        closeButtonPosition: CloseButtonPosition,
+        closeButtonColor: UIColor,
+        navigationTintColor: UIColor
     ) {
         self.hideBackButtonText = hideBackButtonText
         self.showCloseButton = showCloseButton
-        self.closeButton.setTitleColor(closeButtonColor, for: .normal)
+        self.closeButtonPosition = closeButtonPosition
         self.navigationTintColor = navigationTintColor
+
+        self.closeButton = {
+            let button = UIButton()
+            button.titleLabel?.font = .systemFont(ofSize: closeButtonFontSize)
+            button.setTitle(closeButtonTitle, for: .normal)
+            button.setTitleColor(closeButtonColor, for: .normal)
+            return button
+        }()
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -37,13 +49,25 @@ open class NavigationController: UINavigationController {
         rootViewController: UIViewController,
         hideBackButtonText: Bool = false,
         showCloseButton: Bool = false,
-        closeButtonColor: UIColor = .black,
-        navigationTintColor: UIColor = UIColor.rgba(17, 76, 190, 1)
+        closeButtonTitle: String,
+        closeButtonFontSize: CGFloat,
+        closeButtonPosition: CloseButtonPosition,
+        closeButtonColor: UIColor,
+        navigationTintColor: UIColor
     ) {
         self.hideBackButtonText = hideBackButtonText
         self.showCloseButton = showCloseButton
-        self.closeButton.setTitleColor(closeButtonColor, for: .normal)
+        self.closeButtonPosition = closeButtonPosition
         self.navigationTintColor = navigationTintColor
+
+        self.closeButton = {
+            let button = UIButton()
+            button.titleLabel?.font = .systemFont(ofSize: closeButtonFontSize)
+            button.setTitle(closeButtonTitle, for: .normal)
+            button.setTitleColor(closeButtonColor, for: .normal)
+            return button
+        }()
+
         super.init(rootViewController: rootViewController)
     }
 
@@ -65,7 +89,13 @@ open class NavigationController: UINavigationController {
 
         if self.showCloseButton {
             let closeButtonItem = UIBarButtonItem(customView: closeButton)
-            self.viewControllers.first?.navigationItem.leftBarButtonItem = closeButtonItem
+
+            switch self.closeButtonPosition {
+            case .left:
+                self.viewControllers.first?.navigationItem.leftBarButtonItem = closeButtonItem
+            case .right:
+                self.viewControllers.first?.navigationItem.rightBarButtonItem = closeButtonItem
+            }
         }
     }
 

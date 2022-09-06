@@ -155,7 +155,10 @@ private extension DiffableCollectionUI {
         self.collectionView.delegate = self
         self.collectionView.backgroundColor = .white
 
-        self.collectionView.refreshControl = UIRefreshControl()
+        if S.pullToRefreshable {
+            self.collectionView.refreshControl = UIRefreshControl()
+        }
+
         if #available(iOS 14.0, *) {
             self.collectionView.refreshControl?.addAction(.init(handler: { [weak self] _ in
                 self?.reload()

@@ -13,6 +13,7 @@ public protocol DiffableCollectionSection: Hashable {
     var headerSecondaryText: String { get }
     var fetch: AnyPublisher<[Item], AppError> { get }
 
+    static var pullToRefreshable: Bool { get }
     static var sections: [Self] { get }
     static var fetchAll: AnyPublisher<[Self], AppError> { get }
 
@@ -32,4 +33,8 @@ public protocol DiffableCollectionSection: Hashable {
         supplementaryRegistration: SupplementaryRegistration,
         indexPath: IndexPath
     ) -> UICollectionReusableView?
+}
+
+public extension DiffableCollectionSection {
+    static var pullToRefreshable: Bool { false }
 }

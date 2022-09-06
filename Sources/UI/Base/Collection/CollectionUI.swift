@@ -250,6 +250,7 @@ private extension CollectionUI {
 
     private func setupEmptyView() {
         self.collectionView.backgroundView = self.collection.emptyView
+        self.collection.emptyView?.isHidden = true
     }
 }
 

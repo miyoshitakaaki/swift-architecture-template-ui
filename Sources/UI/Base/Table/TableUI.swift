@@ -135,6 +135,7 @@ public final class TableUI<T: Table>: ListUI<T>, UITableViewDataSource, UITableV
 
     private func setupEmptyView() {
         self.tableView.backgroundView = self.table.emptyView
+        self.table.emptyView?.isHidden = true
     }
 
     @objc private func refresh() {

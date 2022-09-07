@@ -18,7 +18,7 @@ public extension FlowController {
         vc: UIViewController,
         navContent: NavigationContent
     ) {
-        self.title = navContent.title
+        self.setupNavigationBar(content: navContent)
 
         if navigation.viewControllers.isEmpty {
             add(navigation)
@@ -26,6 +26,20 @@ public extension FlowController {
         } else {
             add(vc)
         }
+    }
+
+    private func setupNavigationBar(content: NavigationContent) {
+        self.navigationItem.rightBarButtonItems = content.rightNavigationItems
+        self.navigationItem.leftBarButtonItems = content.leftNavigationItems
+
+        if let title = content.title {
+            self.title = title
+        } else {
+            self.navigationItem.titleView = UIView()
+        }
+
+        self.navigationItem.rightBarButtonItem?.tintColor = content.rightBarButtonItemTintColor
+        self.navigationItem.leftBarButtonItem?.tintColor = content.leftBarButtonItemTintColor
     }
 }
 

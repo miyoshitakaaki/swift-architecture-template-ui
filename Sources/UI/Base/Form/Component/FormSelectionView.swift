@@ -17,6 +17,9 @@ public final class FormSelectionView<T: Selection>: UIView {
 
     private var itemViews = [T]()
 
+    public lazy var multiSelectPublishers: [AnyPublisher<Bool, Never>] = itemViews
+        .map { $0.eraseToAnyPublisher() }
+
     private lazy var checkButtonPublishers: AnyPublisher<(Int, Bool), Never> = {
         let p = itemViews.enumerated().map { index, item in
             item.map { flag in (index, flag) }.eraseToAnyPublisher()

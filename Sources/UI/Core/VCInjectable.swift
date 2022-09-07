@@ -37,6 +37,7 @@ public extension VCInjectable {
             self.navigationItem.titleView = UIView()
         }
 
+        self.navigationItem.rightBarButtonItem?.tintColor = content.rightBarButtonItemTintColor
         self.navigationItem.leftBarButtonItem?.tintColor = content.leftBarButtonItemTintColor
     }
 }

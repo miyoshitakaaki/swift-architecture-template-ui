@@ -19,6 +19,7 @@ public final class CollectionViewController<
     T: CollectionList,
     C: NavigationContent
 >: UIViewController,
+    UIAdaptivePresentationControllerDelegate,
     ActivityPresentable,
     AlertPresentable,
     Refreshable
@@ -80,6 +81,15 @@ public final class CollectionViewController<
         super.viewWillDisappear(animated)
 
         self.tabBarController?.tabBar.isHidden = false
+    }
+
+    public func presentationControllerDidDismiss(
+        _ presentationController: UIPresentationController
+    ) {
+        if self.needReflesh {
+            self.viewModel.loadSubject.send((nil, false))
+            self.needReflesh = false
+        }
     }
 
     public func setNeedRefresh() {

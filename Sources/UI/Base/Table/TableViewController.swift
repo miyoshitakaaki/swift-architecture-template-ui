@@ -19,7 +19,9 @@ extension TableViewController: VCInjectable {
 
 // MARK: - stored properties
 
-public final class TableViewController<T: Table>: UIViewController, ActivityPresentable,
+public final class TableViewController<T: Table>: UIViewController,
+    UIAdaptivePresentationControllerDelegate,
+    ActivityPresentable,
     AlertPresentable,
     UISearchBarDelegate,
     Refreshable
@@ -84,6 +86,15 @@ public final class TableViewController<T: Table>: UIViewController, ActivityPres
         super.viewWillDisappear(animated)
 
         self.view.endEditing(true)
+    }
+
+    public func presentationControllerDidDismiss(
+        _ presentationController: UIPresentationController
+    ) {
+        if self.needReflesh {
+            self.viewModel.loadSubject.send((nil, false))
+            self.needReflesh = false
+        }
     }
 
     public func setNeedRefresh() {

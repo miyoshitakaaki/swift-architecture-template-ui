@@ -11,7 +11,7 @@ extension DiffableCollectionViewController: VCInjectable {
 public final class DiffableCollectionViewController<
     S: DiffableCollectionSection,
     C: NavigationContent
->: UIViewController, Refreshable {
+>: UIViewController, UIAdaptivePresentationControllerDelegate, Refreshable {
     public var viewModel: VM!
     public var ui: UI!
     public var cancellables: Set<AnyCancellable> = []
@@ -53,5 +53,14 @@ public final class DiffableCollectionViewController<
 
     public func setNeedRefresh() {
         self.needReflesh = true
+    }
+
+    public func presentationControllerDidDismiss(
+        _ presentationController: UIPresentationController
+    ) {
+        if self.needReflesh {
+            self.ui.reload()
+            self.needReflesh = false
+        }
     }
 }

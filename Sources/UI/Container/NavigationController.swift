@@ -105,6 +105,14 @@ open class NavigationController: UINavigationController {
         return vc
     }
 
+    override public func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+        super.dismiss(animated: flag, completion: completion)
+        guard let presentationController = presentationController else {
+            return
+        }
+        presentationController.delegate?.presentationControllerDidDismiss?(presentationController)
+    }
+
     @objc func close() {
         self.dismiss(animated: true)
     }

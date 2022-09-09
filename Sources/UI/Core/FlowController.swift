@@ -47,10 +47,18 @@ public extension FlowController where T == NavigationController {
     func clear() {
         self.navigation.viewControllers = []
     }
+
+    var rootViewController: UIViewController? {
+        self.navigation.viewControllers.first
+    }
 }
 
 public extension FlowController where T == TabBarController {
     func clear() {
         self.navigation.viewControllers = []
+    }
+
+    var rootViewController: UIViewController? {
+        self.navigation.viewControllers?.first
     }
 }

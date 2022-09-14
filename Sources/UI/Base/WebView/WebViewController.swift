@@ -19,6 +19,7 @@ open class WebViewController: UIViewController {
         if let scheme = scheme {
             config.setURLSchemeHandler(self, forURLScheme: scheme)
         }
+        config.allowsInlineMediaPlayback = true
         return .init(frame: .zero, configuration: config)
 
     }()
@@ -26,12 +27,19 @@ open class WebViewController: UIViewController {
     private let url: String?
     private let localFilePath: String?
 
+    private let backButton = UIButton(style: .init(style: { button in
+        button.setBackgroundImage(UIImage(systemName: "chevron.backward"), for: .normal)
+    }))
+
+    private var canGobackObservation: NSKeyValueObservation?
+
     private let progressView: UIProgressView = .init(frame: .zero)
     private var observation: NSKeyValueObservation?
 
     private let showProgress: Bool
     private let prohibitPopup: Bool
     private let scheme: String?
+    private let showWebBackButton: Bool
 
     public init(
         url: String? = nil,
@@ -39,13 +47,15 @@ open class WebViewController: UIViewController {
         screenTitle: String,
         showProgress: Bool = false,
         prohibitPopup: Bool = true,
-        scheme: String? = nil
+        scheme: String? = nil,
+        showWebBackButton: Bool = false
     ) {
         self.url = url
         self.localFilePath = localFilePath
         self.showProgress = showProgress
         self.prohibitPopup = prohibitPopup
         self.scheme = scheme
+        self.showWebBackButton = showWebBackButton
 
         super.init(nibName: nil, bundle: nil)
         self.title = screenTitle
@@ -66,9 +76,16 @@ public extension WebViewController {
         view.edgeToSelf(self.webView)
 
         self.webView.navigationDelegate = self
+        self.webView.uiDelegate = self
+        self.webView.allowsBackForwardNavigationGestures = true
 
         if self.showProgress {
             self.setupObservation()
+        }
+
+        if self.showWebBackButton {
+            self.setupBackButton()
+            self.setupCanGobackObservation()
         }
 
         if let localFilePath = self.localFilePath {
@@ -79,6 +96,8 @@ public extension WebViewController {
         }
     }
 }
+
+extension WebViewController: WKUIDelegate {}
 
 extension WebViewController: WKURLSchemeHandler {
     public func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
@@ -102,6 +121,25 @@ extension WebViewController: WKNavigationDelegate {
 }
 
 private extension WebViewController {
+    func setupBackButton() {
+        self.backButton.isHidden = true
+        if #available(iOS 14.0, *) {
+            self.backButton.addAction(.init(handler: { [weak self] _ in
+                self?.webView.goBack()
+            }), for: .touchUpInside)
+        } else {
+            // Fallback on earlier versions
+        }
+        let backItem = UIBarButtonItem(customView: backButton)
+        self.navigationItem.leftBarButtonItem = backItem
+    }
+
+    func setupCanGobackObservation() {
+        self.canGobackObservation = self.webView.observe(\.canGoBack, options: .new) { _, _ in
+            self.backButton.isHidden = !self.webView.canGoBack
+        }
+    }
+
     /// 長押しによる選択、コールアウト表示を禁止する
     func prohibitTouchCalloutAndUserSelect() {
         let script = """

@@ -2,6 +2,11 @@ import Combine
 import UIKit
 import WebKit
 
+public struct JavascriptEvent {
+    let name: String
+    let handler: () -> Void
+}
+
 extension WebViewController: VCInjectable {
     public typealias VM = NoViewModel
     public typealias UI = NoUserInterface
@@ -16,9 +21,16 @@ open class WebViewController: UIViewController {
 
     public lazy var webView: WKWebView = {
         let config = WKWebViewConfiguration()
-        if let scheme = scheme {
+        if let scheme = self.scheme {
             config.setURLSchemeHandler(self, forURLScheme: scheme)
         }
+
+        let userContentController = WKUserContentController()
+        self.javascriptEvent.forEach { event in
+            userContentController.add(self, name: event.name)
+        }
+        config.userContentController = userContentController
+
         config.allowsInlineMediaPlayback = true
         return .init(frame: .zero, configuration: config)
 
@@ -40,6 +52,7 @@ open class WebViewController: UIViewController {
     private let prohibitPopup: Bool
     private let scheme: String?
     private let showWebBackButton: Bool
+    private let javascriptEvent: [JavascriptEvent]
 
     public init(
         url: String? = nil,
@@ -48,7 +61,8 @@ open class WebViewController: UIViewController {
         showProgress: Bool = false,
         prohibitPopup: Bool = true,
         scheme: String? = nil,
-        showWebBackButton: Bool = false
+        showWebBackButton: Bool = false,
+        javascriptEvent: [JavascriptEvent] = []
     ) {
         self.url = url
         self.localFilePath = localFilePath
@@ -56,6 +70,7 @@ open class WebViewController: UIViewController {
         self.prohibitPopup = prohibitPopup
         self.scheme = scheme
         self.showWebBackButton = showWebBackButton
+        self.javascriptEvent = javascriptEvent
 
         super.init(nibName: nil, bundle: nil)
         self.title = screenTitle
@@ -117,6 +132,17 @@ extension WebViewController: WKNavigationDelegate {
         if self.prohibitPopup {
             self.prohibitTouchCalloutAndUserSelect()
         }
+    }
+}
+
+extension WebViewController: WKScriptMessageHandler {
+    public func userContentController(
+        _ userContentController: WKUserContentController,
+        didReceive message: WKScriptMessage
+    ) {
+        self.javascriptEvent.first { event in
+            event.name == message.name
+        }?.handler()
     }
 }
 

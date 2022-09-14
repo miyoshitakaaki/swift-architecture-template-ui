@@ -9,12 +9,20 @@ extension WebViewController: VCInjectable {
 
 // MARK: - stored properties
 
-public final class WebViewController: UIViewController {
+open class WebViewController: UIViewController {
     public var viewModel: VM!
     public var ui: UI!
     public var cancellables: Set<AnyCancellable> = []
 
-    private let webView: WKWebView = .init(frame: .zero)
+    public lazy var webView: WKWebView = {
+        let config = WKWebViewConfiguration()
+        if let scheme = scheme {
+            config.setURLSchemeHandler(self, forURLScheme: scheme)
+        }
+        return .init(frame: .zero, configuration: config)
+
+    }()
+
     private let url: String?
     private let localFilePath: String?
 
@@ -23,25 +31,28 @@ public final class WebViewController: UIViewController {
 
     private let showProgress: Bool
     private let prohibitPopup: Bool
+    private let scheme: String?
 
     public init(
         url: String? = nil,
         localFilePath: String? = nil,
         screenTitle: String,
         showProgress: Bool = false,
-        prohibitPopup: Bool = true
+        prohibitPopup: Bool = true,
+        scheme: String? = nil
     ) {
         self.url = url
         self.localFilePath = localFilePath
         self.showProgress = showProgress
         self.prohibitPopup = prohibitPopup
+        self.scheme = scheme
 
         super.init(nibName: nil, bundle: nil)
         self.title = screenTitle
     }
 
     @available(*, unavailable)
-    required init?(coder: NSCoder) {
+    public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
@@ -66,6 +77,19 @@ public extension WebViewController {
         } else if let url = self.url {
             self.webView.load(URLRequest(url: URL(string: url)!))
         }
+    }
+}
+
+extension WebViewController: WKURLSchemeHandler {
+    public func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
+        UIApplication.shared.open(webView.url!)
+        urlSchemeTask.didReceive(URLResponse())
+        urlSchemeTask.didReceive(Data())
+        urlSchemeTask.didFinish()
+    }
+
+    public func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
+        urlSchemeTask.didFinish()
     }
 }
 

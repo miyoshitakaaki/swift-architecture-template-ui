@@ -22,16 +22,19 @@ public final class WebViewController: UIViewController {
     private var observation: NSKeyValueObservation?
 
     private let showProgress: Bool
+    private let prohibitPopup: Bool
 
     public init(
         url: String? = nil,
         localFilePath: String? = nil,
         screenTitle: String,
-        showProgress: Bool = false
+        showProgress: Bool = false,
+        prohibitPopup: Bool = true
     ) {
         self.url = url
         self.localFilePath = localFilePath
         self.showProgress = showProgress
+        self.prohibitPopup = prohibitPopup
 
         super.init(nibName: nil, bundle: nil)
         self.title = screenTitle
@@ -51,6 +54,8 @@ public extension WebViewController {
 
         view.edgeToSelf(self.webView)
 
+        self.webView.navigationDelegate = self
+
         if self.showProgress {
             self.setupObservation()
         }
@@ -64,7 +69,28 @@ public extension WebViewController {
     }
 }
 
+extension WebViewController: WKNavigationDelegate {
+    public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        if self.prohibitPopup {
+            self.prohibitTouchCalloutAndUserSelect()
+        }
+    }
+}
+
 private extension WebViewController {
+    /// 長押しによる選択、コールアウト表示を禁止する
+    func prohibitTouchCalloutAndUserSelect() {
+        let script = """
+        var css = '*{-webkit-touch-callout:none;-webkit-user-select:none}';
+        var head = document.head || document.getElementsByTagName('head')[0];
+        var style = document.createElement('style');
+        style.type = 'text/css';
+        style.appendChild(document.createTextNode(css));
+        head.appendChild(style);
+        """
+        self.webView.evaluateJavaScript(script, completionHandler: nil)
+    }
+
     func setupObservation() {
         self.webView.topLineToSelf(self.progressView, constant: 0, height: 3)
         self.progressView.progressTintColor = UIConfig.accentBlue

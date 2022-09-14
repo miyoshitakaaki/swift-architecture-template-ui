@@ -146,7 +146,7 @@ extension WebViewController: WKURLSchemeHandler {
 }
 
 extension WebViewController: WKNavigationDelegate {
-    public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    open func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         if self.prohibitPopup {
             self.prohibitTouchCalloutAndUserSelect()
         }

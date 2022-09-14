@@ -96,7 +96,17 @@ public extension WebViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.edgeToSelf(self.webView)
+        self.view.addSubviews(
+            self.webView,
+            constraints:
+            self.webView.leadingAnchor
+                .constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            self.webView.trailingAnchor
+                .constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            self.webView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            self.webView.bottomAnchor
+                .constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
+        )
 
         self.webView.navigationDelegate = self
         self.webView.uiDelegate = self

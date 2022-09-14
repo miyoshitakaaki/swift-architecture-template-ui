@@ -251,10 +251,11 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
                 return text
             }()
 
-            self.text = string
+            if text != string {
+                self.text = string
+            }
 
-        default:
-            self.text = text
+        default: break
         }
     }
 

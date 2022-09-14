@@ -15,10 +15,13 @@ public final class WebViewController: UIViewController {
     public var cancellables: Set<AnyCancellable> = []
 
     private let webView: ProgressWebView = .init(frame: .zero)
-    private let url: String
+    private let url: String?
+    private let localFilePath: String?
 
-    public init(url: String, screenTitle: String) {
+    public init(url: String? = nil, localFilePath: String? = nil, screenTitle: String) {
         self.url = url
+        self.localFilePath = localFilePath
+
         super.init(nibName: nil, bundle: nil)
         self.title = screenTitle
     }
@@ -37,8 +40,12 @@ public extension WebViewController {
 
         view.edgeToSelf(self.webView)
         self.webView.setupObservation()
-        self.webView.load(URLRequest(url: URL(string: self.url)!))
+
+        if let localFilePath = self.localFilePath {
+            let localHTMLUrl = URL(fileURLWithPath: localFilePath, isDirectory: false)
+            self.webView.loadFileURL(localHTMLUrl, allowingReadAccessTo: localHTMLUrl)
+        } else if let url = self.url {
+            self.webView.load(URLRequest(url: URL(string: url)!))
+        }
     }
 }
-
-extension WebViewController {}

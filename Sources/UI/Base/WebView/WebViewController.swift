@@ -4,7 +4,15 @@ import WebKit
 
 public struct JavascriptEvent {
     let name: String
-    let handler: () -> Void
+    let handler: (WKScriptMessage) -> Void
+
+    public init(
+        name: String,
+        handler: @escaping (WKScriptMessage) -> Void
+    ) {
+        self.name = name
+        self.handler = handler
+    }
 }
 
 extension WebViewController: VCInjectable {
@@ -142,7 +150,7 @@ extension WebViewController: WKScriptMessageHandler {
     ) {
         self.javascriptEvent.first { event in
             event.name == message.name
-        }?.handler()
+        }?.handler(message)
     }
 }
 

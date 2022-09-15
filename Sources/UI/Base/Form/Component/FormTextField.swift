@@ -237,24 +237,37 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
         guard let text = sender.text else { return }
 
         switch self.picker {
-        case let .text(maxCount, allowSpace):
-
-            let string: String = {
-                if text.count > maxCount {
-                    return String(text.prefix(maxCount))
-                }
-
-                if allowSpace == false {
-                    return text.removingWhiteSpace()
-                }
-
-                return text
-            }()
-
-            self.textPublisher.send(string)
+        case .text:
+            self.textPublisher.send(text)
 
         default:
             self.text = text
+        }
+    }
+
+    public func textField(
+        _ textField: UITextField,
+        shouldChangeCharactersIn range: NSRange,
+        replacementString string: String
+    ) -> Bool {
+        switch self.picker {
+        case let .text(maxCount, allowSpace):
+
+            if textField.text!.count >= maxCount, string.isEmpty == false {
+                return false
+            }
+
+            if allowSpace == false {
+                if string == " " || string == "　" {
+                    return false
+                } else {
+                    return true
+                }
+            }
+
+            return true
+        default:
+            return true
         }
     }
 

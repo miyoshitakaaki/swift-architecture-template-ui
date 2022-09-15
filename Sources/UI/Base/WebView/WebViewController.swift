@@ -207,6 +207,8 @@ extension WebViewController: WKNavigationDelegate {
             default:
                 completionHandler(.performDefaultHandling, nil)
             }
+        } else {
+            completionHandler(.performDefaultHandling, nil)
         }
     }
 }

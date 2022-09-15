@@ -251,7 +251,7 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
                 return text
             }()
 
-            self.text = string
+            self.textPublisher.send(string)
 
         default:
             self.text = text

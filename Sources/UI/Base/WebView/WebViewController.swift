@@ -62,6 +62,8 @@ open class WebViewController: UIViewController {
     private let showWebBackButton: Bool
     private let javascriptEvent: [JavascriptEvent]
 
+    private var needReflesh = false
+
     public init(
         url: String? = nil,
         localFilePath: String? = nil,
@@ -92,8 +94,8 @@ open class WebViewController: UIViewController {
 
 // MARK: - override methods
 
-public extension WebViewController {
-    override func viewDidLoad() {
+extension WebViewController {
+    override open func viewDidLoad() {
         super.viewDidLoad()
 
         self.view.addSubviews(
@@ -121,11 +123,43 @@ public extension WebViewController {
             self.setupCanGobackObservation()
         }
 
+        self.load()
+    }
+
+    override open func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        if self.needReflesh {
+            self.load()
+            self.needReflesh = false
+        }
+    }
+}
+
+private extension WebViewController {
+    func load() {
         if let localFilePath = self.localFilePath {
             let localHTMLUrl = URL(fileURLWithPath: localFilePath, isDirectory: false)
             self.webView.loadFileURL(localHTMLUrl, allowingReadAccessTo: localHTMLUrl)
         } else if let url = self.url {
             self.webView.load(URLRequest(url: URL(string: url)!))
+        }
+    }
+}
+
+extension WebViewController: Refreshable {
+    public func setNeedRefresh() {
+        self.needReflesh = true
+    }
+}
+
+extension WebViewController: UIAdaptivePresentationControllerDelegate {
+    open func presentationControllerDidDismiss(
+        _ presentationController: UIPresentationController
+    ) {
+        if self.needReflesh {
+            self.load()
+            self.needReflesh = false
         }
     }
 }

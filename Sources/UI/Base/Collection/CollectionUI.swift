@@ -139,24 +139,14 @@ extension CollectionUI: UserInterface {
     var deleteItem: (IndexPath) -> Void {{ [weak self] indexPath in
         guard let self = self else { return }
 
-        let alert = UIAlertController(title: "本当に削除しますか？", message: "", preferredStyle: .alert)
+        var snapshot = self.dataSource.snapshot()
+        guard let identifier = self.dataSource.itemIdentifier(for: indexPath) else { return }
+        snapshot.deleteItems([identifier])
+        self.dataSource.apply(snapshot, animatingDifferences: false)
+        self.collectionView.reloadData()
 
-        let action1 = UIAlertAction(title: "キャンセル", style: .cancel)
-        let action2 = UIAlertAction(title: "OK", style: .default) { _ in
-            var snapshot = self.dataSource.snapshot()
-            guard let identifier = self.dataSource.itemIdentifier(for: indexPath) else { return }
-            snapshot.deleteItems([identifier])
-            self.dataSource.apply(snapshot, animatingDifferences: false)
-            self.collectionView.reloadData()
-
-            self.collection.emptyView?.isHidden = !snapshot.itemIdentifiers.isEmpty
-            self.collection.floatingButton?.isHidden = snapshot.itemIdentifiers.isEmpty
-        }
-
-        alert.addAction(action1)
-        alert.addAction(action2)
-
-        self.collectionView.parentViewController?.present(alert, animated: true)
+        self.collection.emptyView?.isHidden = !snapshot.itemIdentifiers.isEmpty
+        self.collection.floatingButton?.isHidden = snapshot.itemIdentifiers.isEmpty
 
     }}
 
@@ -251,18 +241,5 @@ private extension CollectionUI {
     private func setupEmptyView() {
         self.collectionView.backgroundView = self.collection.emptyView
         self.collection.emptyView?.isHidden = true
-    }
-}
-
-private extension UIView {
-    var parentViewController: UIViewController? {
-        var parentResponder: UIResponder? = self
-        while true {
-            guard let nextResponder = parentResponder?.next else { return nil }
-            if let viewController = nextResponder as? UIViewController {
-                return viewController
-            }
-            parentResponder = nextResponder
-        }
     }
 }

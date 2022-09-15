@@ -63,6 +63,7 @@ open class WebViewController: UIViewController {
     private let javascriptEvent: [JavascriptEvent]
 
     private var needReflesh = false
+    private let basicAuthAccount: (id: String, password: String)?
 
     public init(
         url: String? = nil,
@@ -72,7 +73,8 @@ open class WebViewController: UIViewController {
         prohibitPopup: Bool = true,
         scheme: String? = nil,
         showWebBackButton: Bool = false,
-        javascriptEvent: [JavascriptEvent] = []
+        javascriptEvent: [JavascriptEvent] = [],
+        basicAuthAccount: (id: String, password: String)? = nil
     ) {
         self.url = url
         self.localFilePath = localFilePath
@@ -81,6 +83,7 @@ open class WebViewController: UIViewController {
         self.scheme = scheme
         self.showWebBackButton = showWebBackButton
         self.javascriptEvent = javascriptEvent
+        self.basicAuthAccount = basicAuthAccount
 
         super.init(nibName: nil, bundle: nil)
         self.title = screenTitle
@@ -183,6 +186,27 @@ extension WebViewController: WKNavigationDelegate {
     open func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         if self.prohibitPopup {
             self.prohibitTouchCalloutAndUserSelect()
+        }
+    }
+
+    public func webView(
+        _ webView: WKWebView,
+        didReceive challenge: URLAuthenticationChallenge,
+        completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
+    ) {
+        if let basicAuthAccount = self.basicAuthAccount {
+            switch challenge.protectionSpace.authenticationMethod {
+            case NSURLAuthenticationMethodHTTPBasic:
+                let credential = URLCredential(
+                    user: basicAuthAccount.id,
+                    password: basicAuthAccount.password,
+                    persistence: URLCredential.Persistence.forSession
+                )
+                completionHandler(.useCredential, credential)
+
+            default:
+                completionHandler(.performDefaultHandling, nil)
+            }
         }
     }
 }

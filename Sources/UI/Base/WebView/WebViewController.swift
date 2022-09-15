@@ -130,7 +130,7 @@ extension WebViewController {
         super.viewWillAppear(animated)
 
         if self.needReflesh {
-            self.load()
+            self.webView.reload()
             self.needReflesh = false
         }
     }
@@ -158,7 +158,7 @@ extension WebViewController: UIAdaptivePresentationControllerDelegate {
         _ presentationController: UIPresentationController
     ) {
         if self.needReflesh {
-            self.load()
+            self.webView.reload()
             self.needReflesh = false
         }
     }

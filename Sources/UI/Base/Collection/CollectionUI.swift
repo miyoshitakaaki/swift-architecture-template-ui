@@ -142,7 +142,7 @@ extension CollectionUI: UserInterface {
         var snapshot = self.dataSource.snapshot()
         guard let identifier = self.dataSource.itemIdentifier(for: indexPath) else { return }
         snapshot.deleteItems([identifier])
-        self.dataSource.apply(snapshot, animatingDifferences: false)
+        self.dataSource.apply(snapshot, animatingDifferences: true)
         self.collectionView.reloadData()
 
         self.collection.emptyView?.isHidden = !snapshot.itemIdentifiers.isEmpty
@@ -161,7 +161,7 @@ extension CollectionUI: UserInterface {
             snapshot.appendItems(element.value, toSection: items.keys[offset])
         }
 
-        self.dataSource.apply(snapshot, animatingDifferences: false)
+        self.dataSource.apply(snapshot, animatingDifferences: true)
 
         self.collectionView.reloadData()
     }

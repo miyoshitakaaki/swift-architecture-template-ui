@@ -149,16 +149,4 @@ public struct FormViewBuilder {
     public static func buildBlock(_ components: UIView...) -> [UIView] {
         components
     }
-
-    public static func buildOptional(_ component: [UIView]?) -> UIView {
-        component?.first ?? .init()
-    }
-
-    public static func buildEither(first component: [UIView]) -> UIView {
-        component.first ?? .init()
-    }
-
-    public static func buildEither(second component: [UIView]) -> UIView {
-        component.first ?? .init()
-    }
 }

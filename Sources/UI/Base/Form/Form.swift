@@ -10,7 +10,7 @@ public protocol FormUIProtocol {
     var completionButtonPotitionBottomStyle: ViewStyle<UIButton> { get }
     var bottomCompletionButtonEnableBackgroundStyle: ViewStyle<UIButton> { get }
     var bottomCompletionButtondisableBackgroundStyle: ViewStyle<UIButton> { get }
-    var views: [UIView] { get }
+    @FormViewBuilder var views: [UIView] { get }
     var titleView: UIView? { get }
     var isValid: AnyPublisher<Bool, Never> { get }
     var showInvalidAlert: Bool { get }
@@ -141,5 +141,24 @@ private extension Collection where Element: UIView {
                 return partialResult + [view]
             }
         }
+    }
+}
+
+@resultBuilder
+public struct FormViewBuilder {
+    public static func buildBlock(_ components: UIView...) -> [UIView] {
+        components
+    }
+
+    public static func buildOptional(_ component: [UIView]?) -> UIView {
+        component?.first ?? .init()
+    }
+
+    public static func buildEither(first component: [UIView]) -> UIView {
+        component.first ?? .init()
+    }
+
+    public static func buildEither(second component: [UIView]) -> UIView {
+        component.first ?? .init()
     }
 }

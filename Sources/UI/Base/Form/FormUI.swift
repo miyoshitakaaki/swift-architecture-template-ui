@@ -39,7 +39,7 @@ public final class FormUI {
             style: form.completionButtonPotition == .top
                 ? form.completionButtonPotitionTopStyle
                 : form.completionButtonPotitionBottomStyle,
-            title: form.isOptional ? "後で回答する" : form.completionButtonTitle
+            title: form.isOptional ? form.optionalButtonTitle : form.completionButtonTitle
         )
         self.hideCompletionButton = hideCompletionButton
         self.completionButton.isHidden = hideCompletionButton
@@ -75,7 +75,7 @@ public final class FormUI {
         guard self.form.isOptional else { return }
 
         if isEmpty {
-            self.completionButton.setTitle("後で回答する", for: .normal)
+            self.completionButton.setTitle(self.form.optionalButtonTitle, for: .normal)
         } else {
             self.completionButton.setTitle(self.form.completionButtonTitle, for: .normal)
         }

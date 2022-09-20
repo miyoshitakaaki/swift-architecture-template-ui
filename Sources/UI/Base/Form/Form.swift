@@ -4,6 +4,7 @@ import Utility
 
 public protocol FormUIProtocol {
     var backgroundColor: UIColor { get }
+    var optionalButtonTitle: String { get }
     var completionButtonTitle: String { get }
     var completionButtonPotition: CompletionButtonPosition { get }
     var completionButtonPotitionTopStyle: ViewStyle<UIButton> { get }
@@ -25,6 +26,8 @@ public extension FormUIProtocol {
     var titleView: UIView? { nil }
 
     var showInvalidAlert: Bool { true }
+
+    var optionalButtonTitle: String { completionButtonTitle }
 
     func focusNextResponder() {
         guard

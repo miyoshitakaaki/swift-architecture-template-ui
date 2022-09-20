@@ -1,6 +1,6 @@
 import UIKit
 
-extension UILabel {
+public extension UILabel {
     func setSubTextColor(text: String, color: UIColor) {
         let attributedString = NSMutableAttributedString(string: self.text!)
         let range = attributedString.mutableString.range(

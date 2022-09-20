@@ -112,6 +112,7 @@ public extension Form {
 
 public protocol Validatable {
     var isValid: Bool { get }
+    var invalidTitle: String { get }
     var invalidMessage: String { get }
 }
 

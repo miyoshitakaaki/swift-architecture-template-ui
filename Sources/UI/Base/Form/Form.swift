@@ -116,7 +116,8 @@ public protocol Validatable {
 }
 
 public extension Validatable {
-    var invalidMessage: String { "バリデーションエラー" }
+    var isValid: Bool { self.invalidMessage.isEmpty }
+    var invalidMessage: String { "" }
 }
 
 public enum CompletionButtonPosition: Equatable {

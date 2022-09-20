@@ -27,16 +27,16 @@ public extension AlertPresentable where Self: UIViewController {
                 self?.didAuthErrorOccured()
             }))
             self.present(alert, animated: true)
-        case let .invalid(message):
+        case let .invalid(title, message):
             let alert = UIAlertController(
-                title: "入力に不備があります。",
+                title: title,
                 message: message,
                 preferredStyle: .alert
             )
             alert.addAction(.init(title: "OK", style: .cancel))
             self.present(alert, animated: true)
 
-        case .unknown, .hms, .empty:
+        case .unknown, .empty:
             break
         }
     }

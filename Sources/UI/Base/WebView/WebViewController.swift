@@ -32,6 +32,10 @@ open class WebViewController: UIViewController {
         if let scheme = self.scheme {
             config.setURLSchemeHandler(self, forURLScheme: scheme)
         }
+        config.setURLSchemeHandler(self, forURLScheme: "tel")
+        config.setURLSchemeHandler(self, forURLScheme: "mailto")
+        config.setURLSchemeHandler(self, forURLScheme: "facetime")
+        config.setURLSchemeHandler(self, forURLScheme: "sms")
 
         let userContentController = WKUserContentController()
         self.javascriptEvent.forEach { event in

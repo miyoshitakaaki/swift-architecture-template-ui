@@ -115,7 +115,7 @@ extension WebViewController {
                 .constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
             self.webView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             self.webView.bottomAnchor
-                .constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
+                .constraint(equalTo: self.view.bottomAnchor)
         )
 
         self.webView.navigationDelegate = self

@@ -189,7 +189,7 @@ extension WebViewController: WKURLSchemeHandler {
 
 extension WebViewController: WKNavigationDelegate {
     open func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        if self.prohibitPopup {
+        if self.prohibitPopup, #available(iOS 15.0, *) {
             self.prohibitTouchCalloutAndUserSelect()
         }
     }

@@ -48,14 +48,18 @@ open class SegmentedPageContainer<T: SegmentedControl>: UIPageViewController,
 
     private let hidesBarsOnSwipe: Bool
 
+    private let initialIndex: Int
+
     public init(
         viewControllers: [UIViewController],
         tabItems: [String],
-        hidesBarsOnSwipe: Bool = true
+        hidesBarsOnSwipe: Bool = true,
+        initialIndex: Int = 0
     ) {
         self.vcs = viewControllers
         self.tab = T(items: tabItems)
         self.hidesBarsOnSwipe = hidesBarsOnSwipe
+        self.initialIndex = initialIndex
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
     }
 
@@ -113,13 +117,13 @@ open class SegmentedPageContainer<T: SegmentedControl>: UIPageViewController,
         self.dataSource = self
         self.delegate = self
 
-        self.tab.selectedSegmentIndex = 0
-
         self.tab.addTarget(
             self,
             action: #selector(Self.segmentChanged(sender:)),
             for: .valueChanged
         )
+
+        self.selectTab(index: self.initialIndex, animated: false)
     }
 
     override public func viewWillAppear(_ animated: Bool) {

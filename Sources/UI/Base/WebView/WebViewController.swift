@@ -64,12 +64,16 @@ open class WebViewController: UIViewController {
     private let showProgress: Bool
     private let prohibitPopup: Bool
     private let scheme: String?
-    private let showWebBackButton: Bool
+    private let showWebBackButton: ShowWebBackButton
     private let javascriptEvent: [JavascriptEvent]
 
     private var needReflesh = false
     private let basicAuthAccount: (id: String, password: String)?
     private let alwaysOpenSafariWhenLinkTap: Bool
+
+    public enum ShowWebBackButton {
+        case always, whenHasHistory
+    }
 
     public init(
         url: String? = nil,
@@ -78,7 +82,7 @@ open class WebViewController: UIViewController {
         showProgress: Bool = false,
         prohibitPopup: Bool = true,
         scheme: String? = nil,
-        showWebBackButton: Bool = false,
+        showWebBackButton: ShowWebBackButton = .whenHasHistory,
         javascriptEvent: [JavascriptEvent] = [],
         basicAuthAccount: (id: String, password: String)? = nil,
         alwaysOpenSafariWhenLinkTap: Bool = false
@@ -129,10 +133,8 @@ extension WebViewController {
             self.setupObservation()
         }
 
-        if self.showWebBackButton {
-            self.setupBackButton()
-            self.setupCanGobackObservation()
-        }
+        self.setupBackButton()
+        self.setupCanGobackObservation()
 
         self.load()
     }
@@ -253,10 +255,19 @@ extension WebViewController: WKScriptMessageHandler {
 
 private extension WebViewController {
     func setupBackButton() {
-        self.backButton.isHidden = true
+        self.backButton.isHidden = self.showWebBackButton == .whenHasHistory
+
         if #available(iOS 14.0, *) {
             self.backButton.addAction(.init(handler: { [weak self] _ in
-                self?.webView.goBack()
+
+                guard let self = self else { return }
+
+                if self.webView.canGoBack {
+                    self.webView.goBack()
+                } else {
+                    self.navigationController?.popViewController(animated: true)
+                }
+
             }), for: .touchUpInside)
         } else {
             // Fallback on earlier versions
@@ -267,7 +278,12 @@ private extension WebViewController {
 
     func setupCanGobackObservation() {
         self.canGobackObservation = self.webView.observe(\.canGoBack, options: .new) { _, _ in
-            self.backButton.isHidden = !self.webView.canGoBack
+            switch self.showWebBackButton {
+            case .always:
+                self.backButton.isHidden = false
+            case .whenHasHistory:
+                self.backButton.isHidden = !self.webView.canGoBack
+            }
         }
     }
 

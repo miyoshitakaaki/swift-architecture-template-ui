@@ -82,7 +82,7 @@ open class WebViewController: UIViewController {
         showProgress: Bool = false,
         prohibitPopup: Bool = true,
         scheme: String? = nil,
-        showWebBackButton: ShowWebBackButton = .whenHasHistory,
+        showWebBackButton: ShowWebBackButton = .always,
         javascriptEvent: [JavascriptEvent] = [],
         basicAuthAccount: (id: String, password: String)? = nil,
         alwaysOpenSafariWhenLinkTap: Bool = false

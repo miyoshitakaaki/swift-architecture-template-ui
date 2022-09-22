@@ -69,6 +69,7 @@ open class WebViewController: UIViewController {
 
     private var needReflesh = false
     private let basicAuthAccount: (id: String, password: String)?
+    private let alwaysOpenSafariWhenLinkTap: Bool
 
     public init(
         url: String? = nil,
@@ -79,7 +80,8 @@ open class WebViewController: UIViewController {
         scheme: String? = nil,
         showWebBackButton: Bool = false,
         javascriptEvent: [JavascriptEvent] = [],
-        basicAuthAccount: (id: String, password: String)? = nil
+        basicAuthAccount: (id: String, password: String)? = nil,
+        alwaysOpenSafariWhenLinkTap: Bool = false
     ) {
         self.url = url
         self.localFilePath = localFilePath
@@ -89,6 +91,7 @@ open class WebViewController: UIViewController {
         self.showWebBackButton = showWebBackButton
         self.javascriptEvent = javascriptEvent
         self.basicAuthAccount = basicAuthAccount
+        self.alwaysOpenSafariWhenLinkTap = alwaysOpenSafariWhenLinkTap
 
         super.init(nibName: nil, bundle: nil)
         self.title = screenTitle
@@ -188,6 +191,24 @@ extension WebViewController: WKURLSchemeHandler {
 }
 
 extension WebViewController: WKNavigationDelegate {
+    public func webView(
+        _ webView: WKWebView,
+        decidePolicyFor navigationAction: WKNavigationAction,
+        decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
+    ) {
+        switch navigationAction.navigationType {
+        case .linkActivated:
+            if self.alwaysOpenSafariWhenLinkTap {
+                UIApplication.shared.open(webView.url!)
+                decisionHandler(.cancel)
+            } else {
+                decisionHandler(.allow)
+            }
+        default:
+            decisionHandler(.allow)
+        }
+    }
+
     open func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         if self.prohibitPopup, #available(iOS 16.0, *) {
             self.prohibitTouchCalloutAndUserSelect()

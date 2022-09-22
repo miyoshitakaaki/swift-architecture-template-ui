@@ -66,39 +66,39 @@ public final class FormViewModel<T: Form>: ViewModel {
                 LoadingState<T.Input, AppError>,
                 Never
             > in
-            guard let self = self else {
-                return Just(LoadingState<T.Input, AppError>.done(T.Input()))
-                    .eraseToAnyPublisher()
-            }
+                guard let self = self else {
+                    return Just(LoadingState<T.Input, AppError>.done(T.Input()))
+                        .eraseToAnyPublisher()
+                }
 
-            guard requestable else {
-                return Just(LoadingState<T.Input, AppError>.failed(.unknown))
-                    .eraseToAnyPublisher()
-            }
+                guard requestable else {
+                    return Just(LoadingState<T.Input, AppError>.failed(.unknown))
+                        .eraseToAnyPublisher()
+                }
 
-            if self.isOptional, self.input.value == T.Input() {
-                return Just(LoadingState<T.Input, AppError>.done(T.Input()))
-                    .eraseToAnyPublisher()
-            }
+                if self.isOptional, self.input.value == T.Input() {
+                    return Just(LoadingState<T.Input, AppError>.done(T.Input()))
+                        .eraseToAnyPublisher()
+                }
 
-            if self.input.value.isValid == false {
-                return Just(
-                    LoadingState<T.Input, AppError>
-                        .failed(
-                            .invalid(
-                                title: self.input.value.invalidTitle,
-                                message: self.input.value.invalidMessage
+                if self.input.value.isValid == false {
+                    return Just(
+                        LoadingState<T.Input, AppError>
+                            .failed(
+                                .invalid(
+                                    title: self.input.value.invalidTitle,
+                                    message: self.input.value.invalidMessage
+                                )
                             )
-                        )
-                )
-                .eraseToAnyPublisher()
-            }
+                    )
+                    .eraseToAnyPublisher()
+                }
 
-            return self.complete(self.input.value)
-                .map(LoadingState<T.Input, AppError>.done)
-                .catch { error in
-                    Just(LoadingState<T.Input, AppError>.failed(error))
-                }.eraseToAnyPublisher()
+                return self.complete(self.input.value)
+                    .map(LoadingState<T.Input, AppError>.done)
+                    .catch { error in
+                        Just(LoadingState<T.Input, AppError>.failed(error))
+                    }.eraseToAnyPublisher()
             }
             .subscribe(self.loadingState)
     }

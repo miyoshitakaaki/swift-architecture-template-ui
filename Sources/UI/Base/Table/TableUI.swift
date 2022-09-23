@@ -4,7 +4,7 @@ import UIKit
 public final class TableUI<T: Table>: ListUI<T>, UITableViewDataSource, UITableViewDelegate {
     private let tableView: UITableView
 
-    private var viewDataItems: [ListSection<T.Cell.ViewData>]
+    private var viewDataItems: [ListSection<T.Cell.ViewData, T.Header.ViewData>]
 
     let didCellDequeuedPublisher = PassthroughSubject<(T.Cell, IndexPath), Never>()
     let didHeaderDequeuedPublisher = PassthroughSubject<(T.Header, Int), Never>()
@@ -17,7 +17,7 @@ public final class TableUI<T: Table>: ListUI<T>, UITableViewDataSource, UITableV
 
     public init(
         style: UITableView.Style = .plain,
-        viewDataItems: [ListSection<T.Cell.ViewData>] = [],
+        viewDataItems: [ListSection<T.Cell.ViewData, T.Header.ViewData>] = [],
         table: T
     ) {
         self.tableView = UITableView(frame: .zero, style: style)
@@ -205,7 +205,7 @@ extension TableUI: UserInterface {
         self.tableView.delegate = self
     }
 
-    func reload(items: [ListSection<T.Cell.ViewData>]) {
+    func reload(items: [ListSection<T.Cell.ViewData, T.Header.ViewData>]) {
         self.table.emptyView?.isHidden = !items.isEmpty
         self.viewDataItems = items
         self.tableView.reloadData()

@@ -13,7 +13,7 @@ public protocol TableViewControllerDelegate: AnyObject {
 }
 
 extension TableViewController: VCInjectable {
-    public typealias VM = ListViewModel<T.Cell.ViewData, T.Parameter>
+    public typealias VM = ListViewModel<T.Cell.ViewData, T.Parameter, T.Header.ViewData>
     public typealias UI = TableUI<T>
 }
 

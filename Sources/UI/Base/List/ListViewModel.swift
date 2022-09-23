@@ -2,18 +2,18 @@ import Combine
 import UIKit
 import Utility
 
-public struct ListSection<T: Equatable>: Equatable {
-    public let header: String
+public struct ListSection<T: Equatable, HeaderItem: Equatable>: Equatable {
+    public let header: HeaderItem
     public var items: [T]
 
-    public init(header: String, items: [T]) {
+    public init(header: HeaderItem, items: [T]) {
         self.header = header
         self.items = items
     }
 }
 
-public final class ListViewModel<T, Parameter>: ViewModel where T: Hashable {
-    public typealias Items = [ListSection<T>]
+public final class ListViewModel<T, Parameter, HeaderItem: Equatable>: ViewModel where T: Hashable {
+    public typealias Items = [ListSection<T, HeaderItem>]
 
     public let loadSubject: PassthroughSubject<(parameter: Parameter?, isAdditional: Bool), Never> =
         .init()

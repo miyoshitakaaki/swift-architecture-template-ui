@@ -46,13 +46,8 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
                     for: indexPath
                 ) as? T.Header
 
-                if
-                    let data = self.dataSource.snapshot()
-                        .sectionIdentifiers[indexPath.section] as? T
-                        .Header.ViewData
-                {
-                    header?.updateHeader(data: data)
-                }
+                let data = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
+                header?.updateHeader(data: data)
 
                 self.didSupplementaryViewDequeuePublisher.send(header)
 
@@ -74,8 +69,11 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
         }
     }
 
-    private lazy var dataSource: UICollectionViewDiffableDataSource<String, T.Cell.ViewData> = {
-        let dataSource = UICollectionViewDiffableDataSource<String, T.Cell.ViewData>(
+    private lazy var dataSource: UICollectionViewDiffableDataSource<
+        T.Header.ViewData,
+        T.Cell.ViewData
+    > = {
+        let dataSource = UICollectionViewDiffableDataSource<T.Header.ViewData, T.Cell.ViewData>(
             collectionView: collectionView,
             cellProvider: cellProvider
         )
@@ -154,11 +152,11 @@ extension CollectionUI: UserInterface {
 
     }}
 
-    func reload(items: [ListSection<T.Cell.ViewData>]) {
+    func reload(items: [ListSection<T.Cell.ViewData, T.Header.ViewData>]) {
         self.collection.emptyView?.isHidden = !items.isEmpty
         self.collection.floatingButton?.isHidden = items.isEmpty
 
-        var snapshot = NSDiffableDataSourceSnapshot<String, T.Cell.ViewData>()
+        var snapshot = NSDiffableDataSourceSnapshot<T.Header.ViewData, T.Cell.ViewData>()
 
         items.enumerated().forEach { offset, element in
             snapshot.appendSections([items[offset].header])

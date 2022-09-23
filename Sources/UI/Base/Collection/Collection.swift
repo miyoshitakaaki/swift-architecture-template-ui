@@ -9,7 +9,7 @@ public protocol CollectionList: List {
     associatedtype Footer: CollectionFooterLayout
     associatedtype Parameter
 
-    typealias Items = [ListSection<Cell.ViewData, Header.ViewData>]
+    typealias Items = [ListSection<Cell.ViewData, Header.ViewData, Footer.ViewData>]
 
     var hideTabbar: Bool { get }
     var composableLayout: UICollectionViewCompositionalLayout { get }
@@ -43,4 +43,7 @@ public protocol CollectionHeaderLayout: UICollectionReusableView {
     func updateHeader(data: ViewData)
 }
 
-public protocol CollectionFooterLayout: UICollectionReusableView {}
+public protocol CollectionFooterLayout: UICollectionReusableView {
+    associatedtype ViewData: Equatable & Hashable
+    func updateFooter(data: ViewData)
+}

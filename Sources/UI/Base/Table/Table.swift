@@ -10,7 +10,7 @@ public protocol Table: List {
     associatedtype Entity
     associatedtype Parameter
 
-    typealias Items = [ListSection<Cell.ViewData, Header.ViewData>]
+    typealias Items = [ListSection<Cell.ViewData, Header.ViewData, Footer.ViewData>]
 
     var showSearchBar: Bool { get }
     var fetchPublisher: ((parameter: Parameter?, isAdditional: Bool))

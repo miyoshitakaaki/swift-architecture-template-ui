@@ -2,18 +2,35 @@ import Combine
 import UIKit
 import Utility
 
-public struct ListSection<T: Equatable, HeaderItem: Equatable>: Equatable {
-    public let header: HeaderItem
+public struct ListSection<T: Equatable, HeaderItem: Equatable, FooterItem: Equatable>: Equatable
+    where HeaderItem: Hashable, FooterItem: Hashable
+{
+    public struct Section: Equatable, Hashable {
+        public let header: HeaderItem
+        public let footer: FooterItem
+
+        public init(header: HeaderItem, footer: FooterItem) {
+            self.header = header
+            self.footer = footer
+        }
+    }
+
+    public let section: Section
     public var items: [T]
 
-    public init(header: HeaderItem, items: [T]) {
-        self.header = header
+    public init(section: Section, items: [T]) {
+        self.section = section
         self.items = items
     }
 }
 
-public final class ListViewModel<T, Parameter, HeaderItem: Equatable>: ViewModel where T: Hashable {
-    public typealias Items = [ListSection<T, HeaderItem>]
+public final class ListViewModel<
+    T: Hashable,
+    Parameter,
+    HeaderItem: Equatable,
+    FooterItem: Equatable
+>: ViewModel where HeaderItem: Hashable, FooterItem: Hashable {
+    public typealias Items = [ListSection<T, HeaderItem, FooterItem>]
 
     public let loadSubject: PassthroughSubject<(parameter: Parameter?, isAdditional: Bool), Never> =
         .init()

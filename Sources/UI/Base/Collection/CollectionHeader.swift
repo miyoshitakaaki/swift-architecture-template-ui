@@ -4,8 +4,8 @@ import UIKit
 open class CollectionHeader: UICollectionReusableView, CollectionHeaderLayout {
     public let titleLabel: UILabel = .init()
 
-    public func updateHeader(text: String) {
-        self.titleLabel.text = text
+    public func updateHeader(data: String) {
+        self.titleLabel.text = data
         self.titleLabel.font = UIFont.boldSystemFont(ofSize: 16)
     }
 

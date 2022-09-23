@@ -39,7 +39,8 @@ public extension CollectionLayout {
 }
 
 public protocol CollectionHeaderLayout: UICollectionReusableView {
-    func updateHeader(text: String)
+    associatedtype ViewData
+    func updateHeader(data: ViewData)
 }
 
 public protocol CollectionFooterLayout: UICollectionReusableView {}

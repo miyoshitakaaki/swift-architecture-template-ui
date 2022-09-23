@@ -124,8 +124,8 @@ public final class TableViewController<T: Table>: UIViewController,
                 self.delegate?.didItemSelected(
                     indexPath: indexPath,
                     table: self.table,
-                    cellData: self.viewModel.loadingState.value.value?
-                        .elements[indexPath.section].value[indexPath.row]
+                    cellData: self.viewModel.loadingState.value.value?[indexPath.section]
+                        .items[indexPath.row]
                 )
             }
             .store(in: &self.cancellables)

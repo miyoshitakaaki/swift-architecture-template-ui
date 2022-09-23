@@ -1,6 +1,5 @@
 import Combine
 import Foundation
-import OrderedCollections
 import UIKit
 import Utility
 
@@ -150,15 +149,15 @@ extension CollectionUI: UserInterface {
 
     }}
 
-    func reload(items: OrderedDictionary<String, [T.Cell.ViewData]>) {
-        self.collection.emptyView?.isHidden = !items.elements.isEmpty
-        self.collection.floatingButton?.isHidden = items.elements.isEmpty
+    func reload(items: [ListSection<T.Cell.ViewData>]) {
+        self.collection.emptyView?.isHidden = !items.isEmpty
+        self.collection.floatingButton?.isHidden = items.isEmpty
 
         var snapshot = NSDiffableDataSourceSnapshot<String, T.Cell.ViewData>()
 
         items.enumerated().forEach { offset, element in
-            snapshot.appendSections([items.keys[offset]])
-            snapshot.appendItems(element.value, toSection: items.keys[offset])
+            snapshot.appendSections([items[offset].header])
+            snapshot.appendItems(element.items, toSection: items[offset].header)
         }
 
         self.dataSource.apply(snapshot, animatingDifferences: true)

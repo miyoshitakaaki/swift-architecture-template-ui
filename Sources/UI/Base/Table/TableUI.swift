@@ -1,11 +1,10 @@
 import Combine
-import OrderedCollections
 import UIKit
 
 public final class TableUI<T: Table>: ListUI<T>, UITableViewDataSource, UITableViewDelegate {
     private let tableView: UITableView
 
-    private var viewDataItems: OrderedDictionary<String, [T.Cell.ViewData]>
+    private var viewDataItems: [ListSection<T.Cell.ViewData>]
 
     let didCellDequeuedPublisher = PassthroughSubject<(T.Cell, IndexPath), Never>()
     let didHeaderDequeuedPublisher = PassthroughSubject<(T.Header, Int), Never>()
@@ -18,7 +17,7 @@ public final class TableUI<T: Table>: ListUI<T>, UITableViewDataSource, UITableV
 
     public init(
         style: UITableView.Style = .plain,
-        viewDataItems: OrderedDictionary<String, [T.Cell.ViewData]> = [:],
+        viewDataItems: [ListSection<T.Cell.ViewData>] = [],
         table: T
     ) {
         self.tableView = UITableView(frame: .zero, style: style)
@@ -36,7 +35,7 @@ public final class TableUI<T: Table>: ListUI<T>, UITableViewDataSource, UITableV
         if self.viewDataItems.isEmpty {
             return 1
         } else {
-            return self.viewDataItems.elements[section].value.count
+            return self.viewDataItems[section].items.count
         }
     }
 
@@ -44,7 +43,7 @@ public final class TableUI<T: Table>: ListUI<T>, UITableViewDataSource, UITableV
         _ tableView: UITableView,
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
-        if self.viewDataItems.values.isEmpty {
+        if self.viewDataItems.isEmpty {
             return tableView.dequeueReusableCell(
                 withIdentifier: T.EmptyCell.className,
                 for: indexPath
@@ -53,7 +52,7 @@ public final class TableUI<T: Table>: ListUI<T>, UITableViewDataSource, UITableV
 
         guard let cell = tableView.dequeueReusableCell(withIdentifier: T.Cell.className) as? T.Cell
         else { return .init() }
-        cell.viewData = self.viewDataItems.elements[indexPath.section].value[indexPath.row]
+        cell.viewData = self.viewDataItems[indexPath.section].items[indexPath.row]
         cell.deleteItem = self.deleteItem
         cell.selectionStyle = .none
         self.didCellDequeuedPublisher.send((cell, indexPath))
@@ -148,13 +147,12 @@ public final class TableUI<T: Table>: ListUI<T>, UITableViewDataSource, UITableV
 
     var deleteItem: (IndexPath) -> Void { { [weak self] indexPath in
         guard let self = self else { return }
-        var values = self.viewDataItems.elements[indexPath.section].value
+        var values = self.viewDataItems[indexPath.section].items
         values.remove(at: indexPath.row)
         if values.isEmpty {
-            self.viewDataItems = [:]
+            self.viewDataItems = []
         } else {
-            let key = self.viewDataItems.keys[indexPath.section]
-            self.viewDataItems[key] = values
+            self.viewDataItems[indexPath.section].items = values
         }
         self.tableView.reloadData()
     }}
@@ -207,8 +205,8 @@ extension TableUI: UserInterface {
         self.tableView.delegate = self
     }
 
-    func reload(items: OrderedDictionary<String, [T.Cell.ViewData]>) {
-        self.table.emptyView?.isHidden = !items.elements.isEmpty
+    func reload(items: [ListSection<T.Cell.ViewData>]) {
+        self.table.emptyView?.isHidden = !items.isEmpty
         self.viewDataItems = items
         self.tableView.reloadData()
     }

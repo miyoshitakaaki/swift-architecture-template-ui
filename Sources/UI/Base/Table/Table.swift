@@ -1,5 +1,4 @@
 import Combine
-import OrderedCollections
 import UIKit
 import Utility
 
@@ -11,12 +10,12 @@ public protocol Table: List {
     associatedtype Entity
     associatedtype Parameter
 
-    typealias Items = OrderedDictionary<String, [Cell.ViewData]>
+    typealias Items = [ListSection<Cell.ViewData>]
 
     var showSearchBar: Bool { get }
     var fetchPublisher: ((parameter: Parameter?, isAdditional: Bool))
         -> AnyPublisher<Items, AppError> { get }
-    func mapper(entities: [[Entity]]) -> OrderedDictionary<String, [Cell.ViewData]>
+    func mapper(entities: [[Entity]]) -> Items
 }
 
 public extension Table {

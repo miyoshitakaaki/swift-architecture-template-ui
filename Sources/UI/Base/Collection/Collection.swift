@@ -1,5 +1,4 @@
 import Combine
-import OrderedCollections
 import UIKit
 import Utility
 
@@ -10,14 +9,13 @@ public protocol CollectionList: List {
     associatedtype Footer: CollectionFooterLayout
     associatedtype Parameter
 
-    typealias Items = OrderedDictionary<String, [Cell.ViewData]>
+    typealias Items = [ListSection<Cell.ViewData>]
 
     var hideTabbar: Bool { get }
     var composableLayout: UICollectionViewCompositionalLayout { get }
     var topViewSubject: PassthroughSubject<Parameter, Never> { get }
     var fetchPublisher: ((parameter: Parameter?, isAdditional: Bool))
         -> AnyPublisher<Items, AppError> { get }
-
     var floatingButton: UIButton? { get }
 }
 

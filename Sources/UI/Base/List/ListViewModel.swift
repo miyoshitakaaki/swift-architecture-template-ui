@@ -1,10 +1,19 @@
 import Combine
-import OrderedCollections
 import UIKit
 import Utility
 
+public struct ListSection<T: Equatable>: Equatable {
+    public let header: String
+    public var items: [T]
+
+    public init(header: String, items: [T]) {
+        self.header = header
+        self.items = items
+    }
+}
+
 public final class ListViewModel<T, Parameter>: ViewModel where T: Hashable {
-    public typealias Items = OrderedDictionary<String, [T]>
+    public typealias Items = [ListSection<T>]
 
     public let loadSubject: PassthroughSubject<(parameter: Parameter?, isAdditional: Bool), Never> =
         .init()
@@ -42,18 +51,18 @@ public final class ListViewModel<T, Parameter>: ViewModel where T: Hashable {
 
                 return self.fetchPublisher(query)
                     .map { new in
-                        let current = self.loadingState.value.value ?? [:]
+                        let current = self.loadingState.value.value ?? []
 
                         if query.isAdditional {
                             if new.isEmpty {
                                 return LoadingState<Items, AppError>.standby(current)
                             } else {
-                                let result = current.merging(new, uniquingKeysWith: +)
+                                let result = current + new
                                 return LoadingState<Items, AppError>.done(result)
                             }
                         } else {
                             if new.isEmpty {
-                                return LoadingState<Items, AppError>.done([:])
+                                return LoadingState<Items, AppError>.done([])
                             } else {
                                 return LoadingState<Items, AppError>.done(new)
                             }

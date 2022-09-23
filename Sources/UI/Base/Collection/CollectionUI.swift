@@ -47,7 +47,7 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
                 ) as? T.Header
 
                 let data = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
-                header?.updateHeader(data: data)
+                header?.updateHeader(data: data.header)
 
                 self.didSupplementaryViewDequeuePublisher.send(header)
 
@@ -60,6 +60,9 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
                     for: indexPath
                 ) as? T.Footer
 
+                let data = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
+                footer?.updateFooter(data: data.footer)
+
                 self.didSupplementaryViewDequeuePublisher.send(footer)
 
                 return footer
@@ -70,10 +73,13 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
     }
 
     private lazy var dataSource: UICollectionViewDiffableDataSource<
-        T.Header.ViewData,
+        ListSection<T.Cell.ViewData, T.Header.ViewData, T.Footer.ViewData>.Section,
         T.Cell.ViewData
     > = {
-        let dataSource = UICollectionViewDiffableDataSource<T.Header.ViewData, T.Cell.ViewData>(
+        let dataSource = UICollectionViewDiffableDataSource<
+            ListSection<T.Cell.ViewData, T.Header.ViewData, T.Footer.ViewData>.Section,
+            T.Cell.ViewData
+        >(
             collectionView: collectionView,
             cellProvider: cellProvider
         )
@@ -152,15 +158,18 @@ extension CollectionUI: UserInterface {
 
     }}
 
-    func reload(items: [ListSection<T.Cell.ViewData, T.Header.ViewData>]) {
+    func reload(items: [ListSection<T.Cell.ViewData, T.Header.ViewData, T.Footer.ViewData>]) {
         self.collection.emptyView?.isHidden = !items.isEmpty
         self.collection.floatingButton?.isHidden = items.isEmpty
 
-        var snapshot = NSDiffableDataSourceSnapshot<T.Header.ViewData, T.Cell.ViewData>()
+        var snapshot = NSDiffableDataSourceSnapshot<
+            ListSection<T.Cell.ViewData, T.Header.ViewData, T.Footer.ViewData>.Section,
+            T.Cell.ViewData
+        >()
 
         items.enumerated().forEach { offset, element in
-            snapshot.appendSections([items[offset].header])
-            snapshot.appendItems(element.items, toSection: items[offset].header)
+            snapshot.appendSections([items[offset].section])
+            snapshot.appendItems(element.items, toSection: items[offset].section)
         }
 
         self.dataSource.apply(snapshot, animatingDifferences: true)

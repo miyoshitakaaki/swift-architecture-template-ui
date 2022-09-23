@@ -9,7 +9,12 @@ public protocol CollectionViewControllerDelegate: AnyObject {
 }
 
 extension CollectionViewController: VCInjectable {
-    public typealias VM = ListViewModel<T.Cell.ViewData, T.Parameter, T.Header.ViewData>
+    public typealias VM = ListViewModel<
+        T.Cell.ViewData,
+        T.Parameter,
+        T.Header.ViewData,
+        T.Footer.ViewData
+    >
     public typealias UI = CollectionUI<T>
 }
 

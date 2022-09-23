@@ -46,8 +46,13 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
                     for: indexPath
                 ) as? T.Header
 
-                let data = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
-                header?.updateHeader(data: data as! T.Header.ViewData)
+                if
+                    let data = self.dataSource.snapshot()
+                        .sectionIdentifiers[indexPath.section] as? T
+                        .Header.ViewData
+                {
+                    header?.updateHeader(data: data)
+                }
 
                 self.didSupplementaryViewDequeuePublisher.send(header)
 

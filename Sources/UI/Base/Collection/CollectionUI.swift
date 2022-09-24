@@ -73,11 +73,11 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
     }
 
     private lazy var dataSource: UICollectionViewDiffableDataSource<
-        ListSection<T.Cell.ViewData, T.Header.ViewData, T.Footer.ViewData>.Section,
+        T.Items.Element.Section,
         T.Cell.ViewData
     > = {
         let dataSource = UICollectionViewDiffableDataSource<
-            ListSection<T.Cell.ViewData, T.Header.ViewData, T.Footer.ViewData>.Section,
+            T.Items.Element.Section,
             T.Cell.ViewData
         >(
             collectionView: collectionView,
@@ -158,12 +158,12 @@ extension CollectionUI: UserInterface {
 
     }}
 
-    func reload(items: [ListSection<T.Cell.ViewData, T.Header.ViewData, T.Footer.ViewData>]) {
+    func reload(items: T.Items) {
         self.collection.emptyView?.isHidden = !items.isEmpty
         self.collection.floatingButton?.isHidden = items.isEmpty
 
         var snapshot = NSDiffableDataSourceSnapshot<
-            ListSection<T.Cell.ViewData, T.Header.ViewData, T.Footer.ViewData>.Section,
+            T.Items.Element.Section,
             T.Cell.ViewData
         >()
 

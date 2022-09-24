@@ -74,7 +74,21 @@ public final class ListViewModel<
                             if new.isEmpty {
                                 return LoadingState<Items, AppError>.standby(current)
                             } else {
-                                let result = current + new
+                                let result = new.reduce(current) { partialResult, item in
+                                    var sections = partialResult
+
+                                    let index = sections.firstIndex { section in
+                                        section.section == item.section
+                                    }
+
+                                    if let index {
+                                        sections[index].items += item.items
+                                    } else {
+                                        sections.append(item)
+                                    }
+
+                                    return sections
+                                }
                                 return LoadingState<Items, AppError>.done(result)
                             }
                         } else {

@@ -102,8 +102,16 @@ extension DiffableCollectionUI: UserInterface {
     func reload() {
         S.fetchAll
             .receive(on: DispatchQueue.main)
-            .sink { _ in
-                print("finished")
+            .sink { finished in
+
+                switch finished {
+                case .finished:
+                    print("finished")
+
+                case let .failure(error):
+                    self.delegate?.didErrorOccured(error: error)
+                }
+
             } receiveValue: { [weak self] allCases in
 
                 guard let self = self else { return }
@@ -115,8 +123,16 @@ extension DiffableCollectionUI: UserInterface {
                 allCases.forEach { section in
                     section.fetch
                         .receive(on: DispatchQueue.main)
-                        .sink { _ in
-                            print("finished")
+                        .sink { finished in
+
+                            switch finished {
+                            case .finished:
+                                print("finished")
+
+                            case let .failure(error):
+                                self.delegate?.didErrorOccured(error: error)
+                            }
+
                         } receiveValue: { result in
                             if #available(iOS 14.0, *) {
                                 var sectionSnapshot = NSDiffableDataSourceSectionSnapshot<S.Item>()

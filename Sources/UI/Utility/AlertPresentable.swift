@@ -9,15 +9,16 @@ public protocol AlertPresentable {
 public extension AlertPresentable where Self: UIViewController {
     func present(_ error: AppError) {
         switch error {
-        case .normal, .offline:
+        case let .notice(title, message):
             let alert = UIAlertController(
-                title: error.localizedDescription,
-                message: nil,
+                title: title,
+                message: message,
                 preferredStyle: .alert
             )
             alert.addAction(.init(title: "OK", style: .cancel))
             self.present(alert, animated: true)
-        case .auth:
+
+        case .redirect:
             let alert = UIAlertController(
                 title: "ログインしてください",
                 message: nil,
@@ -27,16 +28,8 @@ public extension AlertPresentable where Self: UIViewController {
                 self?.didAuthErrorOccured()
             }))
             self.present(alert, animated: true)
-        case let .invalid(title, message):
-            let alert = UIAlertController(
-                title: title,
-                message: message,
-                preferredStyle: .alert
-            )
-            alert.addAction(.init(title: "OK", style: .cancel))
-            self.present(alert, animated: true)
 
-        case .unknown, .empty:
+        case .none:
             break
         }
     }

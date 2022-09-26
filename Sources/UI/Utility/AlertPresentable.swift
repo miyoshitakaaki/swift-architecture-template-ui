@@ -3,7 +3,7 @@ import Utility
 
 public protocol AlertPresentable {
     func present(_ error: AppError)
-    func didAuthErrorOccured()
+    func didOKButtonTapped()
 }
 
 public extension AlertPresentable where Self: UIViewController {
@@ -18,14 +18,14 @@ public extension AlertPresentable where Self: UIViewController {
             alert.addAction(.init(title: "OK", style: .cancel))
             self.present(alert, animated: true)
 
-        case let .redirect(title, message):
+        case let .action(title, message):
             let alert = UIAlertController(
                 title: title,
                 message: message,
                 preferredStyle: .alert
             )
             alert.addAction(.init(title: "OK", style: .default, handler: { [weak self] _ in
-                self?.didAuthErrorOccured()
+                self?.didOKButtonTapped()
             }))
             self.present(alert, animated: true)
 
@@ -34,5 +34,5 @@ public extension AlertPresentable where Self: UIViewController {
         }
     }
 
-    func didAuthErrorOccured() {}
+    func didOKButtonTapped() {}
 }

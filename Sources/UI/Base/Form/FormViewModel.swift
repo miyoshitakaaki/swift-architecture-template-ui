@@ -72,7 +72,7 @@ public final class FormViewModel<T: Form>: ViewModel {
                 }
 
                 guard requestable else {
-                    return Just(LoadingState<T.Input, AppError>.failed(.unknown))
+                    return Just(LoadingState<T.Input, AppError>.failed(.none))
                         .eraseToAnyPublisher()
                 }
 
@@ -85,7 +85,7 @@ public final class FormViewModel<T: Form>: ViewModel {
                     return Just(
                         LoadingState<T.Input, AppError>
                             .failed(
-                                .invalid(
+                                .notice(
                                     title: self.input.value.invalidTitle,
                                     message: self.input.value.invalidMessage
                                 )

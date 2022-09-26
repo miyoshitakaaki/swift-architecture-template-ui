@@ -62,7 +62,7 @@ public final class ListViewModel<
             .flatMap { [weak self] query -> AnyPublisher<LoadingState<Items, AppError>, Never> in
 
                 guard let self = self else {
-                    return Just(LoadingState<Items, AppError>.failed(.unknown))
+                    return Just(LoadingState<Items, AppError>.failed(.none))
                         .eraseToAnyPublisher()
                 }
 

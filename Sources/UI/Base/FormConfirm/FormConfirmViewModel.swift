@@ -19,7 +19,7 @@ public final class FormConfirmViewModel<T: Equatable>: ViewModel {
             .flatMap { [weak self] _ -> AnyPublisher<LoadingState<T, AppError>, Never> in
 
                 guard let self = self else {
-                    return Just(LoadingState<T, AppError>.failed(.unknown))
+                    return Just(LoadingState<T, AppError>.failed(.none))
                         .eraseToAnyPublisher()
                 }
 

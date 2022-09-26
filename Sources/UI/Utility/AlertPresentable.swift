@@ -18,10 +18,10 @@ public extension AlertPresentable where Self: UIViewController {
             alert.addAction(.init(title: "OK", style: .cancel))
             self.present(alert, animated: true)
 
-        case .redirect:
+        case let .redirect(title, message):
             let alert = UIAlertController(
-                title: "ログインしてください",
-                message: nil,
+                title: title,
+                message: message,
                 preferredStyle: .alert
             )
             alert.addAction(.init(title: "OK", style: .default, handler: { [weak self] _ in

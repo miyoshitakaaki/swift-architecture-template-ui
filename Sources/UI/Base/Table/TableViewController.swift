@@ -10,6 +10,7 @@ public protocol TableViewControllerDelegate: AnyObject {
     )
     func didSearchCancelButtonTapped()
     func didSearchTextUpdated(text: String?)
+    func didAuthErrorOccured()
 }
 
 extension TableViewController: VCInjectable {
@@ -210,5 +211,9 @@ public final class TableViewController<T: Table>: UIViewController,
     public func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
         self.delegate?.didSearchCancelButtonTapped()
+    }
+
+    public func didAuthOKButtonTapped() {
+        self.delegate?.didAuthErrorOccured()
     }
 }

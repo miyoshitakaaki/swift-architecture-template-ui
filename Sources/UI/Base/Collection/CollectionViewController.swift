@@ -6,6 +6,7 @@ public protocol CollectionViewControllerDelegate: AnyObject {
     func didItemSelected<T: CollectionList>(selectedInfo: SelectedCellInfo<T>)
     func didCellDequeued<T: UICollectionViewCell>(cell: T?, indexPath: IndexPath)
     func didSupplementaryViewDequeued(supplementaryView: UICollectionReusableView?)
+    func didAuthErrorOccured()
 }
 
 extension CollectionViewController: VCInjectable {
@@ -163,5 +164,9 @@ public final class CollectionViewController<
                 self.viewModel.loadSubject.send((parameter, false))
             }
             .store(in: &self.cancellables)
+    }
+
+    public func didAuthOKButtonTapped() {
+        self.delegate?.didAuthErrorOccured()
     }
 }

@@ -203,9 +203,12 @@ extension WebViewController: WKNavigationDelegate {
     ) {
         switch navigationAction.navigationType {
         case .linkActivated:
-            let scheme = navigationAction.request.url?.scheme
-            if self.alwaysOpenSafariWhenLinkTap, scheme == "https" {
-                UIApplication.shared.open(webView.url!)
+            guard let url = navigationAction.request.url else {
+                decisionHandler(.cancel)
+                return
+            }
+            if self.alwaysOpenSafariWhenLinkTap, url.scheme == "https" {
+                UIApplication.shared.open(url)
                 decisionHandler(.cancel)
             } else {
                 decisionHandler(.allow)

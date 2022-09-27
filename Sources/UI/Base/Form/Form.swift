@@ -71,7 +71,7 @@ public extension FormUIProtocol {
     }
 }
 
-public protocol Form: AnyObject, FormUIProtocol {
+public protocol Form: AnyObject, FormUIProtocol, AnalyticsScreenView {
     associatedtype NavContent: NavigationContent
     associatedtype Input: Initializable, Equatable, Validatable
 

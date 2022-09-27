@@ -80,6 +80,8 @@ public final class TableViewController<T: Table>: UIViewController,
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        T.sendScreenView()
+
         self.setupNavigationItemIfNeeded()
 
         if self.needReflesh {
@@ -97,6 +99,8 @@ public final class TableViewController<T: Table>: UIViewController,
     public func presentationControllerDidDismiss(
         _ presentationController: UIPresentationController
     ) {
+        T.sendScreenView()
+
         if self.needReflesh {
             self.viewModel.loadSubject.send((nil, false))
             self.needReflesh = false

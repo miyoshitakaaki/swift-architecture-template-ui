@@ -38,6 +38,12 @@ public final class StackViewController<T: Stack>: UIViewController {
         self.fetch()
     }
 
+    override public func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        T.sendScreenView()
+    }
+
     override public func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
     }

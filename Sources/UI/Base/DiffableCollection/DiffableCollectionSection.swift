@@ -4,7 +4,7 @@ import Utility
 
 public struct EmptyContent: Hashable {}
 
-public protocol DiffableCollectionSection: Hashable {
+public protocol DiffableCollectionSection: Hashable, AnalyticsScreenView {
     associatedtype CellRegistration
     associatedtype SupplementaryRegistration
     associatedtype Item: Hashable

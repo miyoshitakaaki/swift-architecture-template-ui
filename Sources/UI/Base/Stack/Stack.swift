@@ -1,6 +1,6 @@
 import UIKit
 
-public protocol Stack {
+public protocol Stack: AnalyticsScreenView {
     func setupContent(stackView: UIStackView)
 }
 

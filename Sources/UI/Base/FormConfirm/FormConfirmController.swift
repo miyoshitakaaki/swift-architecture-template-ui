@@ -76,6 +76,8 @@ public final class FormConfirmController<T: FormConfirmProtocol>: UIViewControll
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        T.sendScreenView()
+
         self.tabBarController?.tabBar.isHidden = true
     }
 

@@ -22,7 +22,7 @@ extension WebViewController: VCInjectable {
 
 // MARK: - stored properties
 
-open class WebViewController: UIViewController {
+open class WebViewController: UIViewController, AnalyticsScreenView {
     public var viewModel: VM!
     public var ui: UI!
     public var cancellables: Set<AnyCancellable> = []
@@ -144,6 +144,8 @@ extension WebViewController {
 
     override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
+        Self.sendScreenView()
 
         if self.needReflesh {
             self.webView.reload()

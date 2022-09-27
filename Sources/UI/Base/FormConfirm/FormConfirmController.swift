@@ -3,6 +3,7 @@ import UIKit
 
 public protocol FormConfirmControllerDelegate: AnyObject {
     func didConfirmCompletionButtonTapped<T>(data: T)
+    func didAuthErrorOccured()
 }
 
 extension FormConfirmController: VCInjectable {
@@ -82,5 +83,9 @@ public final class FormConfirmController<T: FormConfirmProtocol>: UIViewControll
         super.viewWillDisappear(animated)
 
         self.tabBarController?.tabBar.isHidden = false
+    }
+
+    public func didAuthOKButtonTapped() {
+        self.delegate?.didAuthErrorOccured()
     }
 }

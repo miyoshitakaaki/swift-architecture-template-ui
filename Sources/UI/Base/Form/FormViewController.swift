@@ -4,6 +4,7 @@ import Utility
 
 public protocol FormViewControllerDelegate: AnyObject {
     func didCompletionButtonTapped<F: Form>(data: F.Input, form: F)
+    func didAuthErrorOccured()
 }
 
 extension FormViewController: VCInjectable {
@@ -137,5 +138,9 @@ private extension FormViewController {
                     break
                 }
             }).store(in: &self.cancellables)
+    }
+
+    public func didAuthOKButtonTapped() {
+        self.delegate?.didAuthErrorOccured()
     }
 }

@@ -2,7 +2,7 @@ import Combine
 import UIKit
 import Utility
 
-public protocol CollectionList: List {
+public protocol CollectionList: List, AnalyticsScreenView {
     associatedtype NavContent: NavigationContent
     associatedtype Cell: CollectionLayout
     associatedtype Header: CollectionHeaderLayout

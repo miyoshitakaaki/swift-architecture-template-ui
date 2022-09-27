@@ -29,7 +29,6 @@ public final class CollectionViewController<
     ActivityPresentable,
     AlertPresentable,
     Refreshable
-
 {
     public var viewModel: VM!
     public var ui: UI!
@@ -70,6 +69,8 @@ public final class CollectionViewController<
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        T.sendScreenView()
+
         self.tabBarController?.tabBar.isHidden = self.collection.hideTabbar
 
         navigationController?.setNavigationBarHidden(
@@ -92,6 +93,8 @@ public final class CollectionViewController<
     public func presentationControllerDidDismiss(
         _ presentationController: UIPresentationController
     ) {
+        T.sendScreenView()
+
         if self.needReflesh {
             self.viewModel.loadSubject.send((nil, false))
             self.needReflesh = false

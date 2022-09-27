@@ -52,6 +52,8 @@ public final class FormViewController<T: Form>: UIViewController, ActivityPresen
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        T.sendScreenView()
+
         self.tabBarController?.tabBar.isHidden = true
     }
 
@@ -59,6 +61,10 @@ public final class FormViewController<T: Form>: UIViewController, ActivityPresen
         super.viewWillDisappear(animated)
 
         self.tabBarController?.tabBar.isHidden = false
+    }
+
+    public func didAuthOKButtonTapped() {
+        self.delegate?.didAuthErrorOccured()
     }
 }
 
@@ -138,9 +144,5 @@ private extension FormViewController {
                     break
                 }
             }).store(in: &self.cancellables)
-    }
-
-    public func didAuthOKButtonTapped() {
-        self.delegate?.didAuthErrorOccured()
     }
 }

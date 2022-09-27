@@ -45,6 +45,8 @@ public final class DiffableCollectionViewController<
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        S.sendScreenView()
+
         if self.needReflesh {
             self.ui.reload()
             self.needReflesh = false
@@ -58,6 +60,8 @@ public final class DiffableCollectionViewController<
     public func presentationControllerDidDismiss(
         _ presentationController: UIPresentationController
     ) {
+        S.sendScreenView()
+
         if self.needReflesh {
             self.ui.reload()
             self.needReflesh = false

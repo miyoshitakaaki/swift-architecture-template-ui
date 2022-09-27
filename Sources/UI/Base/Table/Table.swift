@@ -2,7 +2,7 @@ import Combine
 import UIKit
 import Utility
 
-public protocol Table: List {
+public protocol Table: List, AnalyticsScreenView {
     associatedtype Cell: TableViewCell
     associatedtype EmptyCell: UITableViewCell
     associatedtype Header: TableViewHeaderFooter

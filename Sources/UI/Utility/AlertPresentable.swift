@@ -9,7 +9,7 @@ public protocol AlertPresentable {
 public extension AlertPresentable where Self: UIViewController {
     func present(_ error: AppError) {
         switch error {
-        case let .notice(title, message):
+        case let .normal(title, message):
             let alert = UIAlertController(
                 title: title,
                 message: message,
@@ -18,7 +18,7 @@ public extension AlertPresentable where Self: UIViewController {
             alert.addAction(.init(title: "OK", style: .cancel))
             self.present(alert, animated: true)
 
-        case let .action(title, message):
+        case let .auth(title, message):
             let alert = UIAlertController(
                 title: title,
                 message: message,

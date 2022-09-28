@@ -104,9 +104,11 @@ extension DiffableCollectionUI: UserInterface {
             .receive(on: DispatchQueue.main)
             .sink { finished in
 
+                self.collectionView.refreshControl?.endRefreshing()
+
                 switch finished {
                 case .finished:
-                    print("finished")
+                    break
 
                 case let .failure(error):
                     self.delegate?.didErrorOccured(error: error)

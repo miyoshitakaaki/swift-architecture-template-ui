@@ -4,7 +4,7 @@ import Utility
 
 public protocol FormViewControllerDelegate: AnyObject {
     func didCompletionButtonTapped<F: Form>(data: F.Input, form: F)
-    func didAuthErrorOccured()
+    func didErrorOccured(error: AppError)
 }
 
 extension FormViewController: VCInjectable {
@@ -14,9 +14,7 @@ extension FormViewController: VCInjectable {
 
 // MARK: - stored properties
 
-public final class FormViewController<T: Form>: UIViewController, ActivityPresentable,
-    AlertPresentable
-{
+public final class FormViewController<T: Form>: UIViewController, ActivityPresentable {
     public var viewModel: VM!
     public var ui: UI!
     public var cancellables: Set<AnyCancellable> = []
@@ -61,10 +59,6 @@ public final class FormViewController<T: Form>: UIViewController, ActivityPresen
         super.viewWillDisappear(animated)
 
         self.tabBarController?.tabBar.isHidden = false
-    }
-
-    public func didAuthOKButtonTapped() {
-        self.delegate?.didAuthErrorOccured()
     }
 }
 
@@ -134,7 +128,7 @@ private extension FormViewController {
 
                 case let .failed(error):
                     self.dismissActivity()
-                    self.present(error)
+                    self.delegate?.didErrorOccured(error: error)
 
                 case let .done(value):
                     self.dismissActivity()

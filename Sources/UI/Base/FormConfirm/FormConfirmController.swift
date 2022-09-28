@@ -1,9 +1,10 @@
 import Combine
 import UIKit
+import Utility
 
 public protocol FormConfirmControllerDelegate: AnyObject {
     func didConfirmCompletionButtonTapped<T>(data: T)
-    func didAuthErrorOccured()
+    func didErrorOccured(error: AppError)
 }
 
 extension FormConfirmController: VCInjectable {
@@ -14,8 +15,7 @@ extension FormConfirmController: VCInjectable {
 // MARK: - stored properties
 
 public final class FormConfirmController<T: FormConfirmProtocol>: UIViewController,
-    ActivityPresentable,
-    AlertPresentable
+    ActivityPresentable
 {
     public var viewModel: VM!
     public var ui: UI!
@@ -61,7 +61,7 @@ public final class FormConfirmController<T: FormConfirmProtocol>: UIViewControll
 
                 case let .failed(error):
                     self.dismissActivity()
-                    self.present(error)
+                    self.delegate?.didErrorOccured(error: error)
 
                 case let .done(value):
                     self.dismissActivity()
@@ -85,9 +85,5 @@ public final class FormConfirmController<T: FormConfirmProtocol>: UIViewControll
         super.viewWillDisappear(animated)
 
         self.tabBarController?.tabBar.isHidden = false
-    }
-
-    public func didAuthOKButtonTapped() {
-        self.delegate?.didAuthErrorOccured()
     }
 }

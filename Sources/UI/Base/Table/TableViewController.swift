@@ -1,5 +1,6 @@
 import Combine
 import UIKit
+import Utility
 
 public protocol TableViewControllerDelegate: AnyObject {
     func didItemSelected<T: Table>(indexPath: IndexPath, table: T, cellData: T.Cell.ViewData?)
@@ -10,7 +11,7 @@ public protocol TableViewControllerDelegate: AnyObject {
     )
     func didSearchCancelButtonTapped()
     func didSearchTextUpdated(text: String?)
-    func didAuthErrorOccured()
+    func didErrorOccured(error: AppError)
 }
 
 extension TableViewController: VCInjectable {
@@ -28,7 +29,6 @@ extension TableViewController: VCInjectable {
 public final class TableViewController<T: Table>: UIViewController,
     UIAdaptivePresentationControllerDelegate,
     ActivityPresentable,
-    AlertPresentable,
     UISearchBarDelegate,
     Refreshable
 {
@@ -184,7 +184,7 @@ public final class TableViewController<T: Table>: UIViewController,
                 case let .failed(error):
                     self.ui.endRefresh()
                     self.dismissActivity()
-                    self.present(error)
+                    self.delegate?.didErrorOccured(error: error)
 
                 case let .done(value):
                     self.ui.endRefresh()
@@ -215,9 +215,5 @@ public final class TableViewController<T: Table>: UIViewController,
     public func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
         self.delegate?.didSearchCancelButtonTapped()
-    }
-
-    public func didAuthOKButtonTapped() {
-        self.delegate?.didAuthErrorOccured()
     }
 }

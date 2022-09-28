@@ -1,12 +1,13 @@
 import Combine
 import UIKit
+import Utility
 
 public protocol CollectionViewControllerDelegate: AnyObject {
     // TODO: should not use generic parameter
     func didItemSelected<T: CollectionList>(selectedInfo: SelectedCellInfo<T>)
     func didCellDequeued<T: UICollectionViewCell>(cell: T?, indexPath: IndexPath)
     func didSupplementaryViewDequeued(supplementaryView: UICollectionReusableView?)
-    func didAuthErrorOccured()
+    func didErrorOccured(error: AppError)
 }
 
 extension CollectionViewController: VCInjectable {
@@ -27,7 +28,6 @@ public final class CollectionViewController<
 >: UIViewController,
     UIAdaptivePresentationControllerDelegate,
     ActivityPresentable,
-    AlertPresentable,
     Refreshable
 {
     public var viewModel: VM!
@@ -147,7 +147,7 @@ public final class CollectionViewController<
                 case let .failed(error):
                     self.ui.endRefresh()
                     self.dismissActivity()
-                    self.present(error)
+                    self.delegate?.didErrorOccured(error: error)
 
                 case let .done(value):
                     self.ui.endRefresh()
@@ -167,9 +167,5 @@ public final class CollectionViewController<
                 self.viewModel.loadSubject.send((parameter, false))
             }
             .store(in: &self.cancellables)
-    }
-
-    public func didAuthOKButtonTapped() {
-        self.delegate?.didAuthErrorOccured()
     }
 }

@@ -85,7 +85,7 @@ public final class FormViewModel<T: Form>: ViewModel {
                     return Just(
                         LoadingState<T.Input, AppError>
                             .failed(
-                                .validation(
+                                .notice(
                                     title: self.input.value.invalidTitle,
                                     message: self.input.value.invalidMessage
                                 )

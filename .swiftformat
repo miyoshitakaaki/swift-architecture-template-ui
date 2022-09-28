@@ -1,6 +1,6 @@
 --allman false
 --assetliterals visual-width
---beforemarks 
+--beforemarks
 --binarygrouping none
 --categorymark "MARK: %c"
 --classthreshold 0
@@ -28,15 +28,15 @@
 --importgrouping alpha
 --indent 4
 --indentcase false
---lifecycle 
+--lifecycle
 --linebreaks lf
 --markextensions always
 --marktypes always
 --maxwidth 100
---modifierorder 
---nevertrailing 
---nospaceoperators 
---nowrapoperators 
+--modifierorder
+--nevertrailing
+--nospaceoperators
+--nowrapoperators
 --octalgrouping none
 --operatorfunc spaced
 --organizetypes class,enum,struct
@@ -44,14 +44,14 @@
 --ranges spaced
 --redundanttype inferred
 --self insert
---selfrequired 
+--selfrequired
 --semicolons never
 --shortoptionals always
 --smarttabs enabled
 --stripunusedargs closure-only
 --structthreshold 0
 --tabwidth unspecified
---trailingclosures 
+--trailingclosures
 --trimwhitespace always
 --typeattributes preserve
 --typemark "MARK: - %t"
@@ -66,7 +66,3 @@
 --yodaswap always
 
 --disable enumNamespaces
-
-# file options
---exclude Data/Sources/Data/Apollo/ApolloAPI.swift, EMedical/Presentation/Screen/MedicalQuestionnaire/MedicalQuestionnaireInitialForm.swift
-

@@ -97,7 +97,21 @@ public final class FormViewModel<T: Form>: ViewModel {
                 return self.complete(self.input.value)
                     .map(LoadingState<T.Input, AppError>.done)
                     .catch { error in
-                        Just(LoadingState<T.Input, AppError>.failed(error))
+
+                        switch error as AppError {
+                        case let .normal(title, message):
+                            return Just(
+                                LoadingState<T.Input, AppError>.failed(
+                                    .notice(
+                                        title: title,
+                                        message: message
+                                    )
+                                )
+                            )
+                        default:
+                            return Just(LoadingState<T.Input, AppError>.failed(error))
+                        }
+
                     }.eraseToAnyPublisher()
             }
             .subscribe(self.loadingState)

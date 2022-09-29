@@ -14,7 +14,7 @@ extension FormViewController: VCInjectable {
 
 // MARK: - stored properties
 
-public final class FormViewController<T: Form>: UIViewController, ActivityPresentable {
+public final class FormViewController<T: Form>: ViewController, ActivityPresentable {
     public var viewModel: VM!
     public var ui: UI!
     public var cancellables: Set<AnyCancellable> = []
@@ -23,6 +23,8 @@ public final class FormViewController<T: Form>: UIViewController, ActivityPresen
 
     private let formType: T
     private let content: T.NavContent
+
+    override public var screenNameForAnalytics: String { self.formType.screenNameForAnalytics }
 
     public init(formType: T, content: T.NavContent) {
         self.formType = formType
@@ -49,8 +51,6 @@ public final class FormViewController<T: Form>: UIViewController, ActivityPresen
 
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        T.sendScreenView()
 
         self.tabBarController?.tabBar.isHidden = true
     }

@@ -11,17 +11,21 @@ extension DiffableCollectionViewController: VCInjectable {
 public final class DiffableCollectionViewController<
     S: DiffableCollectionSection,
     C: NavigationContent
->: UIViewController, UIAdaptivePresentationControllerDelegate, Refreshable {
+>: ViewController, Refreshable {
     public var viewModel: VM!
     public var ui: UI!
     public var cancellables: Set<AnyCancellable> = []
 
+    private let _screenNameForAnalytics: String
     private let content: C
 
     private var needReflesh = false
 
-    public init(content: C) {
+    override public var screenNameForAnalytics: String { self._screenNameForAnalytics }
+
+    public init(content: C, screenNameForAnalytics: String) {
         self.content = content
+        self._screenNameForAnalytics = screenNameForAnalytics
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -45,8 +49,6 @@ public final class DiffableCollectionViewController<
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        S.sendScreenView()
-
         if self.needReflesh {
             self.ui.reload()
             self.needReflesh = false
@@ -57,10 +59,10 @@ public final class DiffableCollectionViewController<
         self.needReflesh = true
     }
 
-    public func presentationControllerDidDismiss(
+    override public func presentationControllerDidDismiss(
         _ presentationController: UIPresentationController
     ) {
-        S.sendScreenView()
+        super.presentationControllerDidDismiss(presentationController)
 
         if self.needReflesh {
             self.ui.reload()

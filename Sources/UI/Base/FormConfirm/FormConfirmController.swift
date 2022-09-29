@@ -14,7 +14,7 @@ extension FormConfirmController: VCInjectable {
 
 // MARK: - stored properties
 
-public final class FormConfirmController<T: FormConfirmProtocol>: UIViewController,
+public final class FormConfirmController<T: FormConfirmProtocol>: ViewController,
     ActivityPresentable
 {
     public var viewModel: VM!
@@ -24,6 +24,8 @@ public final class FormConfirmController<T: FormConfirmProtocol>: UIViewControll
     public weak var delegate: FormConfirmControllerDelegate?
 
     private let form: T
+
+    override public var screenNameForAnalytics: String { self.form.screenNameForAnalytics }
 
     public init(form: T) {
         self.form = form
@@ -75,8 +77,6 @@ public final class FormConfirmController<T: FormConfirmProtocol>: UIViewControll
 
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        T.sendScreenView()
 
         self.tabBarController?.tabBar.isHidden = true
     }

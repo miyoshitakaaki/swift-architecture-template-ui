@@ -2,7 +2,7 @@ import Combine
 import UIKit
 import Utility
 
-public protocol FormConfirmProtocol: AnyObject, AnalyticsScreenView {
+public protocol FormConfirmProtocol: AnyObject, AnalyticsScreenName {
     associatedtype InputType
     associatedtype OutputType: Equatable
 

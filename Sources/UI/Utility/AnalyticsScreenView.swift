@@ -1,13 +1,14 @@
+import UIKit
 import Utility
 
-public protocol AnalyticsScreenView {
-    static var screenNameForAnalytics: String { get }
+public protocol AnalyticsScreenName {
+    var screenNameForAnalytics: String { get }
 }
 
-public extension AnalyticsScreenView {
-    static var screenNameForAnalytics: String { "" }
+public protocol AnalyticsScreenView: UIViewController, AnalyticsScreenName {}
 
-    static func sendScreenView() {
-        AnalyticsService.shared.sendScreen(screenName: Self.screenNameForAnalytics)
+public extension AnalyticsScreenView {
+    func sendScreenView() {
+        AnalyticsService.shared.sendScreen(screenName: self.screenNameForAnalytics)
     }
 }

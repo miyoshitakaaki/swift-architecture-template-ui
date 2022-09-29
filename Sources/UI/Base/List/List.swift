@@ -1,6 +1,6 @@
 import UIKit
 
-public protocol List: AnyObject {
+public protocol List: AnyObject, AnalyticsScreenName {
     associatedtype T: UIView
     associatedtype Usecase
 

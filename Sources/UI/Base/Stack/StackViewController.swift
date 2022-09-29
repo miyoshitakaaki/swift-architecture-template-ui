@@ -8,7 +8,7 @@ extension StackViewController: VCInjectable {
 
 // MARK: - stored properties
 
-public final class StackViewController<T: Stack>: UIViewController {
+public final class StackViewController<T: Stack>: ViewController {
     public var viewModel: VM!
     public var ui: UI!
     public var cancellables: Set<AnyCancellable> = []
@@ -16,6 +16,8 @@ public final class StackViewController<T: Stack>: UIViewController {
     private let component: T
 
     private let fetch: () -> Void
+
+    override public var screenNameForAnalytics: String { self.component.screenNameForAnalytics }
 
     public init(component: T, fetch: @escaping () -> Void) {
         self.component = component
@@ -40,8 +42,6 @@ public final class StackViewController<T: Stack>: UIViewController {
 
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        T.sendScreenView()
     }
 
     override public func viewDidLayoutSubviews() {

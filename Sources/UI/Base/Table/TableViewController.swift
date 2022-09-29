@@ -26,8 +26,7 @@ extension TableViewController: VCInjectable {
 
 // MARK: - stored properties
 
-public final class TableViewController<T: Table>: UIViewController,
-    UIAdaptivePresentationControllerDelegate,
+public final class TableViewController<T: Table>: ViewController,
     ActivityPresentable,
     UISearchBarDelegate,
     Refreshable
@@ -44,6 +43,8 @@ public final class TableViewController<T: Table>: UIViewController,
     private let table: T
 
     private var needReflesh = false
+
+    override public var screenNameForAnalytics: String { self.table.screenNameForAnalytics }
 
     public init(table: T) {
         self.table = table
@@ -80,8 +81,6 @@ public final class TableViewController<T: Table>: UIViewController,
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        T.sendScreenView()
-
         self.setupNavigationItemIfNeeded()
 
         if self.needReflesh {
@@ -96,10 +95,10 @@ public final class TableViewController<T: Table>: UIViewController,
         self.view.endEditing(true)
     }
 
-    public func presentationControllerDidDismiss(
+    override public func presentationControllerDidDismiss(
         _ presentationController: UIPresentationController
     ) {
-        T.sendScreenView()
+        super.presentationControllerDidDismiss(presentationController)
 
         if self.needReflesh {
             self.viewModel.loadSubject.send((nil, false))

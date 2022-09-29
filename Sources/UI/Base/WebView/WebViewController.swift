@@ -75,7 +75,9 @@ open class WebViewController: ViewController {
         case always, whenHasHistory
     }
 
-    override public var screenNameForAnalytics: String { "" }
+    private let _screenNameForAnalytics: String
+
+    override public var screenNameForAnalytics: String { self._screenNameForAnalytics }
 
     public init(
         url: String? = nil,
@@ -87,7 +89,8 @@ open class WebViewController: ViewController {
         showWebBackButton: ShowWebBackButton = .always,
         javascriptEvent: [JavascriptEvent] = [],
         basicAuthAccount: (id: String, password: String)? = nil,
-        alwaysOpenSafariWhenLinkTap: Bool = false
+        alwaysOpenSafariWhenLinkTap: Bool = false,
+        screenNameForAnalytics: String
     ) {
         self.url = url
         self.localFilePath = localFilePath
@@ -98,6 +101,7 @@ open class WebViewController: ViewController {
         self.javascriptEvent = javascriptEvent
         self.basicAuthAccount = basicAuthAccount
         self.alwaysOpenSafariWhenLinkTap = alwaysOpenSafariWhenLinkTap
+        self._screenNameForAnalytics = screenNameForAnalytics
 
         super.init(nibName: nil, bundle: nil)
         self.title = screenTitle

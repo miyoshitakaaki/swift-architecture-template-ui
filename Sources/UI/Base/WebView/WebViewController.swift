@@ -159,8 +159,11 @@ private extension WebViewController {
         if let localFilePath = self.localFilePath {
             let localHTMLUrl = URL(fileURLWithPath: localFilePath, isDirectory: false)
             self.webView.loadFileURL(localHTMLUrl, allowingReadAccessTo: localHTMLUrl)
-        } else if let url = self.url {
-            self.webView.load(URLRequest(url: URL(string: url)!))
+        } else if
+            let urlString = self.url,
+            let url = URL(string: urlString)
+        {
+            self.webView.load(URLRequest(url: url))
         }
     }
 }

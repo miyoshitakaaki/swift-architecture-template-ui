@@ -25,8 +25,7 @@ extension CollectionViewController: VCInjectable {
 public final class CollectionViewController<
     T: CollectionList,
     C: NavigationContent
->: UIViewController,
-    UIAdaptivePresentationControllerDelegate,
+>: ViewController,
     ActivityPresentable,
     Refreshable
 {
@@ -38,6 +37,10 @@ public final class CollectionViewController<
 
     private let collection: T
     private let content: C
+
+    override public var screenNameForAnalytics: String {
+        self.collection.screenNameForAnalytics
+    }
 
     private var needReflesh = false
 
@@ -69,8 +72,6 @@ public final class CollectionViewController<
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        T.sendScreenView()
-
         self.tabBarController?.tabBar.isHidden = self.collection.hideTabbar
 
         navigationController?.setNavigationBarHidden(
@@ -90,10 +91,10 @@ public final class CollectionViewController<
         self.tabBarController?.tabBar.isHidden = false
     }
 
-    public func presentationControllerDidDismiss(
+    override public func presentationControllerDidDismiss(
         _ presentationController: UIPresentationController
     ) {
-        T.sendScreenView()
+        super.presentationControllerDidDismiss(presentationController)
 
         if self.needReflesh {
             self.viewModel.loadSubject.send((nil, false))

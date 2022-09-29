@@ -1,7 +1,7 @@
 import Combine
 import UIKit
 
-public protocol VCInjectable: UIViewController {
+public protocol VCInjectable: ViewController {
     associatedtype VM: ViewModel
     associatedtype UI: UserInterface
 

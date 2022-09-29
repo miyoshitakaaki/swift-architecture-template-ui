@@ -22,7 +22,7 @@ extension WebViewController: VCInjectable {
 
 // MARK: - stored properties
 
-open class WebViewController: UIViewController, AnalyticsScreenView {
+open class WebViewController: ViewController {
     public var viewModel: VM!
     public var ui: UI!
     public var cancellables: Set<AnyCancellable> = []
@@ -75,6 +75,8 @@ open class WebViewController: UIViewController, AnalyticsScreenView {
         case always, whenHasHistory
     }
 
+    override public var screenNameForAnalytics: String { "" }
+
     public init(
         url: String? = nil,
         localFilePath: String? = nil,
@@ -104,6 +106,17 @@ open class WebViewController: UIViewController, AnalyticsScreenView {
     @available(*, unavailable)
     public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override open func presentationControllerDidDismiss(
+        _ presentationController: UIPresentationController
+    ) {
+        super.presentationControllerDidDismiss(presentationController)
+
+        if self.needReflesh {
+            self.webView.reload()
+            self.needReflesh = false
+        }
     }
 }
 
@@ -145,8 +158,6 @@ extension WebViewController {
     override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        Self.sendScreenView()
-
         if self.needReflesh {
             self.webView.reload()
             self.needReflesh = false
@@ -171,17 +182,6 @@ private extension WebViewController {
 extension WebViewController: Refreshable {
     public func setNeedRefresh() {
         self.needReflesh = true
-    }
-}
-
-extension WebViewController: UIAdaptivePresentationControllerDelegate {
-    open func presentationControllerDidDismiss(
-        _ presentationController: UIPresentationController
-    ) {
-        if self.needReflesh {
-            self.webView.reload()
-            self.needReflesh = false
-        }
     }
 }
 

@@ -1,9 +1,12 @@
 import UIKit
+import Utility
 
 open class ViewController: UIViewController, AnalyticsScreenView,
     UIAdaptivePresentationControllerDelegate
 {
     open var screenNameForAnalytics: String { "" }
+
+    open var screenEventForAnalytics: AnalyticsEvent? { nil }
 
     override open func viewWillAppear(_ animated: Bool) {
         self.sendScreenView()

@@ -1,5 +1,6 @@
 import Combine
 import UIKit
+import Utility
 
 extension StackViewController: VCInjectable {
     public typealias VM = NoViewModel
@@ -18,6 +19,10 @@ public final class StackViewController<T: Stack>: ViewController {
     private let fetch: () -> Void
 
     override public var screenNameForAnalytics: String { self.component.screenNameForAnalytics }
+
+    override public var screenEventForAnalytics: AnalyticsEvent? {
+        self.component.screenEventForAnalytics
+    }
 
     public init(component: T, fetch: @escaping () -> Void) {
         self.component = component

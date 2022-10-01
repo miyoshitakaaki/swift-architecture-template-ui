@@ -1,7 +1,7 @@
 import UIKit
 import Utility
 
-public protocol AlertPresentable {
+public protocol AlertPresentable: UIViewController {
     func present(
         title: String,
         message: String,
@@ -9,7 +9,7 @@ public protocol AlertPresentable {
     )
 }
 
-public extension AlertPresentable where Self: UIViewController {
+public extension AlertPresentable {
     func present(
         title: String,
         message: String,

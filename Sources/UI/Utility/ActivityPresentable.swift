@@ -1,11 +1,11 @@
 import UIKit
 
-public protocol ActivityPresentable {
+public protocol ActivityPresentable: UIViewController {
     func presentActivity()
     func dismissActivity()
 }
 
-public extension ActivityPresentable where Self: UIViewController {
+public extension ActivityPresentable {
     func presentActivity() {
         if let activityIndicator = findActivity() {
             activityIndicator.startAnimating()

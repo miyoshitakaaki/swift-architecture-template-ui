@@ -1,11 +1,11 @@
 import UIKit
 
-public protocol KeyboardPresentable {
+public protocol KeyboardPresentable: UIViewController {
     func keyboardWillHide(_ notification: Notification)
     func keyboardWillShow(_ notification: Notification, offset: CGFloat)
 }
 
-public extension KeyboardPresentable where Self: UIViewController {
+public extension KeyboardPresentable {
     func keyboardWillHide(_ notification: Notification) {
         guard let userInfo = notification.userInfo as? [String: Any] else {
             return

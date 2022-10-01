@@ -4,7 +4,7 @@ import Utility
 
 public protocol CollectionViewControllerDelegate: AnyObject {
     // TODO: should not use generic parameter
-    func didItemSelected<T: CollectionList>(selectedInfo: SelectedCellInfo<T>)
+    func didItemSelected(selectedInfo: SelectedCellInfo<some CollectionList>)
     func didCellDequeued<T: UICollectionViewCell>(cell: T?, indexPath: IndexPath)
     func didSupplementaryViewDequeued(supplementaryView: UICollectionReusableView?)
     func didErrorOccured(error: AppError)

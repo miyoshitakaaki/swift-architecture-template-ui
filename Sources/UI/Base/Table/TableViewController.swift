@@ -2,9 +2,19 @@ import Combine
 import UIKit
 import Utility
 
+public struct SelectedTableCellInfo<T: Table> {
+    public let indexPath: IndexPath
+    public let viewData: T.Cell.ViewData?
+}
+
+public struct SelectedTableCell<T: Table> {
+    public let indexPath: IndexPath
+    public let cell: T.Cell?
+}
+
 public protocol TableViewControllerDelegate: AnyObject {
-    func didItemSelected<T: Table>(indexPath: IndexPath, table: T, cellData: T.Cell.ViewData?)
-    func didCellDequeued<T: Table>(indexPath: IndexPath, table: T, cell: T.Cell)
+    func didItemSelected(cellData: SelectedTableCellInfo<some Table>)
+    func didCellDequeued(cell: SelectedTableCell<some Table>)
     func didHeaderFooterDequeued(
         tableViewHeaderFooterView: UITableViewHeaderFooterView?,
         section: Int
@@ -136,19 +146,24 @@ public final class TableViewController<T: Table>: ViewController,
         self.ui.didItemSelectedPublisher
             .sink { [weak self] indexPath in
                 guard let self = self else { return }
-                self.delegate?.didItemSelected(
-                    indexPath: indexPath,
-                    table: self.table,
-                    cellData: self.viewModel.loadingState.value.value?[indexPath.section]
-                        .items[indexPath.row]
-                )
+                let viewData = self.viewModel.loadingState.value.value?[indexPath.section]
+                    .items[indexPath.row]
+                self.delegate?
+                    .didItemSelected(cellData: SelectedTableCellInfo<T>(
+                        indexPath: indexPath,
+                        viewData: viewData
+                    ))
             }
             .store(in: &self.cancellables)
 
         self.ui.didCellDequeuedPublisher
             .sink { [weak self] cell, indexPath in
                 guard let self = self else { return }
-                self.delegate?.didCellDequeued(indexPath: indexPath, table: self.table, cell: cell)
+                self.delegate?
+                    .didCellDequeued(
+                        cell: SelectedTableCell<T>
+                            .init(indexPath: indexPath, cell: cell)
+                    )
             }
             .store(in: &self.cancellables)
 

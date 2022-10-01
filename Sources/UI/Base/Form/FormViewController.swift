@@ -24,7 +24,13 @@ public final class FormViewController<T: Form>: ViewController, ActivityPresenta
     private let formType: T
     private let content: T.NavContent
 
-    override public var screenNameForAnalytics: String { self.formType.screenNameForAnalytics }
+    override public var screenNameForAnalytics: String {
+        self.formType.screenNameForAnalytics
+    }
+
+    override public var screenEventForAnalytics: [AnalyticsEvent] {
+        self.formType.screenEventForAnalytics
+    }
 
     public init(formType: T, content: T.NavContent) {
         self.formType = formType

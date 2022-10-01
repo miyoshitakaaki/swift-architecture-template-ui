@@ -42,6 +42,10 @@ public final class CollectionViewController<
         self.collection.screenNameForAnalytics
     }
 
+    override public var screenEventForAnalytics: [AnalyticsEvent] {
+        self.collection.screenEventForAnalytics
+    }
+
     private var needReflesh = false
 
     public init(collection: T, content: C) {

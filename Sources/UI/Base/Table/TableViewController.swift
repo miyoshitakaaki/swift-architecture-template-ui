@@ -44,7 +44,13 @@ public final class TableViewController<T: Table>: ViewController,
 
     private var needReflesh = false
 
-    override public var screenNameForAnalytics: String { self.table.screenNameForAnalytics }
+    override public var screenNameForAnalytics: String {
+        self.table.screenNameForAnalytics
+    }
+
+    override public var screenEventForAnalytics: [AnalyticsEvent] {
+        self.table.screenEventForAnalytics
+    }
 
     public init(table: T) {
         self.table = table

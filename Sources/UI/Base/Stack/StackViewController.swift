@@ -20,7 +20,7 @@ public final class StackViewController<T: Stack>: ViewController {
 
     override public var screenNameForAnalytics: String { self.component.screenNameForAnalytics }
 
-    override public var screenEventForAnalytics: AnalyticsEvent? {
+    override public var screenEventForAnalytics: [AnalyticsEvent] {
         self.component.screenEventForAnalytics
     }
 

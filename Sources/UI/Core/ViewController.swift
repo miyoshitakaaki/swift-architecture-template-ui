@@ -6,7 +6,7 @@ open class ViewController: UIViewController, AnalyticsScreenView,
 {
     open var screenNameForAnalytics: String { "" }
 
-    open var screenEventForAnalytics: AnalyticsEvent? { nil }
+    open var screenEventForAnalytics: [AnalyticsEvent] { [] }
 
     override open func viewWillAppear(_ animated: Bool) {
         self.sendScreenView()

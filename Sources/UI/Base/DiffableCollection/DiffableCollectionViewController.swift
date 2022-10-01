@@ -17,7 +17,7 @@ public final class DiffableCollectionViewController<
     public var ui: UI!
     public var cancellables: Set<AnyCancellable> = []
 
-    private let _screenEventForAnalytics: AnalyticsEvent?
+    private let _screenEventForAnalytics: [AnalyticsEvent]
     private let _screenNameForAnalytics: String
     private let content: C
 
@@ -25,12 +25,12 @@ public final class DiffableCollectionViewController<
 
     override public var screenNameForAnalytics: String { self._screenNameForAnalytics }
 
-    override public var screenEventForAnalytics: AnalyticsEvent? { self._screenEventForAnalytics }
+    override public var screenEventForAnalytics: [AnalyticsEvent] { self._screenEventForAnalytics }
 
     public init(
         content: C,
         screenNameForAnalytics: String,
-        screenEventForAnalytics: AnalyticsEvent? = nil
+        screenEventForAnalytics: [AnalyticsEvent] = []
     ) {
         self.content = content
         self._screenNameForAnalytics = screenNameForAnalytics

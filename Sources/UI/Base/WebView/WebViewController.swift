@@ -1,5 +1,6 @@
 import Combine
 import UIKit
+import Utility
 import WebKit
 
 public struct JavascriptEvent {
@@ -77,7 +78,11 @@ open class WebViewController: ViewController {
 
     private let _screenNameForAnalytics: String
 
+    private let _screenEventForAnalytics: AnalyticsEvent?
+
     override public var screenNameForAnalytics: String { self._screenNameForAnalytics }
+
+    override open var screenEventForAnalytics: AnalyticsEvent? { self._screenEventForAnalytics }
 
     public init(
         url: String? = nil,
@@ -90,7 +95,8 @@ open class WebViewController: ViewController {
         javascriptEvent: [JavascriptEvent] = [],
         basicAuthAccount: (id: String, password: String)? = nil,
         alwaysOpenSafariWhenLinkTap: Bool = false,
-        screenNameForAnalytics: String
+        screenNameForAnalytics: String,
+        screenEventForAnalytics: AnalyticsEvent? = nil
     ) {
         self.url = url
         self.localFilePath = localFilePath
@@ -102,6 +108,7 @@ open class WebViewController: ViewController {
         self.basicAuthAccount = basicAuthAccount
         self.alwaysOpenSafariWhenLinkTap = alwaysOpenSafariWhenLinkTap
         self._screenNameForAnalytics = screenNameForAnalytics
+        self._screenEventForAnalytics = screenEventForAnalytics
 
         super.init(nibName: nil, bundle: nil)
         self.title = screenTitle

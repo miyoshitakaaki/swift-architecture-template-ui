@@ -2,9 +2,11 @@ import Combine
 import UIKit
 import Utility
 
-public struct ListSection<T: Equatable, HeaderItem: Equatable, FooterItem: Equatable>: Equatable
-    where HeaderItem: Hashable, FooterItem: Hashable
-{
+public struct ListSection<
+    T: Equatable,
+    HeaderItem: Equatable & Hashable,
+    FooterItem: Equatable & Hashable
+>: Equatable {
     public struct Section: Equatable, Hashable {
         public let header: HeaderItem
         public let footer: FooterItem
@@ -27,9 +29,9 @@ public struct ListSection<T: Equatable, HeaderItem: Equatable, FooterItem: Equat
 public final class ListViewModel<
     T: Hashable,
     Parameter,
-    HeaderItem: Equatable,
-    FooterItem: Equatable
->: ViewModel where HeaderItem: Hashable, FooterItem: Hashable {
+    HeaderItem: Equatable & Hashable,
+    FooterItem: Equatable & Hashable
+>: ViewModel {
     public typealias Items = [ListSection<T, HeaderItem, FooterItem>]
 
     public let loadSubject: PassthroughSubject<(parameter: Parameter?, isAdditional: Bool), Never> =

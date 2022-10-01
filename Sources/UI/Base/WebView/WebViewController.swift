@@ -78,11 +78,11 @@ open class WebViewController: ViewController {
 
     private let _screenNameForAnalytics: String
 
-    private let _screenEventForAnalytics: AnalyticsEvent?
+    private let _screenEventForAnalytics: [AnalyticsEvent]
 
     override public var screenNameForAnalytics: String { self._screenNameForAnalytics }
 
-    override open var screenEventForAnalytics: AnalyticsEvent? { self._screenEventForAnalytics }
+    override open var screenEventForAnalytics: [AnalyticsEvent] { self._screenEventForAnalytics }
 
     public init(
         url: String? = nil,
@@ -96,7 +96,7 @@ open class WebViewController: ViewController {
         basicAuthAccount: (id: String, password: String)? = nil,
         alwaysOpenSafariWhenLinkTap: Bool = false,
         screenNameForAnalytics: String,
-        screenEventForAnalytics: AnalyticsEvent? = nil
+        screenEventForAnalytics: [AnalyticsEvent] = []
     ) {
         self.url = url
         self.localFilePath = localFilePath

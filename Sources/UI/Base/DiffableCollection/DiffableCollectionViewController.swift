@@ -1,5 +1,6 @@
 import Combine
 import UIKit
+import Utility
 
 extension DiffableCollectionViewController: VCInjectable {
     public typealias VM = NoViewModel
@@ -16,6 +17,7 @@ public final class DiffableCollectionViewController<
     public var ui: UI!
     public var cancellables: Set<AnyCancellable> = []
 
+    private let _screenEventForAnalytics: AnalyticsEvent?
     private let _screenNameForAnalytics: String
     private let content: C
 
@@ -23,9 +25,16 @@ public final class DiffableCollectionViewController<
 
     override public var screenNameForAnalytics: String { self._screenNameForAnalytics }
 
-    public init(content: C, screenNameForAnalytics: String) {
+    override public var screenEventForAnalytics: AnalyticsEvent? { self._screenEventForAnalytics }
+
+    public init(
+        content: C,
+        screenNameForAnalytics: String,
+        screenEventForAnalytics: AnalyticsEvent? = nil
+    ) {
         self.content = content
         self._screenNameForAnalytics = screenNameForAnalytics
+        self._screenEventForAnalytics = screenEventForAnalytics
         super.init(nibName: nil, bundle: nil)
     }
 

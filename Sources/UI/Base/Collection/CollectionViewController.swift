@@ -38,7 +38,7 @@ public final class CollectionViewController<
     private let collection: T
     private let content: C
 
-    override public var screenNameForAnalytics: String {
+    override public var screenNameForAnalytics: [AnalyticsScreen] {
         self.collection.screenNameForAnalytics
     }
 

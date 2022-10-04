@@ -18,18 +18,18 @@ public final class DiffableCollectionViewController<
     public var cancellables: Set<AnyCancellable> = []
 
     private let _screenEventForAnalytics: [AnalyticsEvent]
-    private let _screenNameForAnalytics: String
+    private let _screenNameForAnalytics: [AnalyticsScreen]
     private let content: C
 
     private var needReflesh = false
 
-    override public var screenNameForAnalytics: String { self._screenNameForAnalytics }
+    override public var screenNameForAnalytics: [AnalyticsScreen] { self._screenNameForAnalytics }
 
     override public var screenEventForAnalytics: [AnalyticsEvent] { self._screenEventForAnalytics }
 
     public init(
         content: C,
-        screenNameForAnalytics: String,
+        screenNameForAnalytics: [AnalyticsScreen] = [],
         screenEventForAnalytics: [AnalyticsEvent] = []
     ) {
         self.content = content

@@ -4,7 +4,7 @@ import Utility
 open class ViewController: UIViewController, AnalyticsScreenView,
     UIAdaptivePresentationControllerDelegate
 {
-    open var screenNameForAnalytics: String { "" }
+    open var screenNameForAnalytics: [AnalyticsScreen] { [] }
 
     open var screenEventForAnalytics: [AnalyticsEvent] { [] }
 

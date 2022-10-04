@@ -76,11 +76,11 @@ open class WebViewController: ViewController {
         case always, whenHasHistory
     }
 
-    private let _screenNameForAnalytics: String
+    private let _screenNameForAnalytics: [AnalyticsScreen]
 
     private let _screenEventForAnalytics: [AnalyticsEvent]
 
-    override public var screenNameForAnalytics: String { self._screenNameForAnalytics }
+    override open var screenNameForAnalytics: [AnalyticsScreen] { self._screenNameForAnalytics }
 
     override open var screenEventForAnalytics: [AnalyticsEvent] { self._screenEventForAnalytics }
 
@@ -95,7 +95,7 @@ open class WebViewController: ViewController {
         javascriptEvent: [JavascriptEvent] = [],
         basicAuthAccount: (id: String, password: String)? = nil,
         alwaysOpenSafariWhenLinkTap: Bool = false,
-        screenNameForAnalytics: String,
+        screenNameForAnalytics: [AnalyticsScreen] = [],
         screenEventForAnalytics: [AnalyticsEvent] = []
     ) {
         self.url = url

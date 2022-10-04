@@ -54,7 +54,7 @@ public final class TableViewController<T: Table>: ViewController,
 
     private var needReflesh = false
 
-    override public var screenNameForAnalytics: String {
+    override public var screenNameForAnalytics: [AnalyticsScreen] {
         self.table.screenNameForAnalytics
     }
 

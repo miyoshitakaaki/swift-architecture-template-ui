@@ -18,7 +18,9 @@ public final class StackViewController<T: Stack>: ViewController {
 
     private let fetch: () -> Void
 
-    override public var screenNameForAnalytics: String { self.component.screenNameForAnalytics }
+    override public var screenNameForAnalytics: [AnalyticsScreen] {
+        self.component.screenNameForAnalytics
+    }
 
     override public var screenEventForAnalytics: [AnalyticsEvent] {
         self.component.screenEventForAnalytics

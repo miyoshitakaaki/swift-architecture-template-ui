@@ -25,7 +25,7 @@ public final class FormConfirmController<T: FormConfirmProtocol>: ViewController
 
     private let form: T
 
-    override public var screenNameForAnalytics: String {
+    override public var screenNameForAnalytics: [AnalyticsScreen] {
         self.form.screenNameForAnalytics
     }
 

@@ -52,16 +52,18 @@ public final class DiffableCollectionViewController<
 
         self.ui.setupView(rootview: view)
 
-        self.ui.reload()
+        // TODO: remove this comment out
+//        self.ui.reload()
     }
 
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        if self.needReflesh {
-            self.ui.reload()
-            self.needReflesh = false
-        }
+        // TODO: use needReflesh
+//        if self.needReflesh {
+        self.ui.reload()
+        self.needReflesh = false
+//        }
     }
 
     public func setNeedRefresh() {

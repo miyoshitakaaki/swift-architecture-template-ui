@@ -54,7 +54,24 @@ open class WebViewController: ViewController {
     private let localFilePath: String?
 
     private let backButton = UIButton(style: .init(style: { button in
-        button.setBackgroundImage(UIImage(systemName: "chevron.backward"), for: .normal)
+        let largeConfig = UIImage.SymbolConfiguration(
+            pointSize: 18,
+            weight: .semibold,
+            scale: .large
+        )
+        button.setImage(
+            UIImage(
+                systemName: "chevron.backward",
+                withConfiguration: largeConfig
+            ),
+            for: .normal
+        )
+        button.contentEdgeInsets = UIEdgeInsets(
+            top: 0,
+            left: -6,
+            bottom: 0,
+            right: 16
+        )
     }))
 
     private var canGobackObservation: NSKeyValueObservation?
@@ -295,7 +312,13 @@ private extension WebViewController {
             // Fallback on earlier versions
         }
         let backItem = UIBarButtonItem(customView: backButton)
-        self.navigationItem.leftBarButtonItem = backItem
+
+        switch self.showWebBackButton {
+        case .always:
+            self.navigationItem.backBarButtonItem = backItem
+        case .whenHasHistory:
+            self.navigationItem.leftBarButtonItem = backItem
+        }
     }
 
     func setupCanGobackObservation() {

@@ -101,6 +101,8 @@ open class WebViewController: ViewController {
 
     override open var screenEventForAnalytics: [AnalyticsEvent] { self._screenEventForAnalytics }
 
+    private let linkTapEventForAnalytics: ((_ url: String) -> AnalyticsEvent)?
+
     public init(
         url: String? = nil,
         localFilePath: String? = nil,
@@ -113,7 +115,8 @@ open class WebViewController: ViewController {
         basicAuthAccount: (id: String, password: String)? = nil,
         alwaysOpenSafariWhenLinkTap: Bool = false,
         screenNameForAnalytics: [AnalyticsScreen] = [],
-        screenEventForAnalytics: [AnalyticsEvent] = []
+        screenEventForAnalytics: [AnalyticsEvent] = [],
+        linkTapEventForAnalytics: ((_ url: String) -> AnalyticsEvent)? = nil
     ) {
         self.url = url
         self.localFilePath = localFilePath
@@ -126,6 +129,7 @@ open class WebViewController: ViewController {
         self.alwaysOpenSafariWhenLinkTap = alwaysOpenSafariWhenLinkTap
         self._screenNameForAnalytics = screenNameForAnalytics
         self._screenEventForAnalytics = screenEventForAnalytics
+        self.linkTapEventForAnalytics = linkTapEventForAnalytics
 
         super.init(nibName: nil, bundle: nil)
         self.title = screenTitle
@@ -240,6 +244,11 @@ extension WebViewController: WKNavigationDelegate {
                 decisionHandler(.cancel)
                 return
             }
+
+            if let event = self.linkTapEventForAnalytics?(url.absoluteString) {
+                AnalyticsService.shared.sendEvent(event)
+            }
+
             if self.alwaysOpenSafariWhenLinkTap, url.scheme == "https" {
                 UIApplication.shared.open(url)
                 decisionHandler(.cancel)

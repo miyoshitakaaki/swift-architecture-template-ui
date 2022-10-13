@@ -53,33 +53,47 @@ public extension FlowController where T == NavigationController {
         self.navigation.viewControllers.first
     }
 
-    func show(error: AppError) {
+    func show(error: AppError, okAction: ((UIAlertAction) -> Void)? = nil) {
         switch error {
         case let .normal(title, message):
-            self.present(title: title, message: message) { [weak self] _ in
-                guard let self else { return }
 
-                if self.navigation.viewControllers.count == 1 {
-                    self.dismiss(animated: true)
-                } else {
-                    _ = self.navigation.popViewController(animated: true)
+            if let okAction {
+                self.present(title: title, message: message, action: okAction)
+            } else {
+                self.present(title: title, message: message) { [weak self] _ in
+                    guard let self else { return }
+
+                    if self.navigation.viewControllers.count == 1 {
+                        self.dismiss(animated: true)
+                    } else {
+                        _ = self.navigation.popViewController(animated: true)
+                    }
                 }
             }
 
         case let .auth(title, message):
-            self.present(title: title, message: message) { [weak self] _ in
 
-                guard let self else { return }
+            if let okAction {
+                self.present(title: title, message: message, action: okAction)
+            } else {
+                self.present(title: title, message: message) { [weak self] _ in
 
-                self.clear()
+                    guard let self else { return }
 
-                self.dismiss(animated: true) {
-                    self.delegate?.didFinished()
+                    self.clear()
+
+                    self.dismiss(animated: true) {
+                        self.delegate?.didFinished()
+                    }
                 }
             }
 
         case let .notice(title, message):
-            self.present(title: title, message: message) { _ in }
+            if let okAction {
+                self.present(title: title, message: message, action: okAction)
+            } else {
+                self.present(title: title, message: message) { _ in }
+            }
 
         case .none:
             break

@@ -55,7 +55,7 @@ open class WebViewController: ViewController {
 
     private let backButton = UIButton(style: .init(style: { button in
         let largeConfig = UIImage.SymbolConfiguration(
-            pointSize: 18,
+            pointSize: 16,
             weight: .semibold,
             scale: .large
         )
@@ -312,13 +312,7 @@ private extension WebViewController {
             // Fallback on earlier versions
         }
         let backItem = UIBarButtonItem(customView: backButton)
-
-        switch self.showWebBackButton {
-        case .always:
-            self.navigationItem.backBarButtonItem = backItem
-        case .whenHasHistory:
-            self.navigationItem.leftBarButtonItem = backItem
-        }
+        self.navigationItem.leftBarButtonItem = backItem
     }
 
     func setupCanGobackObservation() {

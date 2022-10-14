@@ -16,21 +16,6 @@ public protocol FlowController: UIViewController, AlertPresentable {
 public extension FlowController {
     func show(
         navigation: NavigationController,
-        vc: UIViewController,
-        navContent: NavigationContent
-    ) {
-        self.setupNavigationBar(content: navContent)
-
-        if navigation.viewControllers.isEmpty {
-            add(navigation)
-            navigation.viewControllers = [vc]
-        } else {
-            add(vc)
-        }
-    }
-
-    func show(
-        navigation: NavigationController,
         vc: UIViewController
     ) {
         if navigation.viewControllers.isEmpty {
@@ -39,20 +24,6 @@ public extension FlowController {
         } else {
             add(vc)
         }
-    }
-
-    private func setupNavigationBar(content: NavigationContent) {
-        self.navigationItem.rightBarButtonItems = content.rightNavigationItems
-        self.navigationItem.leftBarButtonItems = content.leftNavigationItems
-
-        if let title = content.title {
-            self.title = title
-        } else {
-            self.navigationItem.titleView = UIView()
-        }
-
-        self.navigationItem.rightBarButtonItem?.tintColor = content.rightBarButtonItemTintColor
-        self.navigationItem.leftBarButtonItem?.tintColor = content.leftBarButtonItemTintColor
     }
 }
 

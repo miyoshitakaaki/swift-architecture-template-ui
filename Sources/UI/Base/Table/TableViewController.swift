@@ -62,8 +62,11 @@ public final class TableViewController<T: Table>: ViewController,
         self.table.screenEventForAnalytics
     }
 
-    public init(table: T) {
+    private let content: T.NavContent
+
+    public init(table: T, content: T.NavContent) {
         self.table = table
+        self.content = content
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -78,6 +81,8 @@ public final class TableViewController<T: Table>: ViewController,
         self.view.backgroundColor = self.table.backgroundColor
 
         self.ui.setupView(rootview: view)
+
+        self.setupNavigationBar(content: self.content)
 
         if self.table.showSearchBar {
             let searchBar = UISearchBar(frame: navigationController?.navigationBar.bounds ?? .zero)

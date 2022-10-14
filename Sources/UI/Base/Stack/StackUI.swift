@@ -20,11 +20,6 @@ public final class StackUI<T: Stack>: NSObject {
 }
 
 extension StackUI: UserInterface {
-    public func setupNavigationBar(
-        navigationBar: UINavigationBar?,
-        navigationItem: UINavigationItem?
-    ) {}
-
     public func setupView(rootview: UIView) {
         self.setupScrollView(rootview)
         self.setupStackView()

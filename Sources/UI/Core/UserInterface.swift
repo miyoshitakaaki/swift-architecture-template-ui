@@ -12,12 +12,7 @@ public extension UserInterface {
     func setupNavigationBar(
         navigationBar: UINavigationBar? = nil,
         navigationItem: UINavigationItem? = nil
-    ) {
-        self.setupNavigationBar(
-            navigationBar: navigationBar,
-            navigationItem: navigationItem
-        )
-    }
+    ) {}
 }
 
 public class NoUserInterface: UserInterface {

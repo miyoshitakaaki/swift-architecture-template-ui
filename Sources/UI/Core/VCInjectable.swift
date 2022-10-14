@@ -28,16 +28,18 @@ public extension VCInjectable {
     }
 
     func setupNavigationBar(content: NavigationContent) {
-        self.navigationItem.rightBarButtonItems = content.rightNavigationItems
-        self.navigationItem.leftBarButtonItems = content.leftNavigationItems
+        let target = (self.parent as? (any FlowController)) ?? self
+
+        target.navigationItem.rightBarButtonItems = content.rightNavigationItems
+        target.navigationItem.leftBarButtonItems = content.leftNavigationItems
 
         if let title = content.title {
-            self.title = title
+            target.title = title
         } else {
-            self.navigationItem.titleView = UIView()
+            target.navigationItem.titleView = UIView()
         }
 
-        self.navigationItem.rightBarButtonItem?.tintColor = content.rightBarButtonItemTintColor
-        self.navigationItem.leftBarButtonItem?.tintColor = content.leftBarButtonItemTintColor
+        target.navigationItem.rightBarButtonItem?.tintColor = content.rightBarButtonItemTintColor
+        target.navigationItem.leftBarButtonItem?.tintColor = content.leftBarButtonItemTintColor
     }
 }

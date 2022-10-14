@@ -44,8 +44,11 @@ public func create<T: CollectionList>(
     return vc
 }
 
-public func create<T: Table>(table: T) -> TableViewController<T> {
-    let vc = TableViewController(table: table)
+public func create<T: Table>(
+    table: T,
+    content: T.NavContent
+) -> TableViewController<T> {
+    let vc = TableViewController(table: table, content: content)
     vc.inject(
         viewModel: .init(fetchPublisher: table.fetchPublisher),
         ui: .init(table: table)

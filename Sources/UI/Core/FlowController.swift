@@ -29,6 +29,18 @@ public extension FlowController {
         }
     }
 
+    func show(
+        navigation: NavigationController,
+        vc: UIViewController
+    ) {
+        if navigation.viewControllers.isEmpty {
+            add(navigation)
+            navigation.viewControllers = [vc]
+        } else {
+            add(vc)
+        }
+    }
+
     private func setupNavigationBar(content: NavigationContent) {
         self.navigationItem.rightBarButtonItems = content.rightNavigationItems
         self.navigationItem.leftBarButtonItems = content.leftNavigationItems

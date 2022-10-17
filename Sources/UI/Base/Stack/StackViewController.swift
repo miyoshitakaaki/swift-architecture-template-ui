@@ -14,10 +14,6 @@ public final class StackViewController<T: Stack>: ViewController {
     public var ui: UI!
     public var cancellables: Set<AnyCancellable> = []
 
-    private let component: T
-
-    private let fetch: () -> Void
-
     override public var screenNameForAnalytics: [AnalyticsScreen] {
         self.component.screenNameForAnalytics
     }
@@ -26,9 +22,20 @@ public final class StackViewController<T: Stack>: ViewController {
         self.component.screenEventForAnalytics
     }
 
-    public init(component: T, fetch: @escaping () -> Void) {
+    private let component: T
+
+    private let content: NavigationContent
+
+    private let fetch: () -> Void
+
+    public init(
+        component: T,
+        content: NavigationContent,
+        fetch: @escaping () -> Void
+    ) {
         self.component = component
         self.fetch = fetch
+        self.content = content
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -43,6 +50,8 @@ public final class StackViewController<T: Stack>: ViewController {
         view.backgroundColor = .white
 
         self.ui.setupView(rootview: view)
+
+        self.setupNavigationBar(content: self.content)
 
         self.fetch()
     }

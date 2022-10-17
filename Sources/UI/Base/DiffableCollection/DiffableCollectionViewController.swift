@@ -12,7 +12,7 @@ extension DiffableCollectionViewController: VCInjectable {
 public final class DiffableCollectionViewController<
     S: DiffableCollectionSection,
     C: NavigationContent
->: ViewController, Refreshable {
+>: ViewController, Refreshable, ActivityPresentable, DiffableCollectionUIDelegate {
     public var viewModel: VM!
     public var ui: UI!
     public var cancellables: Set<AnyCancellable> = []
@@ -48,6 +48,8 @@ public final class DiffableCollectionViewController<
 
         view.backgroundColor = .white
 
+        self.ui.uiDelegate = self
+
         self.setupNavigationBar(content: self.content)
 
         self.ui.setupView(rootview: view)
@@ -77,5 +79,13 @@ public final class DiffableCollectionViewController<
             self.ui.reload()
             self.needReflesh = false
         }
+    }
+
+    public func willfetchAll() {
+        self.presentActivity()
+    }
+
+    public func didfetchAll() {
+        self.dismissActivity()
     }
 }

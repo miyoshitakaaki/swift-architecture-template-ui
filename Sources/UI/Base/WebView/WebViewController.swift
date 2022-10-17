@@ -224,20 +224,20 @@ extension WebViewController: Refreshable {
 extension WebViewController: WKUIDelegate {}
 
 extension WebViewController: WKURLSchemeHandler {
-    public func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
+    open func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
         UIApplication.shared.open(webView.url!)
         urlSchemeTask.didReceive(URLResponse())
         urlSchemeTask.didReceive(Data())
         urlSchemeTask.didFinish()
     }
 
-    public func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
+    open func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
         urlSchemeTask.didFinish()
     }
 }
 
 extension WebViewController: WKNavigationDelegate {
-    public func webView(
+    open func webView(
         _ webView: WKWebView,
         decidePolicyFor navigationAction: WKNavigationAction,
         decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
@@ -270,7 +270,7 @@ extension WebViewController: WKNavigationDelegate {
         }
     }
 
-    public func webView(
+    open func webView(
         _ webView: WKWebView,
         didReceive challenge: URLAuthenticationChallenge,
         completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
@@ -295,7 +295,7 @@ extension WebViewController: WKNavigationDelegate {
 }
 
 extension WebViewController: WKScriptMessageHandler {
-    public func userContentController(
+    open func userContentController(
         _ userContentController: WKUserContentController,
         didReceive message: WKScriptMessage
     ) {

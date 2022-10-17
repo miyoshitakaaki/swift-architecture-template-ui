@@ -103,10 +103,11 @@ open class WebViewController: ViewController {
 
     private let linkTapEventForAnalytics: ((_ url: String) -> AnalyticsEvent)?
 
+    private let navigationContent: NavigationContent
+
     public init(
         url: String? = nil,
         localFilePath: String? = nil,
-        screenTitle: String,
         showProgress: Bool = false,
         prohibitPopup: Bool = true,
         scheme: String? = nil,
@@ -116,7 +117,8 @@ open class WebViewController: ViewController {
         alwaysOpenSafariWhenLinkTap: Bool = false,
         screenNameForAnalytics: [AnalyticsScreen] = [],
         screenEventForAnalytics: [AnalyticsEvent] = [],
-        linkTapEventForAnalytics: ((_ url: String) -> AnalyticsEvent)? = nil
+        linkTapEventForAnalytics: ((_ url: String) -> AnalyticsEvent)? = nil,
+        navigationContent: NavigationContent
     ) {
         self.url = url
         self.localFilePath = localFilePath
@@ -130,9 +132,9 @@ open class WebViewController: ViewController {
         self._screenNameForAnalytics = screenNameForAnalytics
         self._screenEventForAnalytics = screenEventForAnalytics
         self.linkTapEventForAnalytics = linkTapEventForAnalytics
+        self.navigationContent = navigationContent
 
         super.init(nibName: nil, bundle: nil)
-        self.title = screenTitle
     }
 
     @available(*, unavailable)
@@ -157,6 +159,8 @@ open class WebViewController: ViewController {
 extension WebViewController {
     override open func viewDidLoad() {
         super.viewDidLoad()
+
+        self.setupNavigationBar(content: self.navigationContent)
 
         self.view.addSubviews(
             self.webView,

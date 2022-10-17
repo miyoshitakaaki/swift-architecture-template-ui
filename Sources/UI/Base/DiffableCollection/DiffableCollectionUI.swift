@@ -2,6 +2,11 @@ import Combine
 import Foundation
 import UIKit
 
+public protocol DiffableCollectionUIDelegate: AnyObject {
+    func willfetchAll()
+    func didfetchAll()
+}
+
 public final class DiffableCollectionUI<
     S: DiffableCollectionSection
 >: NSObject,
@@ -71,6 +76,8 @@ public final class DiffableCollectionUI<
 
     public weak var delegate: DiffableCollectionEvent?
 
+    public weak var uiDelegate: DiffableCollectionUIDelegate?
+
     public init(
         cellRegistration: S.CellRegistration,
         supplementaryRegistration: S.SupplementaryRegistration
@@ -100,11 +107,17 @@ extension DiffableCollectionUI: UserInterface {
     }
 
     func reload() {
+        self.uiDelegate?.willfetchAll()
+
         S.fetchAll
             .receive(on: DispatchQueue.main)
-            .sink { finished in
+            .sink { [weak self] finished in
+
+                guard let self else { return }
 
                 self.collectionView.refreshControl?.endRefreshing()
+
+                self.uiDelegate?.didfetchAll()
 
                 switch finished {
                 case .finished:
@@ -116,11 +129,13 @@ extension DiffableCollectionUI: UserInterface {
 
             } receiveValue: { [weak self] allCases in
 
-                guard let self = self else { return }
+                guard let self else { return }
+
+                self.uiDelegate?.didfetchAll()
 
                 var snapshot = NSDiffableDataSourceSnapshot<S, S.Item>()
                 snapshot.appendSections(allCases)
-                self.dataSource.apply(snapshot, animatingDifferences: true)
+                self.dataSource.apply(snapshot, animatingDifferences: false)
 
                 allCases.forEach { section in
                     section.fetch
@@ -142,7 +157,7 @@ extension DiffableCollectionUI: UserInterface {
                                 self.dataSource.apply(
                                     sectionSnapshot,
                                     to: section,
-                                    animatingDifferences: true
+                                    animatingDifferences: false
                                 )
                                 self.collectionView.refreshControl?.endRefreshing()
                             } else {

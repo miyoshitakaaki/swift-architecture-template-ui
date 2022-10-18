@@ -9,6 +9,7 @@ public func create<T: Form>(
     let vc = FormViewController(formType: form, content: navContent)
     vc.inject(
         viewModel: .init(
+            confirmAlertTitle: form.confirmAlertTitle,
             isOptional: form.isOptional,
             fetch: form.fetch,
             complete: form.complete

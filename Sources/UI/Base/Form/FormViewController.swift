@@ -46,6 +46,8 @@ public final class FormViewController<T: Form>: ViewController, ActivityPresenta
     override public func viewDidLoad() {
         super.viewDidLoad()
 
+        self.viewModel.delegate = self
+
         self.setupNavigationBar(content: self.content)
         self.ui.setupView(rootview: view)
         self.ui.setupNavigationBar(navigationBar: nil, navigationItem: navigationItem)
@@ -86,34 +88,6 @@ private extension FormViewController {
 
         self.viewModel.bind(
             buttonPublisher: self.ui.completionButtonPublisher
-                .flatMap { [weak self] _ -> AnyPublisher<Bool, Never> in
-
-                    if let title = self?.formType.confirmAlertTitle {
-                        return Future { promise in
-                            let alert = UIAlertController(
-                                title: title,
-                                message: "",
-                                preferredStyle: .alert
-                            )
-                            alert.addAction(UIAlertAction(
-                                title: "OK",
-                                style: .default
-                            ) { _ in
-                                promise(.success(true))
-                            })
-                            alert.addAction(UIAlertAction(
-                                title: "キャンセル",
-                                style: .default
-                            ) { _ in
-                                promise(.success(false))
-                            })
-                            self?.present(alert, animated: true)
-                        }.eraseToAnyPublisher()
-                    } else {
-                        return Just(true).eraseToAnyPublisher()
-                    }
-                }
-                .eraseToAnyPublisher()
         )
         .store(in: &self.cancellables)
 
@@ -144,5 +118,11 @@ private extension FormViewController {
                     break
                 }
             }).store(in: &self.cancellables)
+    }
+}
+
+extension FormViewController: FormViewModelDelegate {
+    public func didAlertRequested(alert: UIAlertController) {
+        self.present(alert, animated: true)
     }
 }

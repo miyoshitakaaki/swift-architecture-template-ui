@@ -151,8 +151,10 @@ public final class TableViewController<T: Table>: ViewController,
         self.ui.didItemSelectedPublisher
             .sink { [weak self] indexPath in
                 guard let self = self else { return }
-                let viewData = self.viewModel.loadingState.value.value?[indexPath.section]
-                    .items[indexPath.row]
+                guard
+                    let viewData = self.viewModel.loadingState.value
+                        .value?[safe: indexPath.section]?
+                        .items[safe: indexPath.row] else { return }
                 self.delegate?
                     .didItemSelected(cellData: SelectedTableCellInfo<T>(
                         indexPath: indexPath,

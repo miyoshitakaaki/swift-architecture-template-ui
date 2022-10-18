@@ -23,7 +23,7 @@ extension WebViewController: VCInjectable {
 
 // MARK: - stored properties
 
-open class WebViewController: ViewController {
+open class WebViewController: ViewController, UIGestureRecognizerDelegate {
     public var viewModel: VM!
     public var ui: UI!
     public var cancellables: Set<AnyCancellable> = []
@@ -152,6 +152,10 @@ open class WebViewController: ViewController {
             self.needReflesh = false
         }
     }
+
+    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        true
+    }
 }
 
 // MARK: - override methods
@@ -189,6 +193,9 @@ extension WebViewController {
         self.setupCanGobackObservation()
 
         self.load()
+
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     }
 
     override open func viewWillAppear(_ animated: Bool) {
@@ -333,9 +340,13 @@ private extension WebViewController {
             switch self.showWebBackButton {
             case .always:
                 self.backButton.isHidden = false
+
             case .whenHasHistory:
                 self.backButton.isHidden = !self.webView.canGoBack
             }
+
+            self.navigationController?.interactivePopGestureRecognizer?
+                .isEnabled = !self.webView.canGoBack
         }
     }
 

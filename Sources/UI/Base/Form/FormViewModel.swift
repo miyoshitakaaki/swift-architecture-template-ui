@@ -159,7 +159,7 @@ public final class FormViewModel<T: Form>: ViewModel {
                         }.eraseToAnyPublisher()
 
                 case .confirmCancel:
-                    return Just(LoadingState<T.Input, AppError>.done(T.Input()))
+                    return Just(LoadingState<T.Input, AppError>.standby())
                         .eraseToAnyPublisher()
 
                 case .none:

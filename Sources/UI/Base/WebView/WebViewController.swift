@@ -67,10 +67,10 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate {
             for: .normal
         )
         button.contentEdgeInsets = UIEdgeInsets(
-            top: 0,
-            left: -6,
-            bottom: 0,
-            right: 16
+            top: 8,
+            left: 0,
+            bottom: 8,
+            right: 32
         )
     }))
 

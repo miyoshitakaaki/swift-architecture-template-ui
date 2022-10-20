@@ -105,6 +105,8 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate {
 
     private let navigationContent: NavigationContent
 
+    private let needPullToRefresh: Bool
+
     public init(
         url: String? = nil,
         localFilePath: String? = nil,
@@ -118,7 +120,8 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate {
         screenNameForAnalytics: [AnalyticsScreen] = [],
         screenEventForAnalytics: [AnalyticsEvent] = [],
         linkTapEventForAnalytics: ((_ url: String) -> AnalyticsEvent)? = nil,
-        navigationContent: NavigationContent
+        navigationContent: NavigationContent,
+        needPullToRefresh: Bool = false
     ) {
         self.url = url
         self.localFilePath = localFilePath
@@ -133,6 +136,7 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate {
         self._screenEventForAnalytics = screenEventForAnalytics
         self.linkTapEventForAnalytics = linkTapEventForAnalytics
         self.navigationContent = navigationContent
+        self.needPullToRefresh = needPullToRefresh
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -187,6 +191,10 @@ extension WebViewController {
 
         if self.showProgress {
             self.setupObservation()
+        }
+
+        if self.needPullToRefresh {
+            self.setupRefreshControl()
         }
 
         self.setupBackButton()
@@ -272,6 +280,8 @@ extension WebViewController: WKNavigationDelegate {
     }
 
     open func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        self.webView.scrollView.refreshControl?.endRefreshing()
+
         if self.prohibitPopup, #available(iOS 16.0, *) {
             self.prohibitTouchCalloutAndUserSelect()
         }
@@ -313,6 +323,20 @@ extension WebViewController: WKScriptMessageHandler {
 }
 
 private extension WebViewController {
+    func setupRefreshControl() {
+        let refreshControl = UIRefreshControl()
+        self.webView.scrollView.refreshControl = refreshControl
+        refreshControl.addTarget(
+            self,
+            action: #selector(self.refreshWebView(sender:)),
+            for: .valueChanged
+        )
+    }
+
+    @objc func refreshWebView(sender: UIRefreshControl) {
+        self.webView.reload()
+    }
+
     func setupBackButton() {
         self.backButton.isHidden = self.showWebBackButton == .whenHasHistory
 

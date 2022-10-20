@@ -44,7 +44,7 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate {
             userContentController.add(self, name: event.name)
         }
         config.userContentController = userContentController
-
+        config.mediaTypesRequiringUserActionForPlayback = []
         config.allowsInlineMediaPlayback = true
         return .init(frame: .zero, configuration: config)
 
@@ -236,7 +236,17 @@ extension WebViewController: Refreshable {
     }
 }
 
-extension WebViewController: WKUIDelegate {}
+extension WebViewController: WKUIDelegate {
+    @available(iOS 15.0, *)
+    public func webView(
+        _ webView: WKWebView,
+        decideMediaCapturePermissionsFor origin: WKSecurityOrigin,
+        initiatedBy frame: WKFrameInfo,
+        type: WKMediaCaptureType
+    ) async -> WKPermissionDecision {
+        .grant
+    }
+}
 
 extension WebViewController: WKURLSchemeHandler {
     open func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {

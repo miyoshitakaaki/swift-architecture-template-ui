@@ -3,7 +3,7 @@ import Foundation
 import UIKit
 
 public protocol DiffableCollectionUIDelegate: AnyObject {
-    func willfetchAll()
+    func willfetchAll(pullToRefresh: Bool)
     func didfetchAll()
 }
 
@@ -106,8 +106,8 @@ extension DiffableCollectionUI: UserInterface {
         setupCollectionView(rootview: rootview)
     }
 
-    func reload() {
-        self.uiDelegate?.willfetchAll()
+    func reload(pullToRefresh: Bool) {
+        self.uiDelegate?.willfetchAll(pullToRefresh: pullToRefresh)
 
         S.fetchAll
             .receive(on: DispatchQueue.main)
@@ -194,7 +194,7 @@ private extension DiffableCollectionUI {
 
         if #available(iOS 14.0, *) {
             self.collectionView.refreshControl?.addAction(.init(handler: { [weak self] _ in
-                self?.reload()
+                self?.reload(pullToRefresh: true)
             }), for: .valueChanged)
         } else {
             fatalError("not supprt under ios 14")

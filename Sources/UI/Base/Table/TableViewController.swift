@@ -1,4 +1,5 @@
 import Combine
+import SkeletonView
 import UIKit
 import Utility
 
@@ -79,6 +80,8 @@ public final class TableViewController<T: Table>: ViewController,
         super.viewDidLoad()
 
         self.view.backgroundColor = self.table.backgroundColor
+
+        self.view.isSkeletonable = true
 
         self.ui.setupView(rootview: view)
 
@@ -205,17 +208,25 @@ public final class TableViewController<T: Table>: ViewController,
                     self.ui.endRefresh()
                     self.dismissActivity()
 
-                case .loading:
-                    self.presentActivity()
+                case let .loading(value):
+
+                    if let items = self.table.skeletonItems, value?.isEmpty != false {
+                        self.ui.reload(items: items)
+                        self.view.showAnimatedGradientSkeleton()
+                    } else {
+                        self.presentActivity()
+                    }
 
                 case let .failed(error):
                     self.ui.endRefresh()
                     self.dismissActivity()
+                    self.view.hideSkeleton()
                     self.delegate?.didErrorOccured(error: error)
 
                 case let .done(value):
                     self.ui.endRefresh()
                     self.dismissActivity()
+                    self.view.hideSkeleton()
                     self.ui.reload(items: value)
 
                 case .addtionalDone:

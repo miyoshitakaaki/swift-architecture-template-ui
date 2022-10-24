@@ -17,10 +17,12 @@ public protocol Table: List, AnalyticsScreenName {
     var fetchPublisher: ((parameter: Parameter?, isAdditional: Bool))
         -> AnyPublisher<Items, AppError> { get }
     func mapper(entities: [[Entity]]) -> Items
+    var skeletonItems: Items? { get }
 }
 
 public extension Table {
     var showSearchBar: Bool { false }
+    var skeletonItems: Items? { nil }
 }
 
 public protocol TableViewCell: UITableViewCell {

@@ -1,4 +1,5 @@
 import Combine
+import SkeletonView
 import UIKit
 import Utility
 
@@ -62,7 +63,9 @@ public final class CollectionViewController<
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = self.collection.backgroundColor
+        self.view.backgroundColor = self.collection.backgroundColor
+
+        self.view.isSkeletonable = true
 
         self.setupNavigationBar(content: self.content)
 
@@ -141,23 +144,32 @@ public final class CollectionViewController<
             .sink(receiveValue: { [weak self] state in
 
                 guard let self = self else { return }
+
                 switch state {
                 case .standby:
                     self.ui.endRefresh()
                     self.dismissActivity()
 
-                case .loading:
-                    self.presentActivity()
+                case let .loading(value):
+
+                    if let items = self.collection.skeletonItems, value?.isEmpty != false {
+                        self.ui.reload(items: items)
+                        self.view.showAnimatedGradientSkeleton()
+                    } else {
+                        self.presentActivity()
+                    }
 
                 case let .failed(error):
                     self.ui.endRefresh()
                     self.dismissActivity()
                     self.delegate?.didErrorOccured(error: error)
+                    self.view.hideSkeleton()
 
                 case let .done(value):
                     self.ui.endRefresh()
                     self.dismissActivity()
                     self.ui.reload(items: value)
+                    self.view.hideSkeleton()
 
                 case .addtionalDone:
                     break

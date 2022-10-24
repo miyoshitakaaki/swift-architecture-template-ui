@@ -212,7 +212,10 @@ public final class TableViewController<T: Table>: ViewController,
 
                     if let items = self.table.skeletonItems, value?.isEmpty != false {
                         self.ui.reload(items: items)
-                        self.view.showAnimatedGradientSkeleton()
+
+                        DispatchQueue.main.async {
+                            self.view.showAnimatedGradientSkeleton()
+                        }
                     } else {
                         self.presentActivity()
                     }

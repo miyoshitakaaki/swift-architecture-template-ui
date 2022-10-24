@@ -7,6 +7,7 @@ public extension AlertPresentable {
     func present(
         title: String,
         message: String,
+        messageAlignment: NSTextAlignment = .left,
         okButtonTitle: String = "OK",
         action: @escaping (UIAlertAction) -> Void
     ) {
@@ -15,6 +16,19 @@ public extension AlertPresentable {
             message: message,
             preferredStyle: .alert
         )
+
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = messageAlignment
+        let messageText = NSAttributedString(
+            string: message,
+            attributes: [
+                NSAttributedString.Key.paragraphStyle: paragraphStyle,
+                NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12),
+            ]
+        )
+
+        alert.setValue(messageText, forKey: "attributedMessage")
+
         alert.addAction(
             .init(
                 title: okButtonTitle,
@@ -28,6 +42,7 @@ public extension AlertPresentable {
     func present(
         title: String,
         message: String,
+        messageAlignment: NSTextAlignment = .left,
         okButtonTitle: String = "OK",
         cancelButtonTitle: String = "キャンセル",
         okAction: @escaping (UIAlertAction) -> Void,
@@ -38,6 +53,19 @@ public extension AlertPresentable {
             message: message,
             preferredStyle: .alert
         )
+
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = messageAlignment
+        let messageText = NSAttributedString(
+            string: message,
+            attributes: [
+                NSAttributedString.Key.paragraphStyle: paragraphStyle,
+                NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12),
+            ]
+        )
+
+        alert.setValue(messageText, forKey: "attributedMessage")
+
         alert.addAction(
             .init(
                 title: cancelButtonTitle,

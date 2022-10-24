@@ -17,12 +17,14 @@ public protocol CollectionList: List, AnalyticsScreenName {
     var fetchPublisher: ((parameter: Parameter?, isAdditional: Bool))
         -> AnyPublisher<Items, AppError> { get }
     var floatingButton: UIButton? { get }
+    var skeletonItems: Items? { get }
 }
 
 public extension CollectionList {
     var floatingButton: UIButton? { nil }
     var hideTabbar: Bool { false }
     var topViewSubject: PassthroughSubject<String, Never> { .init() }
+    var skeletonItems: Items? { nil }
 }
 
 public protocol CollectionLayout: UICollectionViewCell {

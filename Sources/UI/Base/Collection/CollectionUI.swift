@@ -1,5 +1,6 @@
 import Combine
 import Foundation
+import SkeletonView
 import UIKit
 import Utility
 
@@ -101,6 +102,8 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
     public init(collection: T) {
         self.collection = collection
         super.init(list: collection)
+
+        self.collectionView.isSkeletonable = true
     }
 
     public func collectionView(

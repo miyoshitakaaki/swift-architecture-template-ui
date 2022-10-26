@@ -7,6 +7,7 @@ public protocol FlowDelegate: AnyObject {
 
 public protocol FlowController: UIViewController, AlertPresentable {
     associatedtype T
+    var alertMessageAlignment: NSTextAlignment? { get }
     var navigation: T { get }
     var delegate: FlowDelegate? { get set }
     func start()
@@ -41,9 +42,18 @@ public extension FlowController where T == NavigationController {
         case let .normal(title, message):
 
             if let okAction {
-                self.present(title: title, message: message, action: okAction)
+                self.present(
+                    title: title,
+                    message: message,
+                    messageAlignment: alertMessageAlignment,
+                    action: okAction
+                )
             } else {
-                self.present(title: title, message: message) { [weak self] _ in
+                self.present(
+                    title: title,
+                    message: message,
+                    messageAlignment: alertMessageAlignment
+                ) { [weak self] _ in
                     guard let self else { return }
 
                     if self.navigation.viewControllers.count == 1 {
@@ -57,9 +67,18 @@ public extension FlowController where T == NavigationController {
         case let .auth(title, message):
 
             if let okAction {
-                self.present(title: title, message: message, action: okAction)
+                self.present(
+                    title: title,
+                    message: message,
+                    messageAlignment: alertMessageAlignment,
+                    action: okAction
+                )
             } else {
-                self.present(title: title, message: message) { [weak self] _ in
+                self.present(
+                    title: title,
+                    message: message,
+                    messageAlignment: alertMessageAlignment
+                ) { [weak self] _ in
 
                     guard let self else { return }
 
@@ -73,9 +92,18 @@ public extension FlowController where T == NavigationController {
 
         case let .notice(title, message):
             if let okAction {
-                self.present(title: title, message: message, action: okAction)
+                self.present(
+                    title: title,
+                    message: message,
+                    messageAlignment: alertMessageAlignment,
+                    action: okAction
+                )
             } else {
-                self.present(title: title, message: message) { _ in }
+                self.present(
+                    title: title,
+                    message: message,
+                    messageAlignment: alertMessageAlignment
+                ) { _ in }
             }
 
         case .none:
@@ -96,22 +124,37 @@ public extension FlowController where T == TabBarController {
     func show(error: AppError) {
         switch error {
         case let .normal(title, message):
-            self.present(title: title, message: message) { _ in }
+            self
+                .present(
+                    title: title,
+                    message: message,
+                    messageAlignment: alertMessageAlignment
+                ) { _ in }
 
         case let .auth(title, message):
-            self.present(title: title, message: message) { [weak self] _ in
+            self
+                .present(
+                    title: title,
+                    message: message,
+                    messageAlignment: alertMessageAlignment
+                ) { [weak self] _ in
 
-                guard let self else { return }
+                    guard let self else { return }
 
-                self.clear()
+                    self.clear()
 
-                self.dismiss(animated: true) {
-                    self.delegate?.didFinished()
+                    self.dismiss(animated: true) {
+                        self.delegate?.didFinished()
+                    }
                 }
-            }
 
         case let .notice(title, message):
-            self.present(title: title, message: message) { _ in }
+            self
+                .present(
+                    title: title,
+                    message: message,
+                    messageAlignment: alertMessageAlignment
+                ) { _ in }
 
         case .none:
             break

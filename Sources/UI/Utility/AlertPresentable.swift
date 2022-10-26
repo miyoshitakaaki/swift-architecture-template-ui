@@ -7,7 +7,7 @@ public extension AlertPresentable {
     func present(
         title: String,
         message: String,
-        messageAlignment: NSTextAlignment = .left,
+        messageAlignment: NSTextAlignment? = nil,
         okButtonTitle: String = "OK",
         action: @escaping (UIAlertAction) -> Void
     ) {
@@ -17,17 +17,19 @@ public extension AlertPresentable {
             preferredStyle: .alert
         )
 
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.alignment = messageAlignment
-        let messageText = NSAttributedString(
-            string: message,
-            attributes: [
-                NSAttributedString.Key.paragraphStyle: paragraphStyle,
-                NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12),
-            ]
-        )
+        if let messageAlignment {
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.alignment = messageAlignment
+            let messageText = NSAttributedString(
+                string: message,
+                attributes: [
+                    NSAttributedString.Key.paragraphStyle: paragraphStyle,
+                    NSAttributedString.Key.font: UIFont.systemFont(ofSize: 13),
+                ]
+            )
 
-        alert.setValue(messageText, forKey: "attributedMessage")
+            alert.setValue(messageText, forKey: "attributedMessage")
+        }
 
         alert.addAction(
             .init(
@@ -42,7 +44,7 @@ public extension AlertPresentable {
     func present(
         title: String,
         message: String,
-        messageAlignment: NSTextAlignment = .left,
+        messageAlignment: NSTextAlignment? = nil,
         okButtonTitle: String = "OK",
         cancelButtonTitle: String = "キャンセル",
         okAction: @escaping (UIAlertAction) -> Void,
@@ -54,17 +56,19 @@ public extension AlertPresentable {
             preferredStyle: .alert
         )
 
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.alignment = messageAlignment
-        let messageText = NSAttributedString(
-            string: message,
-            attributes: [
-                NSAttributedString.Key.paragraphStyle: paragraphStyle,
-                NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12),
-            ]
-        )
+        if let messageAlignment {
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.alignment = messageAlignment
+            let messageText = NSAttributedString(
+                string: message,
+                attributes: [
+                    NSAttributedString.Key.paragraphStyle: paragraphStyle,
+                    NSAttributedString.Key.font: UIFont.systemFont(ofSize: 13),
+                ]
+            )
 
-        alert.setValue(messageText, forKey: "attributedMessage")
+            alert.setValue(messageText, forKey: "attributedMessage")
+        }
 
         alert.addAction(
             .init(

@@ -8,6 +8,7 @@ public protocol FlowDelegate: AnyObject {
 public protocol FlowController: UIViewController, AlertPresentable {
     associatedtype T
     var alertMessageAlignment: NSTextAlignment? { get }
+    var alertTintColor: UIColor? { get }
     var navigation: T { get }
     var delegate: FlowDelegate? { get set }
     func start()
@@ -46,13 +47,15 @@ public extension FlowController where T == NavigationController {
                     title: title,
                     message: message,
                     messageAlignment: alertMessageAlignment,
+                    tintColor: alertTintColor,
                     action: okAction
                 )
             } else {
                 self.present(
                     title: title,
                     message: message,
-                    messageAlignment: alertMessageAlignment
+                    messageAlignment: alertMessageAlignment,
+                    tintColor: alertTintColor
                 ) { [weak self] _ in
                     guard let self else { return }
 
@@ -71,13 +74,15 @@ public extension FlowController where T == NavigationController {
                     title: title,
                     message: message,
                     messageAlignment: alertMessageAlignment,
+                    tintColor: alertTintColor,
                     action: okAction
                 )
             } else {
                 self.present(
                     title: title,
                     message: message,
-                    messageAlignment: alertMessageAlignment
+                    messageAlignment: alertMessageAlignment,
+                    tintColor: alertTintColor
                 ) { [weak self] _ in
 
                     guard let self else { return }
@@ -96,13 +101,15 @@ public extension FlowController where T == NavigationController {
                     title: title,
                     message: message,
                     messageAlignment: alertMessageAlignment,
+                    tintColor: alertTintColor,
                     action: okAction
                 )
             } else {
                 self.present(
                     title: title,
                     message: message,
-                    messageAlignment: alertMessageAlignment
+                    messageAlignment: alertMessageAlignment,
+                    tintColor: alertTintColor
                 ) { _ in }
             }
 
@@ -128,7 +135,8 @@ public extension FlowController where T == TabBarController {
                 .present(
                     title: title,
                     message: message,
-                    messageAlignment: alertMessageAlignment
+                    messageAlignment: alertMessageAlignment,
+                    tintColor: alertTintColor
                 ) { _ in }
 
         case let .auth(title, message):
@@ -136,7 +144,8 @@ public extension FlowController where T == TabBarController {
                 .present(
                     title: title,
                     message: message,
-                    messageAlignment: alertMessageAlignment
+                    messageAlignment: alertMessageAlignment,
+                    tintColor: alertTintColor
                 ) { [weak self] _ in
 
                     guard let self else { return }
@@ -153,7 +162,8 @@ public extension FlowController where T == TabBarController {
                 .present(
                     title: title,
                     message: message,
-                    messageAlignment: alertMessageAlignment
+                    messageAlignment: alertMessageAlignment,
+                    tintColor: alertTintColor
                 ) { _ in }
 
         case .none:

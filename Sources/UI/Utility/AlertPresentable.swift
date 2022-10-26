@@ -8,6 +8,7 @@ public extension AlertPresentable {
         title: String,
         message: String,
         messageAlignment: NSTextAlignment? = nil,
+        tintColor: UIColor? = nil,
         okButtonTitle: String = "OK",
         action: @escaping (UIAlertAction) -> Void
     ) {
@@ -31,6 +32,10 @@ public extension AlertPresentable {
             alert.setValue(messageText, forKey: "attributedMessage")
         }
 
+        if let tintColor {
+            alert.view.tintColor = tintColor
+        }
+
         alert.addAction(
             .init(
                 title: okButtonTitle,
@@ -45,6 +50,7 @@ public extension AlertPresentable {
         title: String,
         message: String,
         messageAlignment: NSTextAlignment? = nil,
+        tintColor: UIColor? = nil,
         okButtonTitle: String = "OK",
         cancelButtonTitle: String = "キャンセル",
         okAction: @escaping (UIAlertAction) -> Void,
@@ -68,6 +74,10 @@ public extension AlertPresentable {
             )
 
             alert.setValue(messageText, forKey: "attributedMessage")
+        }
+
+        if let tintColor {
+            alert.view.tintColor = tintColor
         }
 
         alert.addAction(

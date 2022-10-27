@@ -34,7 +34,9 @@ public extension VCInjectable {
         target.navigationItem.leftBarButtonItems = content.leftNavigationItems
 
         if let title = content.title {
-            target.title = title
+            target.navigationItem.titleView = UILabel(style: .init(style: { label in
+                label.font = .systemFont(ofSize: 17, weight: .semibold)
+            }), title: title)
         } else {
             target.navigationItem.titleView = UIView()
         }

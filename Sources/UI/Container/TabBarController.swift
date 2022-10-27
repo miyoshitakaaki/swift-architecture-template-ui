@@ -67,7 +67,12 @@ extension TabBarController: UITabBarControllerDelegate {
             topController.scrollToTop()
             return false
         } else {
-            nav.popViewController(animated: true)
+            if let webView = topController.findWebView() {
+                webView.goBack()
+            } else {
+                nav.popViewController(animated: true)
+            }
+
             return true
         }
     }
@@ -111,5 +116,13 @@ private extension UIViewController {
         }
 
         return true
+    }
+
+    func findWebView() -> WKWebView? {
+        for subView in view.subviews {
+            return subView as? WKWebView
+        }
+
+        return nil
     }
 }

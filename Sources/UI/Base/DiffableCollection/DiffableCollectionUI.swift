@@ -106,10 +106,10 @@ extension DiffableCollectionUI: UserInterface {
         setupCollectionView(rootview: rootview)
     }
 
-    func reload(pullToRefresh: Bool) {
+    func reload(pullToRefresh: Bool = false, needRefresh: Bool = true) {
         self.uiDelegate?.willfetchAll(pullToRefresh: pullToRefresh)
 
-        S.fetchAll
+        S.fetchAll(needRefresh: needRefresh)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] finished in
 

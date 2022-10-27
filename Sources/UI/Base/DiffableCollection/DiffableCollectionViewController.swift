@@ -54,14 +54,14 @@ public final class DiffableCollectionViewController<
 
         self.ui.setupView(rootview: view)
 
-        self.ui.reload(pullToRefresh: false)
+        self.ui.reload(needRefresh: self.needReflesh)
     }
 
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
         if self.needReflesh {
-            self.ui.reload(pullToRefresh: false)
+            self.ui.reload()
             self.needReflesh = false
         }
     }
@@ -76,7 +76,7 @@ public final class DiffableCollectionViewController<
         super.presentationControllerDidDismiss(presentationController)
 
         if self.needReflesh {
-            self.ui.reload(pullToRefresh: false)
+            self.ui.reload()
             self.needReflesh = false
         }
     }

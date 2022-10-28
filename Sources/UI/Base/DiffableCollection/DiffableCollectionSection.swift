@@ -15,7 +15,7 @@ public protocol DiffableCollectionSection: Hashable {
 
     static var pullToRefreshable: Bool { get }
     static var sections: [Self] { get }
-    static func fetchAll(needRefresh: Bool) -> AnyPublisher<[Self], AppError>
+    static func reload(fetchRemote: Bool) -> AnyPublisher<[Self], AppError>
 
     func layout(section: Int, environment: NSCollectionLayoutEnvironment)
         -> NSCollectionLayoutSection

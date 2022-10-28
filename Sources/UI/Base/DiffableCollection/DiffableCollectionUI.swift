@@ -106,10 +106,13 @@ extension DiffableCollectionUI: UserInterface {
         setupCollectionView(rootview: rootview)
     }
 
-    func reload(pullToRefresh: Bool = false, needRefresh: Bool = true) {
+    func reload(
+        pullToRefresh: Bool = false,
+        fetchRemote: Bool = true
+    ) {
         self.uiDelegate?.willfetchAll(pullToRefresh: pullToRefresh)
 
-        S.fetchAll(needRefresh: needRefresh)
+        S.reload(fetchRemote: fetchRemote)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] finished in
 
@@ -194,7 +197,7 @@ private extension DiffableCollectionUI {
 
         if #available(iOS 14.0, *) {
             self.collectionView.refreshControl?.addAction(.init(handler: { [weak self] _ in
-                self?.reload(pullToRefresh: true)
+                self?.reload(pullToRefresh: true, fetchRemote: true)
             }), for: .valueChanged)
         } else {
             fatalError("not supprt under ios 14")

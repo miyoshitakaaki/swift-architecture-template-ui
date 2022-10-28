@@ -75,6 +75,7 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate {
     }))
 
     private var canGobackObservation: NSKeyValueObservation?
+    private var curentPageObservation: NSKeyValueObservation?
 
     private let progressView: UIProgressView = .init(frame: .zero)
     private var observation: NSKeyValueObservation?
@@ -107,6 +108,8 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate {
 
     private let needPullToRefresh: Bool
 
+    private let titleForPagePaths: [(title: String, path: String)]
+
     public init(
         url: String? = nil,
         localFilePath: String? = nil,
@@ -121,7 +124,8 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate {
         screenEventForAnalytics: [AnalyticsEvent] = [],
         linkTapEventForAnalytics: ((_ url: String) -> AnalyticsEvent)? = nil,
         navigationContent: NavigationContent,
-        needPullToRefresh: Bool = false
+        needPullToRefresh: Bool = false,
+        titleForPagePaths: [(title: String, path: String)] = []
     ) {
         self.url = url
         self.localFilePath = localFilePath
@@ -137,6 +141,7 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate {
         self.linkTapEventForAnalytics = linkTapEventForAnalytics
         self.navigationContent = navigationContent
         self.needPullToRefresh = needPullToRefresh
+        self.titleForPagePaths = titleForPagePaths
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -199,6 +204,7 @@ extension WebViewController {
 
         self.setupBackButton()
         self.setupCanGobackObservation()
+        self.setupCurentPageObservation()
 
         self.load()
 
@@ -382,6 +388,32 @@ private extension WebViewController {
             self.navigationController?.interactivePopGestureRecognizer?
                 .isEnabled = !self.webView.canGoBack
         }
+    }
+
+    func setupCurentPageObservation() {
+        self.curentPageObservation = self.webView.observe(
+            \.url,
+            options: .new,
+            changeHandler: { [weak self] _, keyValueObject in
+
+                guard let self else { return }
+
+                if let newValue: URL = keyValueObject.newValue?.map({ $0 }) {
+                    let title = self.titleForPagePaths.first { _, path in
+                        newValue.absoluteString.contains(path)
+                    }?.title
+
+                    if let title {
+                        DispatchQueue.main.async {
+                            if let label = self.navigationItem.titleView as? UILabel {
+                                label.text = title
+                                label.sizeToFit()
+                            }
+                        }
+                    }
+                }
+            }
+        )
     }
 
     /// 長押しによる選択、コールアウト表示を禁止する

@@ -23,6 +23,8 @@ public final class DiffableCollectionViewController<
 
     private var needReflesh = false
 
+    private var needFetchRemote = false
+
     override public var screenNameForAnalytics: [AnalyticsScreen] { self._screenNameForAnalytics }
 
     override public var screenEventForAnalytics: [AnalyticsEvent] { self._screenEventForAnalytics }
@@ -54,20 +56,25 @@ public final class DiffableCollectionViewController<
 
         self.ui.setupView(rootview: view)
 
-        self.ui.reload(needRefresh: self.needReflesh)
+        self.ui.reload(fetchRemote: self.needFetchRemote)
     }
 
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
         if self.needReflesh {
-            self.ui.reload()
+            self.ui.reload(fetchRemote: self.needFetchRemote)
             self.needReflesh = false
+            self.needFetchRemote = false
         }
     }
 
     public func setNeedRefresh() {
         self.needReflesh = true
+    }
+
+    public func setNeedfetchRemote() {
+        self.needFetchRemote = true
     }
 
     override public func presentationControllerDidDismiss(
@@ -76,8 +83,9 @@ public final class DiffableCollectionViewController<
         super.presentationControllerDidDismiss(presentationController)
 
         if self.needReflesh {
-            self.ui.reload()
+            self.ui.reload(fetchRemote: self.needFetchRemote)
             self.needReflesh = false
+            self.needFetchRemote = false
         }
     }
 

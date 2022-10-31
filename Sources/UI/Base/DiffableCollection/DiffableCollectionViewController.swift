@@ -27,19 +27,22 @@ public final class DiffableCollectionViewController<
     private let _screenEventForAnalytics: [AnalyticsEvent]
     private let _screenNameForAnalytics: [AnalyticsScreen]
     private let needRefreshNotificationNames: [Notification.Name]
+    private let needSectionRefreshNotificationNames: [Notification.Name]
 
     public init(
         initialReloadType: ReloadType = .remote,
         content: C,
         screenNameForAnalytics: [AnalyticsScreen] = [],
         screenEventForAnalytics: [AnalyticsEvent] = [],
-        needRefreshNotificationNames: [Notification.Name] = []
+        needRefreshNotificationNames: [Notification.Name] = [],
+        needSectionRefreshNotificationNames: [Notification.Name] = []
     ) {
         self.reloadType = initialReloadType
         self.content = content
         self._screenNameForAnalytics = screenNameForAnalytics
         self._screenEventForAnalytics = screenEventForAnalytics
         self.needRefreshNotificationNames = needRefreshNotificationNames
+        self.needSectionRefreshNotificationNames = needSectionRefreshNotificationNames
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -103,6 +106,16 @@ public final class DiffableCollectionViewController<
                 queue: .current
             ) { _ in
                 self.reloadType = .remote
+            }
+        }
+
+        self.needSectionRefreshNotificationNames.forEach { notificationName in
+            NotificationCenter.default.addObserver(
+                forName: notificationName,
+                object: nil,
+                queue: .current
+            ) { _ in
+                self.reloadType = .remoteOnlySection
             }
         }
     }

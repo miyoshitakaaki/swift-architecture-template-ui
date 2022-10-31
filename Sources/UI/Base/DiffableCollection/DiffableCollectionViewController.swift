@@ -17,7 +17,7 @@ public final class DiffableCollectionViewController<
     public var ui: UI!
     public var cancellables: Set<AnyCancellable> = []
 
-    private var reloadType: ReloadType? = .remote
+    private var reloadType: ReloadType?
 
     override public var screenNameForAnalytics: [AnalyticsScreen] { self._screenNameForAnalytics }
 
@@ -29,11 +29,13 @@ public final class DiffableCollectionViewController<
     private let needRefreshNotificationNames: [Notification.Name]
 
     public init(
+        initialReloadType: ReloadType = .remote,
         content: C,
         screenNameForAnalytics: [AnalyticsScreen] = [],
         screenEventForAnalytics: [AnalyticsEvent] = [],
         needRefreshNotificationNames: [Notification.Name] = []
     ) {
+        self.reloadType = initialReloadType
         self.content = content
         self._screenNameForAnalytics = screenNameForAnalytics
         self._screenEventForAnalytics = screenEventForAnalytics

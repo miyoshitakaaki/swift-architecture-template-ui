@@ -27,7 +27,10 @@ public final class DiffableCollectionViewController<
     private let _screenEventForAnalytics: [AnalyticsEvent]
     private let _screenNameForAnalytics: [AnalyticsScreen]
     private let needRefreshNotificationNames: [Notification.Name]
-    private let needSectionRefreshNotificationNames: [Notification.Name]
+    private let needSectionRefreshNotificationNames: [(
+        name: Notification.Name,
+        sectionIndexes: [Int]
+    )]
 
     public init(
         initialReloadType: ReloadType = .remote,
@@ -35,7 +38,10 @@ public final class DiffableCollectionViewController<
         screenNameForAnalytics: [AnalyticsScreen] = [],
         screenEventForAnalytics: [AnalyticsEvent] = [],
         needRefreshNotificationNames: [Notification.Name] = [],
-        needSectionRefreshNotificationNames: [Notification.Name] = []
+        needSectionRefreshNotificationNames: [(
+            name: Notification.Name,
+            sectionIndexes: [Int]
+        )] = []
     ) {
         self.reloadType = initialReloadType
         self.content = content
@@ -111,11 +117,11 @@ public final class DiffableCollectionViewController<
 
         self.needSectionRefreshNotificationNames.forEach { notificationName in
             NotificationCenter.default.addObserver(
-                forName: notificationName,
+                forName: notificationName.name,
                 object: nil,
                 queue: .current
             ) { _ in
-                self.reloadType = .remoteOnlySection
+                self.reloadType = .remoteOnlySection(sections: notificationName.sectionIndexes)
             }
         }
     }
@@ -136,12 +142,16 @@ public final class DiffableCollectionViewController<
                     break
                 }
             }
-        case .remoteOnlySection:
+        case let .remoteOnlySection(indexes):
             self.ui.reload(fetchRemote: false) { result in
                 switch result {
                 case let .success(sections):
-                    sections.forEach { [weak self] section in
-                        self?.ui.reloadSection(section: section, fetchRemote: true)
+                    sections.enumerated().forEach { [weak self] index, section in
+                        if indexes.contains(index) {
+                            self?.ui.reloadSection(section: section, fetchRemote: true)
+                        } else {
+                            self?.ui.reloadSection(section: section, fetchRemote: false)
+                        }
                     }
 
                 case .failure:

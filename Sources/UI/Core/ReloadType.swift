@@ -1,5 +1,5 @@
 import UIKit
 
 public enum ReloadType {
-    case local, remoteOnlySection, remote
+    case local, remoteOnlySection(sections: [Int] = []), remote
 }

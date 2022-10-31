@@ -110,6 +110,8 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate {
 
     private let titleForPagePaths: [(title: String, path: String)]
 
+    private let needRefreshNotificationNames: [Notification.Name]
+
     public init(
         url: String? = nil,
         localFilePath: String? = nil,
@@ -125,7 +127,8 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate {
         linkTapEventForAnalytics: ((_ url: String) -> AnalyticsEvent)? = nil,
         navigationContent: NavigationContent,
         needPullToRefresh: Bool = false,
-        titleForPagePaths: [(title: String, path: String)] = []
+        titleForPagePaths: [(title: String, path: String)] = [],
+        needRefreshNotificationNames: [Notification.Name] = []
     ) {
         self.url = url
         self.localFilePath = localFilePath
@@ -142,6 +145,7 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate {
         self.navigationContent = navigationContent
         self.needPullToRefresh = needPullToRefresh
         self.titleForPagePaths = titleForPagePaths
+        self.needRefreshNotificationNames = needRefreshNotificationNames
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -151,25 +155,6 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override open func presentationControllerDidDismiss(
-        _ presentationController: UIPresentationController
-    ) {
-        super.presentationControllerDidDismiss(presentationController)
-
-        if self.needReflesh {
-            self.webView.reload()
-            self.needReflesh = false
-        }
-    }
-
-    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        true
-    }
-}
-
-// MARK: - override methods
-
-extension WebViewController {
     override open func viewDidLoad() {
         super.viewDidLoad()
 
@@ -206,6 +191,8 @@ extension WebViewController {
         self.setupCanGobackObservation()
         self.setupCurentPageObservation()
 
+        self.addObserver()
+
         self.load()
 
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
@@ -218,6 +205,33 @@ extension WebViewController {
         if self.needReflesh {
             self.webView.reload()
             self.needReflesh = false
+        }
+    }
+
+    override open func presentationControllerDidDismiss(
+        _ presentationController: UIPresentationController
+    ) {
+        super.presentationControllerDidDismiss(presentationController)
+
+        if self.needReflesh {
+            self.webView.reload()
+            self.needReflesh = false
+        }
+    }
+
+    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        true
+    }
+
+    private func addObserver() {
+        self.needRefreshNotificationNames.forEach { notificationName in
+            NotificationCenter.default.addObserver(
+                forName: notificationName,
+                object: nil,
+                queue: .current
+            ) { _ in
+                self.needReflesh = true
+            }
         }
     }
 }
@@ -233,12 +247,6 @@ private extension WebViewController {
         {
             self.webView.load(URLRequest(url: url))
         }
-    }
-}
-
-extension WebViewController: Refreshable {
-    public func setNeedRefresh(reloadType: ReloadType) {
-        self.needReflesh = true
     }
 }
 

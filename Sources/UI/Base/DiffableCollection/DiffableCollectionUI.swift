@@ -1,6 +1,7 @@
 import Combine
 import Foundation
 import UIKit
+import Utility
 
 public protocol DiffableCollectionUIDelegate: AnyObject {
     func willfetchAll(pullToRefresh: Bool)
@@ -106,9 +107,37 @@ extension DiffableCollectionUI: UserInterface {
         setupCollectionView(rootview: rootview)
     }
 
+    func reloadSection(section: S, fetchRemote: Bool) {
+        if #available(iOS 14.0, *) {
+            section.fetch(fetchRemote: fetchRemote)
+                .receive(on: DispatchQueue.main)
+                .sink { finished in
+
+                    switch finished {
+                    case .finished:
+                        print("finished")
+
+                    case let .failure(error):
+                        self.delegate?.didErrorOccured(error: error)
+                    }
+
+                } receiveValue: { result in
+                    var sectionSnapshot = NSDiffableDataSourceSectionSnapshot<S.Item>()
+                    sectionSnapshot.append(result)
+                    self.dataSource.apply(
+                        sectionSnapshot,
+                        to: section,
+                        animatingDifferences: false
+                    )
+                    self.collectionView.refreshControl?.endRefreshing()
+                }.store(in: &cancellables)
+        }
+    }
+
     func reload(
         pullToRefresh: Bool = false,
-        fetchRemote: Bool = true
+        fetchRemote: Bool = true,
+        completion: @escaping (Result<[S], AppError>) -> Void
     ) {
         self.uiDelegate?.willfetchAll(pullToRefresh: pullToRefresh)
 
@@ -128,6 +157,7 @@ extension DiffableCollectionUI: UserInterface {
 
                 case let .failure(error):
                     self.delegate?.didErrorOccured(error: error)
+                    completion(.failure(error))
                 }
 
             } receiveValue: { [weak self] allCases in
@@ -140,34 +170,7 @@ extension DiffableCollectionUI: UserInterface {
                 snapshot.appendSections(allCases)
                 self.dataSource.apply(snapshot, animatingDifferences: false)
 
-                allCases.forEach { section in
-                    section.fetch
-                        .receive(on: DispatchQueue.main)
-                        .sink { finished in
-
-                            switch finished {
-                            case .finished:
-                                print("finished")
-
-                            case let .failure(error):
-                                self.delegate?.didErrorOccured(error: error)
-                            }
-
-                        } receiveValue: { result in
-                            if #available(iOS 14.0, *) {
-                                var sectionSnapshot = NSDiffableDataSourceSectionSnapshot<S.Item>()
-                                sectionSnapshot.append(result)
-                                self.dataSource.apply(
-                                    sectionSnapshot,
-                                    to: section,
-                                    animatingDifferences: false
-                                )
-                                self.collectionView.refreshControl?.endRefreshing()
-                            } else {
-                                fatalError("not supprt under ios 14")
-                            }
-                        }.store(in: &self.cancellables)
-                }
+                completion(.success(allCases))
             }.store(in: &self.cancellables)
     }
 }
@@ -197,7 +200,18 @@ private extension DiffableCollectionUI {
 
         if #available(iOS 14.0, *) {
             self.collectionView.refreshControl?.addAction(.init(handler: { [weak self] _ in
-                self?.reload(pullToRefresh: true, fetchRemote: true)
+                self?.reload(pullToRefresh: true, fetchRemote: true) { result in
+
+                    switch result {
+                    case let .success(sections):
+                        sections.forEach { [weak self] section in
+                            self?.reloadSection(section: section, fetchRemote: true)
+                        }
+
+                    case .failure:
+                        break
+                    }
+                }
             }), for: .valueChanged)
         } else {
             fatalError("not supprt under ios 14")

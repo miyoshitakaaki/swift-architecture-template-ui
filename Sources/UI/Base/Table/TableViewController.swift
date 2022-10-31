@@ -39,8 +39,7 @@ extension TableViewController: VCInjectable {
 
 public final class TableViewController<T: Table>: ViewController,
     ActivityPresentable,
-    UISearchBarDelegate,
-    Refreshable
+    UISearchBarDelegate
 {
     public var viewModel: VM!
     public var ui: UI!
@@ -51,9 +50,7 @@ public final class TableViewController<T: Table>: ViewController,
     // TODO: move to TableUI
     private var searchBar: UISearchBar!
 
-    private let table: T
-
-    private var needReflesh = false
+    private var reloadType: ReloadType?
 
     override public var screenNameForAnalytics: [AnalyticsScreen] {
         self.table.screenNameForAnalytics
@@ -63,11 +60,18 @@ public final class TableViewController<T: Table>: ViewController,
         self.table.screenEventForAnalytics
     }
 
+    private let table: T
     private let content: T.NavContent
+    private let needRefreshNotificationNames: [Notification.Name]
 
-    public init(table: T, content: T.NavContent) {
+    public init(
+        table: T,
+        content: T.NavContent,
+        needRefreshNotificationNames: [Notification.Name] = []
+    ) {
         self.table = table
         self.content = content
+        self.needRefreshNotificationNames = needRefreshNotificationNames
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -99,7 +103,10 @@ public final class TableViewController<T: Table>: ViewController,
 
         self.bind()
 
+        self.addObserver()
+
         self.viewModel.loadSubject.send((nil, false))
+        self.reloadType = nil
     }
 
     override public func viewWillAppear(_ animated: Bool) {
@@ -107,9 +114,9 @@ public final class TableViewController<T: Table>: ViewController,
 
         self.setupNavigationItemIfNeeded()
 
-        if self.needReflesh {
+        if self.reloadType != nil {
             self.viewModel.loadSubject.send((nil, false))
-            self.needReflesh = false
+            self.reloadType = nil
         }
     }
 
@@ -124,14 +131,22 @@ public final class TableViewController<T: Table>: ViewController,
     ) {
         super.presentationControllerDidDismiss(presentationController)
 
-        if self.needReflesh {
+        if self.reloadType != nil {
             self.viewModel.loadSubject.send((nil, false))
-            self.needReflesh = false
+            self.reloadType = nil
         }
     }
 
-    public func setNeedRefresh() {
-        self.needReflesh = true
+    private func addObserver() {
+        self.needRefreshNotificationNames.forEach { notificationName in
+            NotificationCenter.default.addObserver(
+                forName: notificationName,
+                object: nil,
+                queue: .current
+            ) { _ in
+                self.reloadType = .remote
+            }
+        }
     }
 
     private func setupNavigationItemIfNeeded() {

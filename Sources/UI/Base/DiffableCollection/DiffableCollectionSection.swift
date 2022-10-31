@@ -11,7 +11,7 @@ public protocol DiffableCollectionSection: Hashable {
 
     var headerText: String { get }
     var headerSecondaryText: String { get }
-    var fetch: AnyPublisher<[Item], AppError> { get }
+    func fetch(fetchRemote: Bool) -> AnyPublisher<[Item], AppError>
 
     static var pullToRefreshable: Bool { get }
     static var sections: [Self] { get }

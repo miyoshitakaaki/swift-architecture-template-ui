@@ -35,9 +35,14 @@ public func create<T: FormConfirmUIProtocol & FormConfirmProtocol>(formConfirm: 
 
 public func create<T: CollectionList>(
     collection: T,
-    content: T.NavContent
+    content: T.NavContent,
+    needRefreshNotificationNames: [Notification.Name] = []
 ) -> CollectionViewController<T, T.NavContent> {
-    let vc = CollectionViewController(collection: collection, content: content)
+    let vc = CollectionViewController(
+        collection: collection,
+        content: content,
+        needRefreshNotificationNames: needRefreshNotificationNames
+    )
     vc.inject(
         viewModel: .init(fetchPublisher: collection.fetchPublisher),
         ui: .init(collection: collection)
@@ -47,9 +52,14 @@ public func create<T: CollectionList>(
 
 public func create<T: Table>(
     table: T,
-    content: T.NavContent
+    content: T.NavContent,
+    needRefreshNotificationNames: [Notification.Name] = []
 ) -> TableViewController<T> {
-    let vc = TableViewController(table: table, content: content)
+    let vc = TableViewController(
+        table: table,
+        content: content,
+        needRefreshNotificationNames: needRefreshNotificationNames
+    )
     vc.inject(
         viewModel: .init(fetchPublisher: table.fetchPublisher),
         ui: .init(table: table)

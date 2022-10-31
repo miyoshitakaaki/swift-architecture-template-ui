@@ -27,8 +27,7 @@ public final class CollectionViewController<
     T: CollectionList,
     C: NavigationContent
 >: ViewController,
-    ActivityPresentable,
-    Refreshable
+    ActivityPresentable
 {
     public var viewModel: VM!
     public var ui: UI!
@@ -36,8 +35,7 @@ public final class CollectionViewController<
 
     public weak var delegate: CollectionViewControllerDelegate?
 
-    private let collection: T
-    private let content: C
+    private var reloadType: ReloadType?
 
     override public var screenNameForAnalytics: [AnalyticsScreen] {
         self.collection.screenNameForAnalytics
@@ -47,11 +45,18 @@ public final class CollectionViewController<
         self.collection.screenEventForAnalytics
     }
 
-    private var needReflesh = false
+    private let collection: T
+    private let content: C
+    private let needRefreshNotificationNames: [Notification.Name]
 
-    public init(collection: T, content: C) {
+    public init(
+        collection: T,
+        content: C,
+        needRefreshNotificationNames: [Notification.Name] = []
+    ) {
         self.collection = collection
         self.content = content
+        self.needRefreshNotificationNames = needRefreshNotificationNames
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -73,7 +78,10 @@ public final class CollectionViewController<
 
         self.setupEvent()
 
+        self.addObserver()
+
         self.viewModel.loadSubject.send((nil, false))
+        self.reloadType = nil
     }
 
     override public func viewWillAppear(_ animated: Bool) {
@@ -86,9 +94,9 @@ public final class CollectionViewController<
             animated: true
         )
 
-        if self.needReflesh {
+        if self.reloadType != nil {
             self.viewModel.loadSubject.send((nil, false))
-            self.needReflesh = false
+            self.reloadType = nil
         }
     }
 
@@ -103,14 +111,22 @@ public final class CollectionViewController<
     ) {
         super.presentationControllerDidDismiss(presentationController)
 
-        if self.needReflesh {
+        if self.reloadType != nil {
             self.viewModel.loadSubject.send((nil, false))
-            self.needReflesh = false
+            self.reloadType = nil
         }
     }
 
-    public func setNeedRefresh() {
-        self.needReflesh = true
+    private func addObserver() {
+        self.needRefreshNotificationNames.forEach { notificationName in
+            NotificationCenter.default.addObserver(
+                forName: notificationName,
+                object: nil,
+                queue: .current
+            ) { _ in
+                self.reloadType = .remote
+            }
+        }
     }
 
     private func setupEvent() {

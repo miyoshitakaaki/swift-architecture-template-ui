@@ -12,31 +12,32 @@ extension DiffableCollectionViewController: VCInjectable {
 public final class DiffableCollectionViewController<
     S: DiffableCollectionSection,
     C: NavigationContent
->: ViewController, Refreshable, ActivityPresentable, DiffableCollectionUIDelegate {
+>: ViewController, ActivityPresentable, DiffableCollectionUIDelegate {
     public var viewModel: VM!
     public var ui: UI!
     public var cancellables: Set<AnyCancellable> = []
 
-    private let _screenEventForAnalytics: [AnalyticsEvent]
-    private let _screenNameForAnalytics: [AnalyticsScreen]
-    private let content: C
-
-    private var needReflesh = false
-
-    private var needFetchRemote = false
+    private var reloadType: ReloadType? = .remote
 
     override public var screenNameForAnalytics: [AnalyticsScreen] { self._screenNameForAnalytics }
 
     override public var screenEventForAnalytics: [AnalyticsEvent] { self._screenEventForAnalytics }
 
+    private let content: C
+    private let _screenEventForAnalytics: [AnalyticsEvent]
+    private let _screenNameForAnalytics: [AnalyticsScreen]
+    private let needRefreshNotificationNames: [Notification.Name]
+
     public init(
         content: C,
         screenNameForAnalytics: [AnalyticsScreen] = [],
-        screenEventForAnalytics: [AnalyticsEvent] = []
+        screenEventForAnalytics: [AnalyticsEvent] = [],
+        needRefreshNotificationNames: [Notification.Name] = []
     ) {
         self.content = content
         self._screenNameForAnalytics = screenNameForAnalytics
         self._screenEventForAnalytics = screenEventForAnalytics
+        self.needRefreshNotificationNames = needRefreshNotificationNames
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -56,25 +57,19 @@ public final class DiffableCollectionViewController<
 
         self.ui.setupView(rootview: view)
 
-        self.ui.reload(fetchRemote: self.needFetchRemote)
+        self.addObserver()
+
+        self.reload()
+        self.reloadType = nil
     }
 
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        if self.needReflesh {
-            self.ui.reload(fetchRemote: self.needFetchRemote)
-            self.needReflesh = false
-            self.needFetchRemote = false
+        if self.reloadType != nil {
+            self.reload()
+            self.reloadType = nil
         }
-    }
-
-    public func setNeedRefresh() {
-        self.needReflesh = true
-    }
-
-    public func setNeedfetchRemote() {
-        self.needFetchRemote = true
     }
 
     override public func presentationControllerDidDismiss(
@@ -82,10 +77,9 @@ public final class DiffableCollectionViewController<
     ) {
         super.presentationControllerDidDismiss(presentationController)
 
-        if self.needReflesh {
-            self.ui.reload(fetchRemote: self.needFetchRemote)
-            self.needReflesh = false
-            self.needFetchRemote = false
+        if self.reloadType != nil {
+            self.reload()
+            self.reloadType = nil
         }
     }
 
@@ -97,5 +91,60 @@ public final class DiffableCollectionViewController<
 
     public func didfetchAll() {
         self.dismissActivity()
+    }
+
+    private func addObserver() {
+        self.needRefreshNotificationNames.forEach { notificationName in
+            NotificationCenter.default.addObserver(
+                forName: notificationName,
+                object: nil,
+                queue: .current
+            ) { _ in
+                self.reloadType = .remote
+            }
+        }
+    }
+
+    private func reload() {
+        guard let reloadType = self.reloadType else { return }
+
+        switch reloadType {
+        case .local:
+            self.ui.reload(fetchRemote: false) { result in
+                switch result {
+                case let .success(sections):
+                    sections.forEach { [weak self] section in
+                        self?.ui.reloadSection(section: section, fetchRemote: false)
+                    }
+
+                case .failure:
+                    break
+                }
+            }
+        case .remoteOnlySection:
+            self.ui.reload(fetchRemote: false) { result in
+                switch result {
+                case let .success(sections):
+                    sections.forEach { [weak self] section in
+                        self?.ui.reloadSection(section: section, fetchRemote: true)
+                    }
+
+                case .failure:
+                    break
+                }
+            }
+        case .remote:
+            self.ui.reload(fetchRemote: true) { result in
+                switch result {
+                case let .success(sections):
+                    sections.forEach { [weak self] section in
+                        self?.ui.reloadSection(section: section, fetchRemote: true)
+                    }
+
+                case .failure:
+                    break
+                }
+            }
+        }
     }
 }

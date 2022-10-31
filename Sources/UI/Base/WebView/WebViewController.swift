@@ -237,7 +237,7 @@ private extension WebViewController {
 }
 
 extension WebViewController: Refreshable {
-    public func setNeedRefresh() {
+    public func setNeedRefresh(reloadType: ReloadType) {
         self.needReflesh = true
     }
 }

@@ -9,16 +9,22 @@ public protocol DiffableCollectionSection: Hashable {
     associatedtype SupplementaryRegistration
     associatedtype Item: Hashable
 
-    var headerText: String { get }
-    var headerSecondaryText: String { get }
-    func fetch(fetchRemote: Bool) -> AnyPublisher<[Item], AppError>
-
     static var pullToRefreshable: Bool { get }
     static var sections: [Self] { get }
     static func reload(fetchRemote: Bool) -> AnyPublisher<[Self], AppError>
 
-    func layout(section: Int, environment: NSCollectionLayoutEnvironment)
-        -> NSCollectionLayoutSection
+    var headerText: String { get }
+    var headerSecondaryText: String { get }
+
+    func fetch(
+        fetchRemote: Bool
+    ) -> AnyPublisher<[Item], AppError>
+
+    func layout(
+        section: Int,
+        environment: NSCollectionLayoutEnvironment,
+        items: [Item]
+    ) -> NSCollectionLayoutSection
 
     func cellRegistration(
         cellRegistration: CellRegistration,

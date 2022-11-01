@@ -13,11 +13,17 @@ public final class DiffableCollectionUI<
 >: NSObject,
     UICollectionViewDelegate
 {
-    private let collectionView: UICollectionView = .init(
+    private lazy var collectionView: UICollectionView = .init(
         frame: .zero,
         collectionViewLayout: UICollectionViewCompositionalLayout(
-            sectionProvider: { section, environment in
-                S.sections[section].layout(section: section, environment: environment)
+            sectionProvider: { [weak self] section, environment in
+
+                guard let self else { return nil }
+
+                let snapShot = self.dataSource.snapshot()
+                let sectionItem = snapShot.sectionIdentifiers[section]
+                let items = snapShot.itemIdentifiers(inSection: sectionItem)
+                return sectionItem.layout(section: section, environment: environment, items: items)
             }
         )
     )
@@ -117,6 +123,7 @@ extension DiffableCollectionUI: UserInterface {
                     }
 
                 } receiveValue: { result in
+
                     var snapshot = self.dataSource.snapshot()
                     snapshot.reloadSections([section])
                     snapshot.appendItems(result, toSection: section)

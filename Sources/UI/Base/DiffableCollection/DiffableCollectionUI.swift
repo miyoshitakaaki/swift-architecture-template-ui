@@ -13,15 +13,14 @@ public final class DiffableCollectionUI<
 >: NSObject,
     UICollectionViewDelegate
 {
-    private lazy var collectionView: UICollectionView = .init(
+    private let collectionView: UICollectionView = .init(
         frame: .zero,
-        collectionViewLayout: composableLayout
+        collectionViewLayout: UICollectionViewCompositionalLayout(
+            sectionProvider: { section, environment in
+                S.sections[section].layout(section: section, environment: environment)
+            }
+        )
     )
-
-    private let cellRegistration: S.CellRegistration
-    private let supplementaryRegistration: S.SupplementaryRegistration
-
-    private var cancellables: Set<AnyCancellable> = []
 
     private var cellProvider: (UICollectionView, IndexPath, S.Item) -> UICollectionViewCell? {
         { [weak self] collectionView, indexPath, item in
@@ -73,11 +72,13 @@ public final class DiffableCollectionUI<
         return dataSource
     }()
 
-    private let composableLayout: UICollectionViewCompositionalLayout
-
     public weak var delegate: DiffableCollectionEvent?
-
     public weak var uiDelegate: DiffableCollectionUIDelegate?
+
+    private var cancellables: Set<AnyCancellable> = []
+
+    private let cellRegistration: S.CellRegistration
+    private let supplementaryRegistration: S.SupplementaryRegistration
 
     public init(
         cellRegistration: S.CellRegistration,
@@ -85,12 +86,6 @@ public final class DiffableCollectionUI<
     ) {
         self.cellRegistration = cellRegistration
         self.supplementaryRegistration = supplementaryRegistration
-
-        self.composableLayout = .init(
-            sectionProvider: { section, environment in
-                S.sections[section].layout(section: section, environment: environment)
-            }
-        )
     }
 
     public func collectionView(

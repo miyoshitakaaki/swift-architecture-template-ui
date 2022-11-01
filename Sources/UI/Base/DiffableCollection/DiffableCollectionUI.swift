@@ -122,13 +122,11 @@ extension DiffableCollectionUI: UserInterface {
                     }
 
                 } receiveValue: { result in
-                    var sectionSnapshot = NSDiffableDataSourceSectionSnapshot<S.Item>()
-                    sectionSnapshot.append(result)
-                    self.dataSource.apply(
-                        sectionSnapshot,
-                        to: section,
-                        animatingDifferences: false
-                    )
+                    var snapshot = self.dataSource.snapshot()
+                    snapshot.reloadSections([section])
+                    snapshot.appendItems(result, toSection: section)
+                    self.dataSource.apply(snapshot, animatingDifferences: false)
+
                     self.collectionView.refreshControl?.endRefreshing()
                 }.store(in: &cancellables)
         }

@@ -122,7 +122,9 @@ extension DiffableCollectionUI: UserInterface {
                         self.delegate?.didErrorOccured(error: error)
                     }
 
-                } receiveValue: { result in
+                } receiveValue: { [weak self] result in
+
+                    guard let self else { return }
 
                     var snapshot = self.dataSource.snapshot()
                     snapshot.reloadSections([section])
@@ -200,7 +202,7 @@ private extension DiffableCollectionUI {
 
         if #available(iOS 14.0, *) {
             self.collectionView.refreshControl?.addAction(.init(handler: { [weak self] _ in
-                self?.reload(pullToRefresh: true, fetchRemote: true) { result in
+                self?.reload(pullToRefresh: true, fetchRemote: true) { [weak self] result in
 
                     switch result {
                     case let .success(sections):

@@ -110,8 +110,8 @@ public final class DiffableCollectionViewController<
                 forName: notificationName,
                 object: nil,
                 queue: .current
-            ) { _ in
-                self.reloadType = .remote
+            ) { [weak self] _ in
+                self?.reloadType = .remote
             }
         }
 
@@ -120,8 +120,8 @@ public final class DiffableCollectionViewController<
                 forName: notificationName.name,
                 object: nil,
                 queue: .current
-            ) { _ in
-                self.reloadType = .remoteOnlySection(sections: notificationName.sectionIndexes)
+            ) { [weak self] _ in
+                self?.reloadType = .remoteOnlySection(sections: notificationName.sectionIndexes)
             }
         }
     }

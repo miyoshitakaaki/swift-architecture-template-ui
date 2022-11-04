@@ -16,6 +16,7 @@ public protocol FormUIProtocol {
     var isValid: AnyPublisher<Bool, Never> { get }
     var showInvalidAlert: Bool { get }
     var isOptional: Bool { get }
+    var showAccessoryView: Bool { get }
     func set(inputAccessoryView: AMKeyboardFrameTrackerView)
     func focusNextResponder()
 }
@@ -28,6 +29,8 @@ public extension FormUIProtocol {
     var showInvalidAlert: Bool { true }
 
     var optionalButtonTitle: String { completionButtonTitle }
+
+    var showAccessoryView: Bool { true }
 
     func focusNextResponder() {
         guard

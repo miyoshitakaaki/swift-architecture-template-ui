@@ -129,8 +129,11 @@ extension FormUI: UserInterface {
 
 private extension FormUI {
     private func setupInputAccessoryView(_ rootview: UIView) {
-        let keyboardFrameTrackerView: AMKeyboardFrameTrackerView = .init(height: 44)
+        let keyboardFrameTrackerView: AMKeyboardFrameTrackerView = .init(
+            height: self.form.showAccessoryView ? 44 : 0
+        )
         keyboardFrameTrackerView.isUserInteractionEnabled = true
+        keyboardFrameTrackerView.isHidden = !self.form.showAccessoryView
 
         let button: UIButton = .init(style: .init {
             $0.setTitleColor(UIConfig.accentBlue, for: .normal)

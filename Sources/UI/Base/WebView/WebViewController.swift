@@ -108,7 +108,7 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate {
 
     private let needPullToRefresh: Bool
 
-    private let titleForPagePaths: [(title: String, path: String)]
+    private let titleForURLPatterns: [(title: String, pattern: String)]
 
     private let needRefreshNotificationNames: [Notification.Name]
 
@@ -127,7 +127,7 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate {
         linkTapEventForAnalytics: ((_ url: String) -> AnalyticsEvent)? = nil,
         navigationContent: NavigationContent,
         needPullToRefresh: Bool = false,
-        titleForPagePaths: [(title: String, path: String)] = [],
+        titleForURLPatterns: [(title: String, pattern: String)] = [],
         needRefreshNotificationNames: [Notification.Name] = []
     ) {
         self.url = url
@@ -144,7 +144,7 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate {
         self.linkTapEventForAnalytics = linkTapEventForAnalytics
         self.navigationContent = navigationContent
         self.needPullToRefresh = needPullToRefresh
-        self.titleForPagePaths = titleForPagePaths
+        self.titleForURLPatterns = titleForURLPatterns
         self.needRefreshNotificationNames = needRefreshNotificationNames
 
         super.init(nibName: nil, bundle: nil)
@@ -407,8 +407,8 @@ private extension WebViewController {
                 guard let self else { return }
 
                 if let newValue: URL = keyValueObject.newValue?.map({ $0 }) {
-                    let title = self.titleForPagePaths.first { _, path in
-                        newValue.absoluteString.contains(path)
+                    let title = self.titleForURLPatterns.first { _, pattern in
+                        newValue.absoluteString.match(pattern: pattern)
                     }?.title
 
                     if let title {

@@ -112,6 +112,8 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate {
 
     private let needRefreshNotificationNames: [Notification.Name]
 
+    private let noNeedAccessoryView: Bool
+
     public init(
         url: String? = nil,
         localFilePath: String? = nil,
@@ -128,7 +130,8 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate {
         navigationContent: NavigationContent,
         needPullToRefresh: Bool = false,
         titleForURLPatterns: [(title: String, pattern: String)] = [],
-        needRefreshNotificationNames: [Notification.Name] = []
+        needRefreshNotificationNames: [Notification.Name] = [],
+        noNeedAccessoryView: Bool = false
     ) {
         self.url = url
         self.localFilePath = localFilePath
@@ -146,6 +149,7 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate {
         self.needPullToRefresh = needPullToRefresh
         self.titleForURLPatterns = titleForURLPatterns
         self.needRefreshNotificationNames = needRefreshNotificationNames
+        self.noNeedAccessoryView = noNeedAccessoryView
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -178,6 +182,10 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate {
         self.webView.navigationDelegate = self
         self.webView.uiDelegate = self
         self.webView.allowsBackForwardNavigationGestures = true
+
+        if self.noNeedAccessoryView {
+            self.removeAccessoryView()
+        }
 
         if self.showProgress {
             self.setupObservation()
@@ -459,4 +467,49 @@ private extension WebViewController {
             }
         }
     }
+
+    // Ref: https://qiita.com/rokubay/items/e25936a35b4ad47d1447
+    func removeAccessoryView() {
+        guard
+            let target = self.webView.scrollView.subviews.first(where: {
+                String(describing: type(of: $0)).hasPrefix("WKContent")
+            }), let superclass = target.superclass
+        else {
+            return
+        }
+
+        let noInputAccessoryViewClassName = "\(superclass)_NoInputAccessoryView"
+        var newClass: AnyClass? = NSClassFromString(noInputAccessoryViewClassName)
+
+        if
+            newClass == nil, let targetClass = object_getClass(target),
+            let classNameCString = noInputAccessoryViewClassName.cString(using: .ascii)
+        {
+            newClass = objc_allocateClassPair(targetClass, classNameCString, 0)
+
+            if let newClass = newClass {
+                objc_registerClassPair(newClass)
+            }
+        }
+
+        guard
+            let noInputAccessoryClass = newClass, let originalMethod = class_getInstanceMethod(
+                NoInputAccessoryView.self,
+                #selector(getter: NoInputAccessoryView.inputAccessoryView)
+            )
+        else {
+            return
+        }
+        class_addMethod(
+            noInputAccessoryClass.self,
+            #selector(getter: NoInputAccessoryView.inputAccessoryView),
+            method_getImplementation(originalMethod),
+            method_getTypeEncoding(originalMethod)
+        )
+        object_setClass(target, noInputAccessoryClass)
+    }
+}
+
+private final class NoInputAccessoryView: NSObject {
+    @objc var inputAccessoryView: AnyObject? { nil }
 }

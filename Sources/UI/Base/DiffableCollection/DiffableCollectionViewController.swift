@@ -68,6 +68,11 @@ public final class DiffableCollectionViewController<
 
         self.ui.setupView(rootview: view)
 
+        self.ui.setupBottomAnchor(
+            hasTabber: self.tabBarController != nil,
+            rootview: view
+        )
+
         self.addObserver()
 
         self.reload()

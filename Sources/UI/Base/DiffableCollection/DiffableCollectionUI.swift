@@ -108,6 +108,16 @@ extension DiffableCollectionUI: UserInterface {
         setupCollectionView(rootview: rootview)
     }
 
+    func setupBottomAnchor(hasTabber: Bool, rootview: UIView) {
+        if hasTabber {
+            self.collectionView.bottomAnchor
+                .constraint(equalTo: rootview.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        } else {
+            self.collectionView.bottomAnchor
+                .constraint(equalTo: rootview.bottomAnchor).isActive = true
+        }
+    }
+
     func reloadSection(section: S, fetchRemote: Bool) {
         if #available(iOS 14.0, *) {
             section.fetch(fetchRemote: fetchRemote)
@@ -186,8 +196,6 @@ private extension DiffableCollectionUI {
                 .constraint(equalTo: rootview.safeAreaLayoutGuide.topAnchor),
             self.collectionView.leadingAnchor
                 .constraint(equalTo: rootview.safeAreaLayoutGuide.leadingAnchor),
-            self.collectionView.bottomAnchor
-                .constraint(equalTo: rootview.safeAreaLayoutGuide.bottomAnchor),
             self.collectionView.trailingAnchor
                 .constraint(equalTo: rootview.safeAreaLayoutGuide.trailingAnchor)
         )

@@ -26,6 +26,16 @@ extension StackUI: UserInterface {
         self.component.setupContent(stackView: self.verticalStackView)
     }
 
+    func setupBottomAnchor(hasTabber: Bool, rootview: UIView) {
+        if hasTabber {
+            self.scrollView.bottomAnchor
+                .constraint(equalTo: rootview.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        } else {
+            self.scrollView.bottomAnchor
+                .constraint(equalTo: rootview.bottomAnchor).isActive = true
+        }
+    }
+
     private func setupScrollView(_ rootview: UIView) {
         rootview.addSubviews(
             self.scrollView,
@@ -34,9 +44,7 @@ extension StackUI: UserInterface {
                 .constraint(equalTo: rootview.safeAreaLayoutGuide.leadingAnchor),
             self.scrollView.trailingAnchor
                 .constraint(equalTo: rootview.safeAreaLayoutGuide.trailingAnchor),
-            self.scrollView.topAnchor.constraint(equalTo: rootview.safeAreaLayoutGuide.topAnchor),
-            self.scrollView.bottomAnchor
-                .constraint(equalTo: rootview.safeAreaLayoutGuide.bottomAnchor)
+            self.scrollView.topAnchor.constraint(equalTo: rootview.safeAreaLayoutGuide.topAnchor)
         )
     }
 

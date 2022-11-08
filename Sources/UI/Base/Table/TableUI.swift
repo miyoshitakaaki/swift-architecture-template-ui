@@ -166,6 +166,15 @@ extension TableUI: UserInterface {
         self.setupEmptyView()
     }
 
+    func setupBottomAnchor(hasTabber: Bool, rootview: UIView) {
+        if hasTabber {
+            self.tableView.bottomAnchor
+                .constraint(equalTo: rootview.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        } else {
+            self.tableView.bottomAnchor.constraint(equalTo: rootview.bottomAnchor).isActive = true
+        }
+    }
+
     func setupTableView(rootview: UIView) {
         rootview.addSubviews(
             self.tableView,
@@ -174,8 +183,6 @@ extension TableUI: UserInterface {
                 .constraint(equalTo: rootview.safeAreaLayoutGuide.topAnchor),
             self.tableView.leadingAnchor
                 .constraint(equalTo: rootview.safeAreaLayoutGuide.leadingAnchor),
-            self.tableView.bottomAnchor
-                .constraint(equalTo: rootview.safeAreaLayoutGuide.bottomAnchor),
             self.tableView.trailingAnchor
                 .constraint(equalTo: rootview.safeAreaLayoutGuide.trailingAnchor)
         )

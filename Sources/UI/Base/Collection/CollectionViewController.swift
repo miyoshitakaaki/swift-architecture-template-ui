@@ -76,6 +76,11 @@ public final class CollectionViewController<
 
         self.ui.setupView(rootview: view)
 
+        self.ui.setupBottomAnchor(
+            hasTabber: self.tabBarController != nil,
+            rootview: view
+        )
+
         self.setupEvent()
 
         self.addObserver()
@@ -86,8 +91,6 @@ public final class CollectionViewController<
 
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        self.tabBarController?.tabBar.isHidden = self.collection.hideTabbar
 
         navigationController?.setNavigationBarHidden(
             self.collection.hideNavigationBar,

@@ -11,7 +11,6 @@ public protocol CollectionList: List, AnalyticsScreenName {
 
     typealias Items = [ListSection<Cell.ViewData, Header.ViewData, Footer.ViewData>]
 
-    var hideTabbar: Bool { get }
     var composableLayout: UICollectionViewCompositionalLayout { get }
     var topViewSubject: PassthroughSubject<Parameter, Never> { get }
     var fetchPublisher: ((parameter: Parameter?, isAdditional: Bool))
@@ -22,7 +21,6 @@ public protocol CollectionList: List, AnalyticsScreenName {
 
 public extension CollectionList {
     var floatingButton: UIButton? { nil }
-    var hideTabbar: Bool { false }
     var topViewSubject: PassthroughSubject<String, Never> { .init() }
     var skeletonItems: Items? { nil }
 }

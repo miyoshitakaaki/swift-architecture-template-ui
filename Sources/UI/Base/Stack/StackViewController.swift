@@ -51,6 +51,11 @@ public final class StackViewController<T: Stack>: ViewController {
 
         self.ui.setupView(rootview: view)
 
+        self.ui.setupBottomAnchor(
+            hasTabber: self.tabBarController != nil,
+            rootview: view
+        )
+
         self.setupNavigationBar(content: self.content)
 
         self.fetch()

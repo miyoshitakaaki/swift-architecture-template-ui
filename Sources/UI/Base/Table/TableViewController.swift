@@ -89,6 +89,11 @@ public final class TableViewController<T: Table>: ViewController,
 
         self.ui.setupView(rootview: view)
 
+        self.ui.setupBottomAnchor(
+            hasTabber: self.tabBarController != nil,
+            rootview: view
+        )
+
         self.setupNavigationBar(content: self.content)
 
         if self.table.showSearchBar {

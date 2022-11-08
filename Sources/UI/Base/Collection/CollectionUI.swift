@@ -147,6 +147,16 @@ extension CollectionUI: UserInterface {
         setupEmptyView()
     }
 
+    func setupBottomAnchor(hasTabber: Bool, rootview: UIView) {
+        if hasTabber {
+            self.collectionView.bottomAnchor
+                .constraint(equalTo: rootview.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        } else {
+            self.collectionView.bottomAnchor
+                .constraint(equalTo: rootview.bottomAnchor).isActive = true
+        }
+    }
+
     var deleteItem: (IndexPath) -> Void {{ [weak self] indexPath in
         guard let self = self else { return }
 
@@ -183,10 +193,6 @@ extension CollectionUI: UserInterface {
 
 private extension CollectionUI {
     private func setupCollectionView(rootview: UIView) {
-        let bottom = self.collection.hideTabbar
-            ? rootview.bottomAnchor
-            : rootview.safeAreaLayoutGuide.bottomAnchor
-
         rootview.addSubviews(
             self.collectionView,
             constraints:
@@ -194,8 +200,6 @@ private extension CollectionUI {
                 .constraint(equalTo: rootview.safeAreaLayoutGuide.topAnchor),
             self.collectionView.leadingAnchor
                 .constraint(equalTo: rootview.safeAreaLayoutGuide.leadingAnchor),
-            self.collectionView.bottomAnchor
-                .constraint(equalTo: bottom),
             self.collectionView.trailingAnchor
                 .constraint(equalTo: rootview.safeAreaLayoutGuide.trailingAnchor)
         )

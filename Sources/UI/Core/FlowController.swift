@@ -27,6 +27,10 @@ public extension FlowController {
             add(vc)
         }
     }
+
+    func showSafari(url: String) {
+        UIApplication.shared.open(URL(string: url)!, options: [:])
+    }
 }
 
 public extension FlowController where T == NavigationController {

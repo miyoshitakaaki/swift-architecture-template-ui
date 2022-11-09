@@ -28,7 +28,12 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate {
     public var ui: UI!
     public var cancellables: Set<AnyCancellable> = []
 
-    public lazy var webView: WKWebView = {
+    public lazy var webView: WKWebView = { [weak self] in
+
+        guard let self else {
+            return .init(frame: .zero, configuration: .init())
+        }
+
         let config = WKWebViewConfiguration()
         if let scheme = self.scheme {
             config.setURLSchemeHandler(self, forURLScheme: scheme)
@@ -237,8 +242,8 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate {
                 forName: notificationName,
                 object: nil,
                 queue: .current
-            ) { _ in
-                self.needReflesh = true
+            ) { [weak self] _ in
+                self?.needReflesh = true
             }
         }
     }
@@ -392,18 +397,22 @@ private extension WebViewController {
     }
 
     func setupCanGobackObservation() {
-        self.canGobackObservation = self.webView.observe(\.canGoBack, options: .new) { _, _ in
-            switch self.showWebBackButton {
-            case .always:
-                self.backButton.isHidden = false
+        self.canGobackObservation = self.webView
+            .observe(\.canGoBack, options: .new) { [weak self] _, _ in
 
-            case .whenHasHistory:
-                self.backButton.isHidden = !self.webView.canGoBack
+                guard let self else { return }
+
+                switch self.showWebBackButton {
+                case .always:
+                    self.backButton.isHidden = false
+
+                case .whenHasHistory:
+                    self.backButton.isHidden = !self.webView.canGoBack
+                }
+
+                self.navigationController?.interactivePopGestureRecognizer?
+                    .isEnabled = !self.webView.canGoBack
             }
-
-            self.navigationController?.interactivePopGestureRecognizer?
-                .isEnabled = !self.webView.canGoBack
-        }
     }
 
     func setupCurentPageObservation() {
@@ -448,24 +457,28 @@ private extension WebViewController {
     func setupObservation() {
         self.webView.topLineToSelf(self.progressView, constant: 0, height: 3)
         self.progressView.progressTintColor = UIConfig.accentBlue
-        self.observation = self.webView.observe(\.estimatedProgress, options: .new) { _, change in
-            self.progressView.setProgress(Float(change.newValue!), animated: true)
-            if change.newValue! >= 1.0 {
-                UIView.animate(
-                    withDuration: 1.0,
-                    delay: 0.0,
-                    options: [.curveEaseIn],
-                    animations: {
-                        self.progressView.alpha = 0.0
-                    },
-                    completion: { (_: Bool) in
-                        self.progressView.setProgress(0, animated: false)
-                    }
-                )
-            } else {
-                self.progressView.alpha = 1.0
+        self.observation = self.webView
+            .observe(\.estimatedProgress, options: .new) { [weak self] _, change in
+
+                guard let self else { return }
+
+                self.progressView.setProgress(Float(change.newValue!), animated: true)
+                if change.newValue! >= 1.0 {
+                    UIView.animate(
+                        withDuration: 1.0,
+                        delay: 0.0,
+                        options: [.curveEaseIn],
+                        animations: {
+                            self.progressView.alpha = 0.0
+                        },
+                        completion: { (_: Bool) in
+                            self.progressView.setProgress(0, animated: false)
+                        }
+                    )
+                } else {
+                    self.progressView.alpha = 1.0
+                }
             }
-        }
     }
 
     // Ref: https://qiita.com/rokubay/items/e25936a35b4ad47d1447

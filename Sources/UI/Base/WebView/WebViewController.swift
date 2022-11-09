@@ -28,6 +28,9 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate {
     public var ui: UI!
     public var cancellables: Set<AnyCancellable> = []
 
+    // Ref: https://stackoverflow.com/questions/71678534/swift-seturlschemehandler-causes-a-memory-leak-wkwebview
+    private lazy var leakAvoider: LeakAvoider = .init(delegate: self)
+
     public lazy var webView: WKWebView = { [weak self] in
 
         guard let self else {
@@ -36,13 +39,13 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate {
 
         let config = WKWebViewConfiguration()
         if let scheme = self.scheme {
-            config.setURLSchemeHandler(self, forURLScheme: scheme)
+            config.setURLSchemeHandler(leakAvoider, forURLScheme: scheme)
         }
-        config.setURLSchemeHandler(self, forURLScheme: "tel")
-        config.setURLSchemeHandler(self, forURLScheme: "mailto")
-        config.setURLSchemeHandler(self, forURLScheme: "facetime")
-        config.setURLSchemeHandler(self, forURLScheme: "sms")
-        config.setURLSchemeHandler(self, forURLScheme: "maps")
+        config.setURLSchemeHandler(leakAvoider, forURLScheme: "tel")
+        config.setURLSchemeHandler(leakAvoider, forURLScheme: "mailto")
+        config.setURLSchemeHandler(leakAvoider, forURLScheme: "facetime")
+        config.setURLSchemeHandler(leakAvoider, forURLScheme: "sms")
+        config.setURLSchemeHandler(leakAvoider, forURLScheme: "maps")
 
         let userContentController = WKUserContentController()
         self.javascriptEvent.forEach { event in
@@ -525,4 +528,21 @@ private extension WebViewController {
 
 private final class NoInputAccessoryView: NSObject {
     @objc var inputAccessoryView: AnyObject? { nil }
+}
+
+class LeakAvoider: NSObject, WKURLSchemeHandler {
+    func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
+        self.delegate?.webView(webView, start: urlSchemeTask)
+    }
+
+    func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
+        self.delegate?.webView(webView, stop: urlSchemeTask)
+    }
+
+    weak var delegate: WKURLSchemeHandler?
+
+    init(delegate: WKURLSchemeHandler) {
+        self.delegate = delegate
+        super.init()
+    }
 }

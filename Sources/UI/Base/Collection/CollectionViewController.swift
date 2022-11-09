@@ -126,8 +126,8 @@ public final class CollectionViewController<
                 forName: notificationName,
                 object: nil,
                 queue: .current
-            ) { _ in
-                self.reloadType = .remote
+            ) { [weak self] _ in
+                self?.reloadType = .remote
             }
         }
     }

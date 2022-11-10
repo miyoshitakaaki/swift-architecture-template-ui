@@ -110,6 +110,24 @@ public final class DiffableCollectionViewController<
     }
 
     private func addObserver() {
+        NotificationCenter.default.addObserver(
+            forName: UIApplication.willEnterForegroundNotification,
+            object: nil,
+            queue: .current
+        ) { [weak self] _ in
+
+            guard let self else { return }
+
+            let isVisible = self.isViewLoaded && self.view.window != nil
+
+            guard isVisible else { return }
+
+            if self.reloadType != nil {
+                self.reload()
+                self.reloadType = nil
+            }
+        }
+
         self.needRefreshNotificationNames.forEach { notificationName in
             NotificationCenter.default.addObserver(
                 forName: notificationName,

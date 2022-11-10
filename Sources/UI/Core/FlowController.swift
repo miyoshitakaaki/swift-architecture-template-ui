@@ -34,8 +34,10 @@ public extension FlowController {
         }
     }
 
-    func showSafari(url: String) {
-        UIApplication.shared.open(URL(string: url)!, options: [:])
+    func showApplication(url: String) {
+        if let url = URL(string: url), UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url, options: [:])
+        }
     }
 }
 

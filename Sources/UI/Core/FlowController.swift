@@ -14,7 +14,7 @@ public protocol FlowController: UIViewController, AlertPresentable {
     var navigation: T { get }
     var delegate: FlowDelegate? { get set }
     var childProvider: (Child) -> UIViewController { get }
-    var flowProvider: (Flow) -> Self { get }
+    var flowProvider: (Flow) -> any FlowController { get }
     func start()
     func clear()
 }
@@ -24,7 +24,7 @@ public extension FlowController {
         UIViewController(nibName: nil, bundle: nil)
     }}
 
-    var flowProvider: (Flow) -> Self { fatalError() }
+    var flowProvider: (Flow) -> any FlowController { fatalError() }
 
     func show(
         navigation: NavigationController,

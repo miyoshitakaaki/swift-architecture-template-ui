@@ -7,15 +7,21 @@ public protocol FlowDelegate: AnyObject {
 
 public protocol FlowController: UIViewController, AlertPresentable {
     associatedtype T
+    associatedtype Child
     var alertMessageAlignment: NSTextAlignment? { get }
     var alertTintColor: UIColor? { get }
     var navigation: T { get }
     var delegate: FlowDelegate? { get set }
+    var childProvider: (Child) -> UIViewController { get }
     func start()
     func clear()
 }
 
 public extension FlowController {
+    var childProvider: (Child) -> UIViewController {{ _ in
+        UIViewController(nibName: nil, bundle: nil)
+    }}
+
     func show(
         navigation: NavigationController,
         vc: UIViewController
@@ -40,6 +46,16 @@ public extension FlowController where T == NavigationController {
 
     var rootViewController: UIViewController? {
         self.navigation.viewControllers.first
+    }
+
+    func show(_ child: Child, root: Bool = false) {
+        let vc = self.childProvider(child)
+
+        if root {
+            self.show(navigation: self.navigation, vc: vc)
+        } else {
+            self.navigation.pushViewController(vc, animated: true)
+        }
     }
 
     func show(error: AppError, okAction: ((UIAlertAction) -> Void)? = nil) {

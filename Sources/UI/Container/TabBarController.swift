@@ -2,6 +2,9 @@ import UIKit
 import WebKit
 
 public class TabBarController: UITabBarController {
+    public static let tabSelectedNotificationName: Notification
+        .Name = .init(rawValue: "tab.selected")
+
     private let tintColor: UIColor, badgeTextAttributesForegroundColor: UIColor
 
     public init(tintColor: UIColor, badgeTextAttributesForegroundColor: UIColor) {
@@ -53,6 +56,12 @@ extension TabBarController: UITabBarControllerDelegate {
         _ tabBarController: UITabBarController,
         shouldSelect viewController: UIViewController
     ) -> Bool {
+        NotificationCenter.default.post(
+            name: Self.tabSelectedNotificationName,
+            object: nil,
+            userInfo: nil
+        )
+
         guard let viewControllers = viewControllers else { return false }
 
         guard viewController == viewControllers[selectedIndex] else { return true }

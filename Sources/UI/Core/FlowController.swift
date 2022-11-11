@@ -64,9 +64,13 @@ public extension FlowController where T == NavigationController {
         }
     }
 
-    func start(_ flow: Flow) {
+    func start(_ flow: Flow, present: Bool) {
         let flow = self.flowProvider(flow)
-        self.navigation.pushViewController(flow, animated: true)
+        if present {
+            self.present(flow, animated: true)
+        } else {
+            self.navigation.pushViewController(flow, animated: true)
+        }
     }
 
     func show(error: AppError, okAction: ((UIAlertAction) -> Void)? = nil) {

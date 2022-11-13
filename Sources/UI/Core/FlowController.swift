@@ -17,6 +17,7 @@ public protocol FlowController: UIViewController, AlertPresentable {
     var flowProvider: (Flow) -> any FlowController { get }
     func start()
     func clear()
+    init(navigation: T, root: Child)
 }
 
 public extension FlowController {

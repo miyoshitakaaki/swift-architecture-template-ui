@@ -31,18 +31,6 @@ public extension FlowController {
         UIViewController(nibName: nil, bundle: nil)
     }}
 
-    func show(
-        navigation: NavigationController,
-        vc: UIViewController
-    ) {
-        if navigation.viewControllers.isEmpty {
-            add(navigation)
-            navigation.viewControllers = [vc]
-        } else {
-            add(vc)
-        }
-    }
-
     func showApplication(url: String) {
         if let url = URL(string: url), UIApplication.shared.canOpenURL(url) {
             UIApplication.shared.open(url, options: [:])
@@ -63,7 +51,12 @@ public extension FlowController where T == NavigationController {
         let vc = self.childProvider(child)
 
         if root {
-            self.show(navigation: self.navigation, vc: vc)
+            if self.navigation.viewControllers.isEmpty {
+                add(self.navigation)
+                self.navigation.viewControllers = [vc]
+            } else {
+                add(vc)
+            }
         } else {
             self.navigation.pushViewController(vc, animated: true)
         }

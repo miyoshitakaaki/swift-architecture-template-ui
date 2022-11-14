@@ -81,6 +81,8 @@ public extension FlowController where T == NavigationController {
             flow.delegate = delegate
             flow.presentationController?.delegate = self
                 .rootViewController as? UIAdaptivePresentationControllerDelegate
+            flow.navigation.presentationController?.delegate = self
+                .rootViewController as? UIAdaptivePresentationControllerDelegate
             self.present(flow, animated: true)
 
         case .push:

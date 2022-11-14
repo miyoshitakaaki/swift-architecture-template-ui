@@ -6,7 +6,11 @@ public protocol FlowDelegate: AnyObject {
 }
 
 public enum ShowType {
-    case modal(navigation: NavigationController), push
+    case modal(
+        navigation: NavigationController,
+        modalPresentationStyle: UIModalPresentationStyle? = nil
+    ),
+        push
 }
 
 public protocol FlowController: UIViewController, AlertPresentable {
@@ -76,8 +80,13 @@ public extension FlowController where T == NavigationController {
         showType: ShowType
     ) where F.T == NavigationController {
         switch showType {
-        case let .modal(navigation):
+        case let .modal(navigation, style):
             let flow = F(navigation: navigation, root: root)
+
+            if let style = style {
+                flow.modalPresentationStyle = style
+            }
+
             flow.delegate = delegate
             flow.presentationController?.delegate = self
                 .rootViewController as? UIAdaptivePresentationControllerDelegate

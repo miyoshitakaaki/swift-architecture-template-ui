@@ -5,6 +5,10 @@ public protocol FlowDelegate: AnyObject {
     func didFinished()
 }
 
+public enum ShowType {
+    case modal(navigation: NavigationController), push
+}
+
 public protocol FlowController: UIViewController, AlertPresentable {
     associatedtype T
     associatedtype Child
@@ -62,6 +66,27 @@ public extension FlowController where T == NavigationController {
             self.show(navigation: self.navigation, vc: vc)
         } else {
             self.navigation.pushViewController(vc, animated: true)
+        }
+    }
+
+    func start<F: FlowController>(
+        flowType: F.Type,
+        root: F.Child,
+        delegate: FlowDelegate,
+        showType: ShowType
+    ) where F.T == NavigationController {
+        switch showType {
+        case let .modal(navigation):
+            let flow = F(navigation: navigation, root: root)
+            flow.delegate = delegate
+            flow.presentationController?.delegate = self
+                .rootViewController as? UIAdaptivePresentationControllerDelegate
+            self.present(flow, animated: true)
+
+        case .push:
+            let flow = F(navigation: self.navigation, root: root)
+            flow.delegate = delegate
+            self.navigation.pushViewController(flow, animated: true)
         }
     }
 

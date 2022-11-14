@@ -16,13 +16,11 @@ public enum ShowType {
 public protocol FlowController: UIViewController, AlertPresentable {
     associatedtype T
     associatedtype Child
-    associatedtype Flow
     var alertMessageAlignment: NSTextAlignment? { get }
     var alertTintColor: UIColor? { get }
     var navigation: T { get }
     var delegate: FlowDelegate? { get set }
     var childProvider: (Child) -> UIViewController { get }
-    var flowProvider: (Flow) -> any FlowController { get }
     func start()
     func clear()
     init(navigation: T, root: Child)
@@ -32,8 +30,6 @@ public extension FlowController {
     var childProvider: (Child) -> UIViewController {{ _ in
         UIViewController(nibName: nil, bundle: nil)
     }}
-
-    var flowProvider: (Flow) -> any FlowController { fatalError() }
 
     func show(
         navigation: NavigationController,
@@ -97,15 +93,6 @@ public extension FlowController where T == NavigationController {
         case .push:
             let flow = F(navigation: self.navigation, root: root)
             flow.delegate = delegate
-            self.navigation.pushViewController(flow, animated: true)
-        }
-    }
-
-    func start(_ flow: Flow, present: Bool) {
-        let flow = self.flowProvider(flow)
-        if present {
-            self.present(flow, animated: true)
-        } else {
             self.navigation.pushViewController(flow, animated: true)
         }
     }

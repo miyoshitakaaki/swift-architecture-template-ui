@@ -13,17 +13,32 @@ public enum ShowType {
         push
 }
 
-public protocol FlowController: UIViewController, AlertPresentable {
+public protocol FlowBase {
     associatedtype T
     associatedtype Child
-    var alertMessageAlignment: NSTextAlignment? { get }
-    var alertTintColor: UIColor? { get }
+
     var root: Child { get }
     var navigation: T { get }
+
+    init(navigation: T, root: Child)
+}
+
+public class BaseFlow<Child>: FlowBase {
+    public let root: Child
+    public let navigation: NavigationController
+
+    public required init(navigation: NavigationController, root: Child) {
+        self.navigation = navigation
+        self.root = root
+    }
+}
+
+public protocol FlowController: UIViewController, FlowBase, AlertPresentable {
+    var alertMessageAlignment: NSTextAlignment? { get }
+    var alertTintColor: UIColor? { get }
     var delegate: FlowDelegate? { get set }
     var childProvider: (Child) -> UIViewController { get }
     func clear()
-    init(navigation: T, root: Child)
 }
 
 public extension FlowController {

@@ -22,7 +22,6 @@ public protocol FlowController: UIViewController, AlertPresentable {
     var navigation: T { get }
     var delegate: FlowDelegate? { get set }
     var childProvider: (Child) -> UIViewController { get }
-    func start()
     func clear()
     init(navigation: T, root: Child)
 }

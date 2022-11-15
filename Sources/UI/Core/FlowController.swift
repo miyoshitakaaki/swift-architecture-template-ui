@@ -18,6 +18,7 @@ public protocol FlowController: UIViewController, AlertPresentable {
     associatedtype Child
     var alertMessageAlignment: NSTextAlignment? { get }
     var alertTintColor: UIColor? { get }
+    var root: Child { get }
     var navigation: T { get }
     var delegate: FlowDelegate? { get set }
     var childProvider: (Child) -> UIViewController { get }

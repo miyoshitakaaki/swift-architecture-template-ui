@@ -1,3 +1,4 @@
+import Combine
 import UIKit
 import Utility
 
@@ -11,6 +12,8 @@ open class AnyFlow<Flow: FlowBase>: UIViewController, FlowController,
     open var childProvider: (Flow.Child) -> UIViewController {{ _ in
         .init(nibName: nil, bundle: nil)
     }}
+
+    public var cancellables: Set<AnyCancellable> = []
 
     public var delegate: FlowDelegate?
 

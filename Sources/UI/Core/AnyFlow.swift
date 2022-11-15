@@ -15,7 +15,7 @@ open class AnyFlow<Flow: FlowBase>: UIViewController, FlowController,
 
     public var cancellables: Set<AnyCancellable> = []
 
-    public var delegate: FlowDelegate?
+    public weak var delegate: FlowDelegate?
 
     public var navigation: Flow.T
 

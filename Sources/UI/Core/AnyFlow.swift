@@ -5,9 +5,9 @@ import Utility
 open class AnyFlow<Flow: FlowBase>: UIViewController, FlowController,
     AlertPresentable where Flow.T == NavigationController
 {
-    public var alertMessageAlignment: NSTextAlignment?
+    open var alertMessageAlignment: NSTextAlignment? { nil }
 
-    public var alertTintColor: UIColor?
+    open var alertTintColor: UIColor? { nil }
 
     open var childProvider: (Flow.Child) -> UIViewController {{ _ in
         .init(nibName: nil, bundle: nil)

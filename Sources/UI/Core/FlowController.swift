@@ -23,7 +23,7 @@ public protocol FlowBase {
     init(navigation: T, root: Child)
 }
 
-public class BaseFlow<Child>: FlowBase {
+open class BaseFlow<Child>: FlowBase {
     public let root: Child
     public let navigation: NavigationController
 

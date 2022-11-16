@@ -34,7 +34,7 @@ open class AnyFlow<Flow: FlowBase>: UIViewController, FlowController,
         fatalError("init(coder:) has not been implemented")
     }
 
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
 
         self.view.backgroundColor = .white
@@ -44,7 +44,7 @@ open class AnyFlow<Flow: FlowBase>: UIViewController, FlowController,
         }
     }
 
-    override public func viewWillAppear(_ animated: Bool) {
+    override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
         if self.navigation.viewControllers.isEmpty == true {
@@ -52,11 +52,11 @@ open class AnyFlow<Flow: FlowBase>: UIViewController, FlowController,
         }
     }
 
-    override public func viewDidAppear(_ animated: Bool) {
+    override open func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     }
 
-    override public func viewDidLayoutSubviews() {
+    override open func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
         children.first?.view.frame = view.bounds

@@ -5,6 +5,8 @@ import Utility
 open class AnyFlow<Flow: FlowBase>: UIViewController, FlowController,
     AlertPresentable where Flow.T == NavigationController
 {
+    open var skipViewDidLoadStart: Bool { false }
+
     open var alertMessageAlignment: NSTextAlignment? { nil }
 
     open var alertTintColor: UIColor? { nil }
@@ -37,14 +39,16 @@ open class AnyFlow<Flow: FlowBase>: UIViewController, FlowController,
 
         self.view.backgroundColor = .white
 
-        self.show(self.root, root: true)
+        if self.skipViewDidLoadStart == false {
+            self.start()
+        }
     }
 
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
         if self.navigation.viewControllers.isEmpty == true {
-            self.show(self.root, root: true)
+            self.start()
         }
     }
 
@@ -56,5 +60,9 @@ open class AnyFlow<Flow: FlowBase>: UIViewController, FlowController,
         super.viewDidLayoutSubviews()
 
         children.first?.view.frame = view.bounds
+    }
+
+    open func start() {
+        self.show(self.root, root: true)
     }
 }

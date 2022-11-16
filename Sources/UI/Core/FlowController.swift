@@ -34,6 +34,7 @@ open class BaseFlow<Child>: FlowBase {
 }
 
 public protocol FlowController: UIViewController, FlowBase, AlertPresentable {
+    var skipViewDidLoadStart: Bool { get }
     var alertMessageAlignment: NSTextAlignment? { get }
     var alertTintColor: UIColor? { get }
     var delegate: FlowDelegate? { get set }
@@ -42,6 +43,8 @@ public protocol FlowController: UIViewController, FlowBase, AlertPresentable {
 }
 
 public extension FlowController {
+    var skipViewDidLoadStart: Bool { false }
+
     var childProvider: (Child) -> UIViewController {{ _ in
         UIViewController(nibName: nil, bundle: nil)
     }}

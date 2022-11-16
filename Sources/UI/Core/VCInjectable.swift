@@ -33,15 +33,21 @@ public extension VCInjectable {
         target.navigationItem.rightBarButtonItems = content.rightNavigationItems
         target.navigationItem.leftBarButtonItems = content.leftNavigationItems
 
-        if let title = content.title {
+        self.setupNavigationTitle(content.title)
+
+        target.navigationItem.rightBarButtonItem?.tintColor = content.rightBarButtonItemTintColor
+        target.navigationItem.leftBarButtonItem?.tintColor = content.leftBarButtonItemTintColor
+    }
+
+    func setupNavigationTitle(_ title: String?) {
+        let target = (self.parent as? (any FlowController)) ?? self
+
+        if let title {
             target.navigationItem.titleView = UILabel(style: .init(style: { label in
                 label.font = .systemFont(ofSize: 17, weight: .semibold)
             }), title: title)
         } else {
             target.navigationItem.titleView = UIView()
         }
-
-        target.navigationItem.rightBarButtonItem?.tintColor = content.rightBarButtonItemTintColor
-        target.navigationItem.leftBarButtonItem?.tintColor = content.leftBarButtonItemTintColor
     }
 }

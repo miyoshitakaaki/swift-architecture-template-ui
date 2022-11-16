@@ -158,6 +158,15 @@ public final class CollectionViewController<
                 self?.delegate?.didSupplementaryViewDequeued(supplementaryView: supplementaryView)
             }.store(in: &self.cancellables)
 
+        self.ui.deletePublisher.sink(receiveValue: { [weak self] itemCount in
+
+            guard let self else { return }
+
+            if let title = self.collection.titleForItemCount?(itemCount) {
+                self.setupNavigationTitle(title)
+            }
+        }).store(in: &self.cancellables)
+
         self.viewModel.loadingState
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] state in
@@ -189,6 +198,10 @@ public final class CollectionViewController<
                     self.dismissActivity()
                     self.ui.reload(items: value)
                     self.view.hideSkeleton()
+
+                    if let title = self.collection.titleForItemCount?(value.count) {
+                        self.setupNavigationTitle(title)
+                    }
 
                 case .addtionalDone:
                     break

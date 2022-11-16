@@ -96,6 +96,7 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
     >()
     let additionalLoadingIndexPathPublisher = PassthroughSubject<Void, Never>()
     let refreshPublisher = PassthroughSubject<Void, Never>()
+    let deletePublisher = PassthroughSubject<Int, Never>()
 
     private let collection: T
 
@@ -168,6 +169,8 @@ extension CollectionUI: UserInterface {
 
         self.collection.emptyView?.isHidden = !snapshot.itemIdentifiers.isEmpty
         self.collection.floatingButton?.isHidden = snapshot.itemIdentifiers.isEmpty
+
+        self.deletePublisher.send(self.dataSource.snapshot().numberOfItems)
 
     }}
 

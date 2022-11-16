@@ -38,6 +38,8 @@ public final class FormSelectionView<T: Selection>: UIView {
             .eraseToAnyPublisher()
     }()
 
+    private lazy var currentValue: CurrentValueSubject<(Int, Bool), Never> = .init((0, false))
+
     private let stackSpace: CGFloat
 
     private let singleSelect: Bool
@@ -49,6 +51,9 @@ public final class FormSelectionView<T: Selection>: UIView {
         super.init(frame: .zero)
         self.backgroundColor = .white
         setupView(contents)
+
+        self.checkButtonPublishers
+            .subscribe(self.currentValue).store(in: &self.cancellables)
     }
 
     @available(*, unavailable)
@@ -117,6 +122,9 @@ public extension FormSelectionView {
         }
         self.itemViews.enumerated().forEach { index, view in
             view.changeButtonFlag(flags[index])
+            if flags[index] {
+                currentValue.send((index, flags[index]))
+            }
         }
     }
 }
@@ -128,6 +136,6 @@ extension FormSelectionView: Publisher {
     public func receive<S>(subscriber: S) where S: Subscriber, Never == S.Failure,
         (Int, Bool) == S.Input
     {
-        self.checkButtonPublishers.subscribe(subscriber)
+        self.currentValue.subscribe(subscriber)
     }
 }

@@ -19,24 +19,38 @@ public protocol FlowBase {
 
     var root: Child { get }
     var navigation: T { get }
+    var alertMessageAlignment: NSTextAlignment? { get }
+    var alertTintColor: UIColor? { get }
 
-    init(navigation: T, root: Child)
+    init(
+        navigation: T,
+        root: Child,
+        alertMessageAlignment: NSTextAlignment?,
+        alertTintColor: UIColor?
+    )
 }
 
 open class BaseFlow<Child>: FlowBase {
     public let root: Child
     public let navigation: NavigationController
+    public let alertMessageAlignment: NSTextAlignment?
+    public let alertTintColor: UIColor?
 
-    public required init(navigation: NavigationController, root: Child) {
+    public required init(
+        navigation: NavigationController,
+        root: Child,
+        alertMessageAlignment: NSTextAlignment?,
+        alertTintColor: UIColor?
+    ) {
         self.navigation = navigation
         self.root = root
+        self.alertMessageAlignment = alertMessageAlignment
+        self.alertTintColor = alertTintColor
     }
 }
 
 public protocol FlowController: UIViewController, FlowBase, AlertPresentable {
     var skipViewDidLoadStart: Bool { get }
-    var alertMessageAlignment: NSTextAlignment? { get }
-    var alertTintColor: UIColor? { get }
     var delegate: FlowDelegate? { get set }
     var childProvider: (Child) -> UIViewController { get }
     func clear()
@@ -84,11 +98,18 @@ public extension FlowController where T == NavigationController {
         flowType: F.Type,
         root: F.Child,
         delegate: FlowDelegate,
-        showType: ShowType
+        showType: ShowType,
+        alertMessageAlignment: NSTextAlignment?,
+        alertTintColor: UIColor?
     ) where F.T == NavigationController {
         switch showType {
         case let .modal(navigation, style):
-            let flow = F(navigation: navigation, root: root)
+            let flow = F(
+                navigation: navigation,
+                root: root,
+                alertMessageAlignment: alertMessageAlignment,
+                alertTintColor: alertTintColor
+            )
 
             if let style = style {
                 flow.modalPresentationStyle = style
@@ -102,7 +123,12 @@ public extension FlowController where T == NavigationController {
             self.present(flow, animated: true)
 
         case .push:
-            let flow = F(navigation: self.navigation, root: root)
+            let flow = F(
+                navigation: self.navigation,
+                root: root,
+                alertMessageAlignment: alertMessageAlignment,
+                alertTintColor: alertTintColor
+            )
             flow.delegate = delegate
             self.navigation.pushViewController(flow, animated: true)
         }

@@ -7,10 +7,6 @@ open class AnyFlow<Flow: FlowBase>: UIViewController, FlowController,
 {
     open var skipViewDidLoadStart: Bool { false }
 
-    open var alertMessageAlignment: NSTextAlignment? { nil }
-
-    open var alertTintColor: UIColor? { nil }
-
     open var childProvider: (Flow.Child) -> UIViewController {{ _ in
         .init(nibName: nil, bundle: nil)
     }}
@@ -23,9 +19,20 @@ open class AnyFlow<Flow: FlowBase>: UIViewController, FlowController,
 
     public let root: Flow.Child
 
-    public required init(navigation: T, root: Child) {
+    public let alertMessageAlignment: NSTextAlignment?
+
+    public let alertTintColor: UIColor?
+
+    public required init(
+        navigation: NavigationController,
+        root: Flow.Child,
+        alertMessageAlignment: NSTextAlignment?,
+        alertTintColor: UIColor?
+    ) {
         self.navigation = navigation
         self.root = root
+        self.alertMessageAlignment = alertMessageAlignment
+        self.alertTintColor = alertTintColor
         super.init(nibName: nil, bundle: nil)
     }
 

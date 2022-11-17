@@ -167,6 +167,10 @@ public final class CollectionViewController<
             }
         }).store(in: &self.cancellables)
 
+        self.ui.errorPublisher.sink { [weak self] error in
+            self?.delegate?.didErrorOccured(error: error)
+        }.store(in: &self.cancellables)
+
         self.viewModel.loadingState
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] state in

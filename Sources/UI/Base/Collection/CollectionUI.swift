@@ -10,6 +10,8 @@ public struct SelectedCellInfo<T: CollectionList> {
 }
 
 public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewDelegate {
+    private var cancellables: Set<AnyCancellable> = []
+
     private lazy var collectionView: UICollectionView = .init(
         frame: .zero,
         collectionViewLayout: collection.composableLayout
@@ -97,6 +99,7 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
     let additionalLoadingIndexPathPublisher = PassthroughSubject<Void, Never>()
     let refreshPublisher = PassthroughSubject<Void, Never>()
     let deletePublisher = PassthroughSubject<Int, Never>()
+    let errorPublisher = PassthroughSubject<AppError, Never>()
 
     private let collection: T
 
@@ -159,18 +162,35 @@ extension CollectionUI: UserInterface {
     }
 
     var deleteItem: (IndexPath) -> Void {{ [weak self] indexPath in
-        guard let self = self else { return }
+        guard let self else { return }
 
-        var snapshot = self.dataSource.snapshot()
         guard let identifier = self.dataSource.itemIdentifier(for: indexPath) else { return }
-        snapshot.deleteItems([identifier])
-        self.dataSource.apply(snapshot, animatingDifferences: true)
-        self.collectionView.reloadData()
 
-        self.collection.emptyView?.isHidden = !snapshot.itemIdentifiers.isEmpty
-        self.collection.floatingButton?.isHidden = snapshot.itemIdentifiers.isEmpty
+        self.collection.deletePublisher(identifier)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] finished in
+                guard let self else { return }
 
-        self.deletePublisher.send(self.dataSource.snapshot().numberOfItems)
+                switch finished {
+                case .finished:
+                    print("finished")
+                case let .failure(error):
+                    self.errorPublisher.send(error)
+                }
+
+            } receiveValue: { [weak self] _ in
+                guard let self else { return }
+
+                var snapshot = self.dataSource.snapshot()
+                snapshot.deleteItems([identifier])
+                self.dataSource.apply(snapshot, animatingDifferences: true)
+                self.collectionView.reloadData()
+
+                self.collection.emptyView?.isHidden = !snapshot.itemIdentifiers.isEmpty
+                self.collection.floatingButton?.isHidden = snapshot.itemIdentifiers.isEmpty
+
+                self.deletePublisher.send(self.dataSource.snapshot().numberOfItems)
+            }.store(in: &self.cancellables)
 
     }}
 

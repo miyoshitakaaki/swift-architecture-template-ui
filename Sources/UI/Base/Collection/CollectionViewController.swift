@@ -3,12 +3,22 @@ import SkeletonView
 import UIKit
 import Utility
 
-public protocol CollectionViewControllerDelegate: AnyObject {
-    // TODO: should not use generic parameter
+public protocol CollectionViewControllerDelegate: FlowController {
     func didItemSelected(selectedInfo: SelectedCellInfo<some CollectionList>)
-    func didCellDequeued<T: UICollectionViewCell>(cell: T?, indexPath: IndexPath)
     func didSupplementaryViewDequeued(supplementaryView: UICollectionReusableView?)
     func didErrorOccured(error: AppError)
+}
+
+public extension CollectionViewControllerDelegate where T == NavigationController {
+    func didErrorOccured(error: AppError) {
+        self.show(error: error)
+    }
+}
+
+public extension CollectionViewControllerDelegate where T == TabBarController {
+    func didErrorOccured(error: AppError) {
+        self.show(error: error)
+    }
 }
 
 extension CollectionViewController: VCInjectable {
@@ -33,7 +43,7 @@ public final class CollectionViewController<
     public var ui: UI!
     public var cancellables: Set<AnyCancellable> = []
 
-    public weak var delegate: CollectionViewControllerDelegate?
+    public weak var delegate: (any CollectionViewControllerDelegate)?
 
     private var reloadType: ReloadType?
 
@@ -146,11 +156,6 @@ public final class CollectionViewController<
         self.ui.didItemSelectedPublisher
             .sink { [weak self] selectedInfo in
                 self?.delegate?.didItemSelected(selectedInfo: selectedInfo)
-            }.store(in: &self.cancellables)
-
-        self.ui.didCellDequeuePublisher
-            .sink { [weak self] data in
-                self?.delegate?.didCellDequeued(cell: data.0, indexPath: data.1)
             }.store(in: &self.cancellables)
 
         self.ui.didSupplementaryViewDequeuePublisher

@@ -30,8 +30,6 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
         cell?.delete = self?.deleteItem
         cell?.indexPath = indexPath
 
-        self?.didCellDequeuePublisher.send((cell, indexPath))
-
         return cell
 
     }}
@@ -91,7 +89,6 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
         return dataSource
     }()
 
-    let didCellDequeuePublisher = PassthroughSubject<(T.Cell?, IndexPath), Never>()
     let didItemSelectedPublisher = PassthroughSubject<SelectedCellInfo<T>, Never>()
     let didSupplementaryViewDequeuePublisher = PassthroughSubject<
         UICollectionReusableView?,

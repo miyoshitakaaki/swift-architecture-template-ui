@@ -28,6 +28,7 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
 
         cell?.viewData = viewData
         cell?.delete = self?.deleteItem
+        cell?.indexPath = indexPath
 
         self?.didCellDequeuePublisher.send((cell, indexPath))
 

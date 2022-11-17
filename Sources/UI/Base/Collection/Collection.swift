@@ -36,10 +36,16 @@ public protocol CollectionLayout: UICollectionViewCell {
     associatedtype ViewData: Hashable
     var viewData: ViewData? { get set }
     var delete: ((IndexPath) -> Void)? { get set }
+    var indexPath: IndexPath? { get set }
 }
 
 public extension CollectionLayout {
     var delete: ((IndexPath) -> Void)? {
+        get { nil }
+        set {}
+    }
+
+    var indexPath: IndexPath? {
         get { nil }
         set {}
     }

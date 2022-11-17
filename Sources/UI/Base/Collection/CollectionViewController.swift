@@ -5,7 +5,6 @@ import Utility
 
 public protocol CollectionViewControllerDelegate: FlowController {
     func didItemSelected(selectedInfo: SelectedCellInfo<some CollectionList>)
-    func didSupplementaryViewDequeued(supplementaryView: UICollectionReusableView?)
     func didErrorOccured(error: AppError)
 }
 
@@ -156,11 +155,6 @@ public final class CollectionViewController<
         self.ui.didItemSelectedPublisher
             .sink { [weak self] selectedInfo in
                 self?.delegate?.didItemSelected(selectedInfo: selectedInfo)
-            }.store(in: &self.cancellables)
-
-        self.ui.didSupplementaryViewDequeuePublisher
-            .sink { [weak self] supplementaryView in
-                self?.delegate?.didSupplementaryViewDequeued(supplementaryView: supplementaryView)
             }.store(in: &self.cancellables)
 
         self.ui.deletePublisher.sink(receiveValue: { [weak self] itemCount in

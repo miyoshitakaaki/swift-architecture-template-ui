@@ -51,8 +51,6 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
                 let data = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
                 header?.updateHeader(data: data.header)
 
-                self.didSupplementaryViewDequeuePublisher.send(header)
-
                 return header
 
             } else if kind == UICollectionView.elementKindSectionFooter {
@@ -64,8 +62,6 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
 
                 let data = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
                 footer?.updateFooter(data: data.footer)
-
-                self.didSupplementaryViewDequeuePublisher.send(footer)
 
                 return footer
             } else {
@@ -90,10 +86,6 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
     }()
 
     let didItemSelectedPublisher = PassthroughSubject<SelectedCellInfo<T>, Never>()
-    let didSupplementaryViewDequeuePublisher = PassthroughSubject<
-        UICollectionReusableView?,
-        Never
-    >()
     let additionalLoadingIndexPathPublisher = PassthroughSubject<Void, Never>()
     let refreshPublisher = PassthroughSubject<Void, Never>()
     let deletePublisher = PassthroughSubject<Int, Never>()

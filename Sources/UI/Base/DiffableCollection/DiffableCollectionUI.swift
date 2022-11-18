@@ -40,8 +40,6 @@ public final class DiffableCollectionUI<
                 item: item
             )
 
-            self.delegate?.didCellDequeud(indexPath: indexPath, cell: cell)
-
             return cell
         }
     }
@@ -78,7 +76,7 @@ public final class DiffableCollectionUI<
         return dataSource
     }()
 
-    public weak var delegate: DiffableCollectionEvent?
+    public weak var delegate: (any DiffableCollectionEvent)?
     public weak var uiDelegate: DiffableCollectionUIDelegate?
 
     private var cancellables: Set<AnyCancellable> = []

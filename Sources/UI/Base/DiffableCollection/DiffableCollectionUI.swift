@@ -40,6 +40,8 @@ public final class DiffableCollectionUI<
                 item: item
             )
 
+            (cell as? (any CollectionLayout))?.indexPath = indexPath
+
             return cell
         }
     }
@@ -57,6 +59,9 @@ public final class DiffableCollectionUI<
                 supplementaryRegistration: self.supplementaryRegistration,
                 indexPath: indexPath
             )
+
+            (supplementaryView as? (any DiffableCollectionSupplementaryLayout))?
+                .indexPath = indexPath
 
             self.delegate?.didSupplementaryViewDequeued(
                 indexPath: indexPath,

@@ -63,11 +63,6 @@ public final class DiffableCollectionUI<
             (supplementaryView as? (any DiffableCollectionSupplementaryLayout))?
                 .indexPath = indexPath
 
-            self.delegate?.didSupplementaryViewDequeued(
-                indexPath: indexPath,
-                supplementaryView: supplementaryView
-            )
-
             return supplementaryView
         }
     }

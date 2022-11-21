@@ -60,7 +60,8 @@ public final class FormConsentView: UIView {
         self.formTextView.isEditable = false
         self.formTextView.isScrollEnabled = false
         self.formTextView
-            .linkTextAttributes = [NSAttributedString.Key.foregroundColor: UIConfig.accentBlue]
+            .linkTextAttributes =
+            [NSAttributedString.Key.foregroundColor: UIColor.rgba(17, 76, 190, 1)]
         self.formTextView.attributedText = attributedString
         self.formTextView.delegate = self
     }
@@ -106,7 +107,7 @@ public final class FormConsentView: UIView {
 
 public extension FormConsentView {
     func agreeButtonBackGroundColorGlay() {
-        self.agreeButton.offBackGroundColor = UIConfig.lightGray_100
+        self.agreeButton.offBackGroundColor = UIColor.rgba(245, 245, 245, 1)
     }
 
     func changeCheckButton(_ isOn: Bool) {

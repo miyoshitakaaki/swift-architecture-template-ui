@@ -91,7 +91,7 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
 
     private let toolBar: UIToolbar = {
         let toolbar = UIToolbar()
-        toolbar.tintColor = UIConfig.accentBlue
+        toolbar.tintColor = UIColor.rgba(17, 76, 190, 1)
         return toolbar
     }()
 
@@ -101,7 +101,7 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
     private let optionButtonContainerView: UIView = .init()
     private let optionButton: UIButton = .init(
         style: .init {
-            $0.setTitleColor(UIConfig.accentBlue, for: .normal)
+            $0.setTitleColor(UIColor.rgba(17, 76, 190, 1), for: .normal)
         },
         title: "表示",
         for: .normal
@@ -140,8 +140,8 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
         } else {
             self.placeholder = placeholder
         }
-        self.backgroundColor = self.isEnabled ? backgroundColor : UIConfig.lightGray_200
-        self.textColor = UIConfig.darkGray_900
+        self.backgroundColor = self.isEnabled ? backgroundColor : UIColor.rgba(238, 238, 238, 1)
+        self.textColor = UIColor.rgba(33, 33, 33, 1)
         self.textContentType = textContentType
         self.returnKeyType = returnKeyType
         self.keyboardType = keyboardType
@@ -208,8 +208,12 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
         self.optionButton.addTarget(self, action: #selector(self.secureToggle), for: .touchUpInside)
         self.optionButton.isHidden = !self.showOptionButton
 
-        self.underArrowView.backgroundColor = self.isEnabled ? backgroundColor : UIConfig
-            .lightGray_200
+        self.underArrowView.backgroundColor = self.isEnabled ? backgroundColor : UIColor.rgba(
+            238,
+            238,
+            238,
+            1
+        )
     }
 
     @available(*, unavailable)

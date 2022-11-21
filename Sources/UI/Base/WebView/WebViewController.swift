@@ -459,7 +459,7 @@ private extension WebViewController {
 
     func setupObservation() {
         self.webView.topLineToSelf(self.progressView, constant: 0, height: 3)
-        self.progressView.progressTintColor = UIConfig.accentBlue
+        self.progressView.progressTintColor = UIColor.rgba(17, 76, 190, 1)
         self.observation = self.webView
             .observe(\.estimatedProgress, options: .new) { [weak self] _, change in
 

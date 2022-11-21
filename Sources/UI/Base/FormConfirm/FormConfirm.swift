@@ -22,7 +22,7 @@ public extension FormConfirmUIProtocol {
         .init {
             $0.layer.cornerRadius = 8.0
             $0.clipsToBounds = true
-            $0.backgroundColor = UIConfig.accentBlue
+            $0.backgroundColor = UIColor.rgba(17, 76, 190, 1)
         }
     }
 }

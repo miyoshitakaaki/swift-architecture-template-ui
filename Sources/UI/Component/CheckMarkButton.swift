@@ -3,7 +3,7 @@ import UIKit
 public final class CheckMarkButton: UIButton {
     public var checkFlag = false
 
-    public var onBackGroundColor: UIColor = UIConfig.accentBlue
+    public var onBackGroundColor = UIColor.rgba(17, 76, 190, 1)
     public var onCheckMarkColor: UIColor = .white
     public var offBackGroundColor: UIColor = .white
     public var offCheckMarkColor: UIColor = .white

@@ -20,7 +20,7 @@ public final class BadgeSegmentedControl: UISegmentedControl, SegmentedControl {
 
         self.setTitleTextAttributes(
             [
-                NSAttributedString.Key.foregroundColor: UIConfig.accentBlue,
+                NSAttributedString.Key.foregroundColor: UIColor.rgba(17, 76, 190, 1),
                 .font: UIFont.boldSystemFont(ofSize: 13),
             ],
             for: .selected

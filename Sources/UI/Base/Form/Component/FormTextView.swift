@@ -25,7 +25,7 @@ public final class FormTextView: UITextView, UITextViewDelegate {
         self.heightAnchor.constraint(equalToConstant: 160).isActive = true
         self.placeholderLabel.text = placeholder
         self.isScrollEnabled = false
-        self.textColor = UIConfig.darkGray_900
+        self.textColor = UIColor.rgba(33, 33, 33, 1)
 
         setup()
     }
@@ -49,7 +49,7 @@ public final class FormTextView: UITextView, UITextViewDelegate {
     override public var isEditable: Bool {
         didSet {
             self.isSelectable = self.isEditable
-            self.backgroundColor = self.isEditable ? .white : UIConfig.lightGray_200
+            self.backgroundColor = self.isEditable ? .white : UIColor.rgba(238, 238, 238, 1)
         }
     }
 

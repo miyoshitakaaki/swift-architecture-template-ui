@@ -52,9 +52,9 @@ public final class FormUI {
 
         if self.form.completionButtonPotition == .top {
             self.completionButton.apply(enable ? .init {
-                $0.setTitleColor(UIConfig.accentBlue, for: .normal)
+                $0.setTitleColor(UIColor.rgba(17, 76, 190, 1), for: .normal)
             } : .init {
-                $0.setTitleColor(UIConfig.darkGray_600, for: .normal)
+                $0.setTitleColor(UIColor.rgba(117, 117, 117, 1), for: .normal)
             })
         } else {
             self.completionButton.apply(
@@ -136,7 +136,7 @@ private extension FormUI {
         keyboardFrameTrackerView.isHidden = !self.form.showAccessoryView
 
         let button: UIButton = .init(style: .init {
-            $0.setTitleColor(UIConfig.accentBlue, for: .normal)
+            $0.setTitleColor(UIColor.rgba(17, 76, 190, 1), for: .normal)
         }, title: "次へ")
         button.addTarget(self, action: #selector(self.nextButtonTapped(_:)), for: .touchUpInside)
 

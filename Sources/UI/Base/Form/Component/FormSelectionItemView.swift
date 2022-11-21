@@ -27,7 +27,7 @@ public final class FormSelectionItemView: UIView, Selection {
 
     public var isEnabled = true {
         didSet {
-            self.backgroundColor = self.isEnabled ? .white : UIConfig.lightGray_200
+            self.backgroundColor = self.isEnabled ? .white : UIColor.rgba(238, 238, 238, 1)
         }
     }
 }
@@ -51,7 +51,7 @@ private extension FormSelectionItemView {
     func setupView(title: String) {
         let label: UILabel = .init(
             style: .init {
-                $0.textColor = UIConfig.darkGlay97
+                $0.textColor = UIColor.rgba(97, 97, 97, 1)
                 $0.font = UIFont.systemFont(ofSize: 12)
             },
             title: title
@@ -69,8 +69,8 @@ private extension FormSelectionItemView {
 
         let button: CheckMarkButton = .init()
         button.backgroundColor = .clear
-        button.onBackGroundColor = UIConfig.accentBlue
-        button.offBackGroundColor = UIConfig.darkGray_400
+        button.onBackGroundColor = UIColor.rgba(17, 76, 190, 1)
+        button.offBackGroundColor = UIColor.rgba(189, 189, 189, 1)
         button.addTarget(self, action: #selector(self.toggle), for: .touchUpInside)
         self.addSubviews(
             button,

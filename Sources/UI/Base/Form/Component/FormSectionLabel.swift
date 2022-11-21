@@ -7,7 +7,7 @@ public final class FormSectionLabel: UILabel {
         self.padding = .init(top: 40, left: leftInset, bottom: 16, right: 0)
         super.init(frame: .zero)
         apply(.init {
-            $0.textColor = UIConfig.accentBlue
+            $0.textColor = UIColor.rgba(17, 76, 190, 1)
             $0.font = UIFont.boldSystemFont(ofSize: 16)
         })
         self.text = title
@@ -54,7 +54,7 @@ private extension FormSectionLabel {
         attributedString.addAttributes(
             [
                 .font: UIFont.boldSystemFont(ofSize: 16),
-                .foregroundColor: UIConfig.darkGray_700,
+                .foregroundColor: UIColor.rgba(97, 97, 97, 1),
             ],
             range: titleTextRange
         )
@@ -62,7 +62,7 @@ private extension FormSectionLabel {
         attributedString.addAttributes(
             [
                 .font: UIFont.boldSystemFont(ofSize: 12),
-                .foregroundColor: UIConfig.darkGray_900,
+                .foregroundColor: UIColor.rgba(33, 33, 33, 1),
             ],
             range: subTitleTextRange
         )

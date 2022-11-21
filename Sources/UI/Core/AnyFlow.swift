@@ -23,12 +23,15 @@ open class AnyFlow<Flow: FlowBase>: UIViewController, FlowController,
 
     public let alertTintColor: UIColor?
 
+    private let isFirstFlow: Bool
+
     public required init(
         navigation: NavigationController,
         root: Flow.Child,
         alertMessageAlignment: NSTextAlignment?,
         alertTintColor: UIColor?
     ) {
+        self.isFirstFlow = navigation.viewControllers.isEmpty
         self.navigation = navigation
         self.root = root
         self.alertMessageAlignment = alertMessageAlignment
@@ -39,6 +42,12 @@ open class AnyFlow<Flow: FlowBase>: UIViewController, FlowController,
     @available(*, unavailable)
     public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    deinit {
+        if self.isFirstFlow {
+            self.clear()
+        }
     }
 
     override open func viewDidLoad() {

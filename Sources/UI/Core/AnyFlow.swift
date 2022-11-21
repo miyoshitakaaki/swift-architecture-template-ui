@@ -69,6 +69,14 @@ open class AnyFlow<Flow: FlowBase>: UIViewController, FlowController,
         children.first?.view.frame = view.bounds
     }
 
+    override open func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+        super.dismiss(animated: flag, completion: completion)
+        guard let presentationController = self.presentationController else {
+            return
+        }
+        presentationController.delegate?.presentationControllerDidDismiss?(presentationController)
+    }
+
     open func start() {
         self.show(self.root, root: true)
     }

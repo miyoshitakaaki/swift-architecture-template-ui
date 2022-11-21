@@ -34,7 +34,9 @@ public final class FormTitleLabel: UILabel {
 
     override public var isEnabled: Bool {
         didSet {
-            self.textColor = self.isEnabled ? UIConfig.darkGray_700 : UIConfig.lightGray_200
+            self.textColor = self.isEnabled
+                ? UIColor.rgba(97, 97, 97, 1)
+                : UIColor.rgba(238, 238, 238, 1)
         }
     }
 }

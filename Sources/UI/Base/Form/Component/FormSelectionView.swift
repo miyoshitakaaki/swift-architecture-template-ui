@@ -63,7 +63,7 @@ public final class FormSelectionView<T: Selection>: UIView {
 
     public var isEnabled = true {
         didSet {
-            self.backgroundColor = self.isEnabled ? .white : UIConfig.lightGray_200
+            self.backgroundColor = self.isEnabled ? .white : UIColor.rgba(238, 238, 238, 1)
 
             self.itemViews.forEach { view in
                 view.isEnabled = self.isEnabled

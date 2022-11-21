@@ -1,7 +1,7 @@
 import UIKit
 
 public class LeftArrowView: UIView {
-    public var color: UIColor = UIConfig.accentBlue {
+    public var color = UIColor.rgba(17, 76, 190, 1) {
         didSet {
             setNeedsDisplay()
         }
@@ -13,7 +13,7 @@ public class LeftArrowView: UIView {
         arrow.move(to: CGPoint(x: rect.width, y: 0))
         arrow.addLine(to: CGPoint(x: 0, y: rect.height / 2))
         arrow.addLine(to: CGPoint(x: rect.width, y: rect.height))
-        UIConfig.accentBlue.setStroke()
+        UIColor.rgba(17, 76, 190, 1).setStroke()
         arrow.stroke()
     }
 }

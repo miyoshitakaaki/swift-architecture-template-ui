@@ -8,7 +8,7 @@ public class DottedLineView: UIView {
         dotted.move(to: CGPoint(x: 0, y: 1))
         dotted.addLine(to: CGPoint(x: self.frame.size.width, y: 1))
         dotted.setLineDash([2, 2], count: [2, 2].count, phase: 0)
-        UIConfig.darkGray_400.setStroke()
+        UIColor.rgba(189, 189, 189, 1).setStroke()
         dotted.stroke()
     }
 }

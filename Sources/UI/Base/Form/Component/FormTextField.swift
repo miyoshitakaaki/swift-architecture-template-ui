@@ -208,7 +208,12 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
         self.optionButton.addTarget(self, action: #selector(self.secureToggle), for: .touchUpInside)
         self.optionButton.isHidden = !self.showOptionButton
 
-        self.underArrowView.backgroundColor = self.isEnabled ? backgroundColor : UIColor.rgba(238, 238, 238, 1)
+        self.underArrowView.backgroundColor = self.isEnabled ? backgroundColor : UIColor.rgba(
+            238,
+            238,
+            238,
+            1
+        )
     }
 
     @available(*, unavailable)

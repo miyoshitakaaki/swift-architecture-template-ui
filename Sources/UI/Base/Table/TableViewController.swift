@@ -13,7 +13,7 @@ public struct SelectedTableCell<T: Table> {
     public let cell: T.Cell?
 }
 
-public protocol TableViewControllerDelegate: AnyObject {
+public protocol TableViewControllerDelegate: FlowController {
     func didItemSelected(cellData: SelectedTableCellInfo<some Table>)
     func didCellDequeued(cell: SelectedTableCell<some Table>)
     func didHeaderFooterDequeued(
@@ -45,7 +45,7 @@ public final class TableViewController<T: Table>: ViewController,
     public var ui: UI!
     public var cancellables: Set<AnyCancellable> = []
 
-    public weak var delegate: TableViewControllerDelegate?
+    public weak var delegate: (any TableViewControllerDelegate)?
 
     // TODO: move to TableUI
     private var searchBar: UISearchBar!

@@ -2,7 +2,7 @@ import Combine
 import UIKit
 import Utility
 
-public protocol FormViewControllerDelegate: AnyObject {
+public protocol FormViewControllerDelegate: FlowController {
     func didCompletionButtonTapped<F: Form>(data: F.Input, form: F)
     func didErrorOccured(error: AppError)
 }
@@ -19,7 +19,7 @@ public final class FormViewController<T: Form>: ViewController, ActivityPresenta
     public var ui: UI!
     public var cancellables: Set<AnyCancellable> = []
 
-    public weak var delegate: FormViewControllerDelegate?
+    public weak var delegate: (any FormViewControllerDelegate)?
 
     private let formType: T
     private let content: T.NavContent

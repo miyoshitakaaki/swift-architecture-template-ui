@@ -2,7 +2,7 @@ import Combine
 import UIKit
 import Utility
 
-public protocol FormConfirmControllerDelegate: AnyObject {
+public protocol FormConfirmControllerDelegate: FlowController {
     func didConfirmCompletionButtonTapped<T>(data: T)
     func didErrorOccured(error: AppError)
 }
@@ -21,7 +21,7 @@ public final class FormConfirmController<T: FormConfirmProtocol>: ViewController
     public var ui: UI!
     public var cancellables: Set<AnyCancellable> = []
 
-    public weak var delegate: FormConfirmControllerDelegate?
+    public weak var delegate: (any FormConfirmControllerDelegate)?
 
     private let form: T
 

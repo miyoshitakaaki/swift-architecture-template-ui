@@ -11,6 +11,17 @@ open class AnyFlow<Flow: FlowBase>: UIViewController, FlowController,
         .init(nibName: nil, bundle: nil)
     }}
 
+    open var asyncChildProvider: (Child)
+        -> AnyPublisher<UIViewController, Never>
+    {{ [weak self] child in
+
+        guard let self else {
+            return Just(UIViewController(nibName: nil, bundle: nil)).eraseToAnyPublisher()
+        }
+
+        return Just(self.childProvider(child)).eraseToAnyPublisher()
+    }}
+
     public var cancellables: Set<AnyCancellable> = []
 
     public weak var delegate: FlowDelegate?

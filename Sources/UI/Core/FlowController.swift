@@ -55,7 +55,7 @@ public protocol FlowController: UIViewController, FlowBase, AlertPresentable {
     var delegate: FlowDelegate? { get set }
     var cancellables: Set<AnyCancellable> { get set }
     var childProvider: (Child) -> UIViewController { get }
-    var asyncChildProvider: (Child) -> AnyPublisher<UIViewController, Never> { get }
+    var asyncChildProvider: ((Child) -> AnyPublisher<UIViewController, Never>)? { get }
     func clear()
 }
 
@@ -66,14 +66,7 @@ public extension FlowController {
         UIViewController(nibName: nil, bundle: nil)
     }}
 
-    var asyncChildProvider: (Child) -> AnyPublisher<UIViewController, Never> {{ [weak self] child in
-
-        guard let self else {
-            return Just(UIViewController(nibName: nil, bundle: nil)).eraseToAnyPublisher()
-        }
-
-        return Just(self.childProvider(child)).eraseToAnyPublisher()
-    }}
+    var asyncChildProvider: ((Child) -> AnyPublisher<UIViewController, Never>)? { nil }
 
     func showApplication(url: String) {
         if let url = URL(string: url), UIApplication.shared.canOpenURL(url) {
@@ -92,23 +85,38 @@ public extension FlowController where T == NavigationController {
     }
 
     func show(_ child: Child, root: Bool = false) {
-        self.asyncChildProvider(child)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] vc in
+        if let provider = self.asyncChildProvider {
+            provider(child)
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] vc in
 
-                guard let self else { return }
+                    guard let self else { return }
 
-                if root {
-                    if self.navigation.viewControllers.isEmpty {
-                        self.add(self.navigation)
-                        self.navigation.viewControllers = [vc]
+                    if root {
+                        if self.navigation.viewControllers.isEmpty {
+                            self.add(self.navigation)
+                            self.navigation.viewControllers = [vc]
+                        } else {
+                            self.add(vc)
+                        }
                     } else {
-                        self.add(vc)
+                        self.navigation.pushViewController(vc, animated: true)
                     }
+                }.store(in: &self.cancellables)
+        } else {
+            let vc = self.childProvider(child)
+
+            if root {
+                if self.navigation.viewControllers.isEmpty {
+                    add(self.navigation)
+                    self.navigation.viewControllers = [vc]
                 } else {
-                    self.navigation.pushViewController(vc, animated: true)
+                    add(vc)
                 }
-            }.store(in: &self.cancellables)
+            } else {
+                self.navigation.pushViewController(vc, animated: true)
+            }
+        }
     }
 
     func start<F: FlowController>(

@@ -25,6 +25,17 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
                     let date = self.text?.date(from: dateFormat) ?? .init()
                     picker.setDate(date, animated: true)
                 }
+
+            case let .list(_, list):
+                if
+                    let picker = self.inputView as? UIPickerView,
+                    let text = self.text,
+                    text.isEmpty == false,
+                    let index = list.firstIndex(of: text)
+                {
+                    picker.selectRow(index, inComponent: 0, animated: true)
+                }
+
             default:
                 break
             }

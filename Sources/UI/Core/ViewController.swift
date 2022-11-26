@@ -13,9 +13,15 @@ open class ViewController: UIViewController, AnalyticsScreenView,
         super.viewWillAppear(animated)
 
         Logger.debug(message: Self.className)
+
+        AnalyticsService.shared.log(message: Self.className)
     }
 
     open func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         self.sendScreenView()
+
+        Logger.debug(message: Self.className)
+
+        AnalyticsService.shared.log(message: Self.className)
     }
 }

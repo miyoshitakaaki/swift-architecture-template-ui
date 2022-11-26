@@ -98,7 +98,7 @@ private extension FormViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] state in
 
-                guard let self = self else { return }
+                guard let self else { return }
                 switch state {
                 case .standby:
                     self.dismissActivity()

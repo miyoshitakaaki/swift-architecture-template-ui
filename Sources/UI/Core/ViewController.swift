@@ -11,9 +11,8 @@ open class ViewController: UIViewController, AnalyticsScreenView,
     override open func viewWillAppear(_ animated: Bool) {
         self.sendScreenView()
         super.viewWillAppear(animated)
-        
-        Logger.debug(message: Self.className)
 
+        Logger.debug(message: Self.className)
     }
 
     open func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {

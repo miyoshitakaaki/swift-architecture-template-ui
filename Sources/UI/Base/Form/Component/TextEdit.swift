@@ -60,7 +60,7 @@ public final class TextEdit<T: UIControl>: Publisher where T: Publisher, T.Outpu
         self.edit
             .handleEvents(receiveOutput: { [weak self] text in
 
-                guard let self = self else { return }
+                guard let self else { return }
 
                 guard self.showValidationError else { return }
 

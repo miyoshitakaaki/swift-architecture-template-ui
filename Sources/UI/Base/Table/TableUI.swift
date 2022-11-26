@@ -147,7 +147,7 @@ public final class TableUI<T: Table>: ListUI<T>, UITableViewDataSource, UITableV
     }
 
     var deleteItem: (IndexPath) -> Void { { [weak self] indexPath in
-        guard let self = self else { return }
+        guard let self else { return }
         var values = self.viewDataItems[indexPath.section].items
         values.remove(at: indexPath.row)
         if values.isEmpty {

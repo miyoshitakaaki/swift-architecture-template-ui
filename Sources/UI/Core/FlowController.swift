@@ -136,7 +136,7 @@ public extension FlowController where T == NavigationController {
                 alertTintColor: alertTintColor
             )
 
-            if let style = style {
+            if let style {
                 flow.modalPresentationStyle = style
             }
 

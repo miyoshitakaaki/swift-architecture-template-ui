@@ -31,7 +31,7 @@ public final class DiffableCollectionUI<
     private var cellProvider: (UICollectionView, IndexPath, S.Item) -> UICollectionViewCell? {
         { [weak self] collectionView, indexPath, item in
 
-            guard let self = self else { return nil }
+            guard let self else { return nil }
 
             let cell = S.sections[indexPath.section].cellRegistration(
                 cellRegistration: self.cellRegistration,
@@ -51,7 +51,7 @@ public final class DiffableCollectionUI<
     {
         { [weak self] collectionView, kind, indexPath in
 
-            guard let self = self else { return nil }
+            guard let self else { return nil }
 
             let supplementaryView = S.sections[indexPath.section].supplementaryRegistration(
                 collectionView: collectionView,

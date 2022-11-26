@@ -174,7 +174,7 @@ public final class CollectionViewController<
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] state in
 
-                guard let self = self else { return }
+                guard let self else { return }
 
                 switch state {
                 case .standby:
@@ -215,7 +215,7 @@ public final class CollectionViewController<
 
         self.collection.topViewSubject
             .sink(receiveCompletion: { _ in }) { [weak self] parameter in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.viewModel.loadSubject.send((parameter, false))
             }
             .store(in: &self.cancellables)

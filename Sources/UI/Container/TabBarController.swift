@@ -62,7 +62,7 @@ extension TabBarController: UITabBarControllerDelegate {
             userInfo: nil
         )
 
-        guard let viewControllers = viewControllers else { return false }
+        guard let viewControllers else { return false }
 
         guard viewController == viewControllers[selectedIndex] else { return true }
 
@@ -90,7 +90,7 @@ extension TabBarController: UITabBarControllerDelegate {
 private extension UIViewController {
     func scrollToTop() {
         func scrollToTop(view: UIView?) {
-            guard let view = view else { return }
+            guard let view else { return }
 
             switch view {
             case let scrollView as UIScrollView:

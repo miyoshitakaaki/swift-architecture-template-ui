@@ -39,7 +39,7 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
     {
         { [weak self] collectionView, kind, indexPath in
 
-            guard let self = self else { return .init() }
+            guard let self else { return .init() }
 
             if kind == UICollectionView.elementKindSectionHeader {
                 let header = collectionView.dequeueReusableSupplementaryView(

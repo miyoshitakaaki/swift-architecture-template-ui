@@ -383,7 +383,7 @@ private extension WebViewController {
         if #available(iOS 14.0, *) {
             self.backButton.addAction(.init(handler: { [weak self] _ in
 
-                guard let self = self else { return }
+                guard let self else { return }
 
                 if self.webView.canGoBack {
                     self.webView.goBack()
@@ -503,7 +503,7 @@ private extension WebViewController {
         {
             newClass = objc_allocateClassPair(targetClass, classNameCString, 0)
 
-            if let newClass = newClass {
+            if let newClass {
                 objc_registerClassPair(newClass)
             }
         }

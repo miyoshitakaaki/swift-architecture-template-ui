@@ -143,7 +143,7 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
         self.text = dummyText
         self.isSecureTextEntry = isSecureTextEntry
         self.delegate = self
-        if let placeholderColor = placeholderColor {
+        if let placeholderColor {
             self.attributedPlaceholder = NSAttributedString(
                 string: placeholder,
                 attributes: [.foregroundColor: placeholderColor]

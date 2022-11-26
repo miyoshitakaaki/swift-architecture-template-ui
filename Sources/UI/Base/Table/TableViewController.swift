@@ -173,7 +173,7 @@ public final class TableViewController<T: Table>: ViewController,
 
         self.ui.didItemSelectedPublisher
             .sink { [weak self] indexPath in
-                guard let self = self else { return }
+                guard let self else { return }
                 guard
                     let viewData = self.viewModel.loadingState.value
                         .value?[safe: indexPath.section]?
@@ -188,7 +188,7 @@ public final class TableViewController<T: Table>: ViewController,
 
         self.ui.didCellDequeuedPublisher
             .sink { [weak self] cell, indexPath in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.delegate?
                     .didCellDequeued(
                         cell: SelectedTableCell<T>
@@ -199,7 +199,7 @@ public final class TableViewController<T: Table>: ViewController,
 
         self.ui.didHeaderDequeuedPublisher
             .sink { [weak self] header, section in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.delegate?.didHeaderFooterDequeued(
                     tableViewHeaderFooterView: header,
                     section: section
@@ -209,7 +209,7 @@ public final class TableViewController<T: Table>: ViewController,
 
         self.ui.didFooterDequeuedPublisher
             .sink { [weak self] footer, section in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.delegate?.didHeaderFooterDequeued(
                     tableViewHeaderFooterView: footer,
                     section: section
@@ -222,7 +222,7 @@ public final class TableViewController<T: Table>: ViewController,
         self.viewModel.loadingState
             .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
-                guard let self = self else { return }
+                guard let self else { return }
                 switch state {
                 case .standby:
                     self.ui.endRefresh()

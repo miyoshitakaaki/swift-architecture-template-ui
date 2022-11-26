@@ -115,7 +115,7 @@ extension FormUI: UserInterface {
         navigationBar: UINavigationBar?,
         navigationItem: UINavigationItem?
     ) {
-        guard let navigationItem = navigationItem else { return }
+        guard let navigationItem else { return }
 
         if self.form.completionButtonPotition == .top {
             setupRightBarButtonItem(navigationItem: navigationItem)
@@ -147,7 +147,7 @@ private extension FormUI {
         keyboardFrameTrackerView.edgeToSelf(toolbar)
 
         keyboardFrameTrackerView.onKeyboardFrameDidChange = { [weak self, weak rootview] rect in
-            guard let self = self, let rootview = rootview else { return }
+            guard let self, let rootview else { return }
 
             self.scrollView.findConstraint(layoutAttribute: .bottom)?.isActive = false
 

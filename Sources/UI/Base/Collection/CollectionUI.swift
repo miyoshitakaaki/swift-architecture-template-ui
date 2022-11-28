@@ -163,7 +163,7 @@ extension CollectionUI: UserInterface {
 
                 switch finished {
                 case .finished:
-                    print("finished")
+                    break
                 case let .failure(error):
                     self.errorPublisher.send(error)
                 }

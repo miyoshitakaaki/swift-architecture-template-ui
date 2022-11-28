@@ -124,7 +124,7 @@ extension DiffableCollectionUI: UserInterface {
 
                     switch finished {
                     case .finished:
-                        print("finished")
+                        break
 
                     case let .failure(error):
                         self.delegate?.didErrorOccured(error: error)

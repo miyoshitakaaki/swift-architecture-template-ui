@@ -3,7 +3,7 @@ import UIKit
 
 public protocol Selection: UIView, Publisher where Output == Bool, Failure == Never {
     var isEnabled: Bool { get set }
-    init(title: String, dottedLine: Bool)
+    init(title: String, dottedLine: Bool, togglable: Bool)
     func changeButtonFlag(_ flag: Bool)
 }
 
@@ -96,7 +96,8 @@ private extension FormSelectionView {
         contents.enumerated().forEach { index, content in
             let view: T = .init(
                 title: content,
-                dottedLine: index < contents.count - 1
+                dottedLine: index < contents.count - 1,
+                togglable: singleSelect == false
             )
             stackView.addArrangedSubviews(
                 view,

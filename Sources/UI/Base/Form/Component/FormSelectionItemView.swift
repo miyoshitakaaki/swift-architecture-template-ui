@@ -8,7 +8,11 @@ public final class FormSelectionItemView: UIView, Selection {
 
     private let togglePublisher = CurrentValueSubject<Bool, Never>(false)
 
-    public init(title: String, dottedLine: Bool) {
+    private let togglable: Bool
+
+    public init(title: String, dottedLine: Bool, togglable: Bool) {
+        self.togglable = togglable
+
         super.init(frame: .zero)
         let tapGestureRecognizer = UITapGestureRecognizer(
             target: self,

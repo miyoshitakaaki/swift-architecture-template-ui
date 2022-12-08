@@ -311,6 +311,9 @@ extension WebViewController: WKNavigationDelegate {
             if self.alwaysOpenSafariWhenLinkTap, url.scheme == "https" {
                 UIApplication.shared.open(url)
                 decisionHandler(.cancel)
+            } else if navigationAction.targetFrame == nil {
+                UIApplication.shared.open(url)
+                decisionHandler(.cancel)
             } else {
                 decisionHandler(.allow)
             }

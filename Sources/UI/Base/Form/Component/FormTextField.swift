@@ -1,5 +1,6 @@
 import Combine
 import UIKit
+import Utility
 
 public final class FormTextField: UITextField, UITextFieldDelegate {
     public enum Picker {
@@ -22,8 +23,12 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
             switch self.picker {
             case let .date(_, _, _, dateFormat):
                 if let picker = self.inputView as? UIDatePicker {
-                    let date = self.text?.date(from: dateFormat) ?? .init()
-                    picker.setDate(date, animated: true)
+                    if let text = self.text {
+                        let date = DateFormatter.create(dateFormat).date(from: text)
+                        picker.setDate(date ?? .init(), animated: true)
+                    } else {
+                        picker.setDate(.init(), animated: true)
+                    }
                 }
 
             case let .list(_, list):
@@ -165,27 +170,21 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
             let picker = UIDatePicker(style: .init {
                 $0.date = Date()
                 $0.datePickerMode = .date
-                if #available(iOS 13.4, *) {
-                    $0.preferredDatePickerStyle = .wheels
-                }
+                $0.preferredDatePickerStyle = .wheels
             })
             picker.date = initial
             picker.minimumDate = minDate
             picker.maximumDate = maxDate
+            picker.locale = .init(identifier: "ja_JP")
 
-            if #available(iOS 14.0, *) {
-                picker.addAction(.init(handler: { _ in
-                    let format = DateFormatter()
-                    format.dateFormat = dateFormat
-                    self.text = format.string(from: picker.date)
-                }), for: .valueChanged)
-            } else {
-                picker.addTarget(
-                    self,
-                    action: #selector(self.didDatePickerSelected(sender:)),
-                    for: .valueChanged
-                )
-            }
+            var calender = Calendar(identifier: .gregorian)
+            calender.locale = .current
+            picker.calendar = calender
+
+            picker.addAction(.init(handler: { _ in
+                self.text = DateFormatter.create(dateFormat).string(from: picker.date)
+            }), for: .valueChanged)
+
             self.inputView = picker
 
             addArrowButton()
@@ -298,12 +297,6 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
         } else {
             self.endEditing(true)
         }
-    }
-
-    @objc func didDatePickerSelected(sender: UIDatePicker) {
-        let format = DateFormatter()
-        format.dateFormat = "yyyy-MM-dd"
-        self.text = format.string(from: sender.date)
     }
 
     public func insertListData(_ data: [String]) {
@@ -421,20 +414,5 @@ private extension String {
     func removingWhiteSpace() -> String {
         let whiteSpaces: CharacterSet = [" ", "　"]
         return self.trimmingCharacters(in: whiteSpaces)
-    }
-}
-
-// TODO: move Utility package
-private extension String {
-    func date(from originallyType: String) -> Date? {
-        let formatter = DateFormatter()
-        formatter.timeZone = TimeZone(identifier: "Asia/Tokyo")!
-        formatter.locale = Locale(identifier: "ja_jp")
-        formatter.calendar = Calendar(identifier: .gregorian)
-        formatter.dateFormat = originallyType
-
-        guard let date = formatter.date(from: self) else { return nil }
-
-        return date
     }
 }

@@ -9,7 +9,7 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
                  initial: Date = .init(),
                  minDate: Date? = nil,
                  maxDate: Date? = nil,
-                 dateFormat: String
+                 dateFormat: DateFormat
              ),
              list(initial: String, list: [String]),
              doubleList([String], [String]),
@@ -23,12 +23,7 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
             switch self.picker {
             case let .date(_, _, _, dateFormat):
                 if let picker = self.inputView as? UIDatePicker {
-                    if let text = self.text {
-                        let date = DateFormatter.create(dateFormat).date(from: text)
-                        picker.setDate(date ?? .init(), animated: true)
-                    } else {
-                        picker.setDate(.init(), animated: true)
-                    }
+                    picker.setDate(self.text?.date(from: dateFormat) ?? .init(), animated: true)
                 }
 
             case let .list(_, list):
@@ -182,7 +177,7 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
             picker.calendar = calender
 
             picker.addAction(.init(handler: { _ in
-                self.text = DateFormatter.create(dateFormat).string(from: picker.date)
+                self.text = picker.date.string(to: dateFormat)
             }), for: .valueChanged)
 
             self.inputView = picker

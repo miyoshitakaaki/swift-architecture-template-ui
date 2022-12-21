@@ -21,9 +21,9 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
             self.textPublisher.send(self.text ?? "")
 
             switch self.picker {
-            case let .date(_, _, _, dateFormat):
+            case let .date(initial, _, _, dateFormat):
                 if let picker = self.inputView as? UIDatePicker {
-                    picker.setDate(self.text?.date(from: dateFormat) ?? .init(), animated: true)
+                    picker.setDate(self.text?.date(from: dateFormat) ?? initial, animated: true)
                 }
 
             case let .list(_, list):
@@ -163,7 +163,6 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
         case let .date(initial, minDate, maxDate, dateFormat):
             let dateFormat = dateFormat
             let picker = UIDatePicker(style: .init {
-                $0.date = Date()
                 $0.datePickerMode = .date
                 $0.preferredDatePickerStyle = .wheels
             })

@@ -2,6 +2,7 @@ import Combine
 import UIKit
 import Utility
 
+@MainActor
 public protocol FormViewControllerDelegate: FlowController {
     func didCompletionButtonTapped<F: Form>(data: F.Input, form: F)
     func didErrorOccured(error: AppError)

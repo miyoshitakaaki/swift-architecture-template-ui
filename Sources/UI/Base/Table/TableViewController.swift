@@ -13,6 +13,7 @@ public struct SelectedTableCell<T: Table> {
     public let cell: T.Cell?
 }
 
+@MainActor
 public protocol TableViewControllerDelegate: FlowController {
     func didItemSelected(cellData: SelectedTableCellInfo<some Table>)
     func didCellDequeued(cell: SelectedTableCell<some Table>)

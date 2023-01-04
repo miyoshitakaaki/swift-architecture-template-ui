@@ -3,6 +3,7 @@ import SkeletonView
 import UIKit
 import Utility
 
+@MainActor
 public protocol CollectionViewControllerDelegate: FlowController {
     func didItemSelected(selectedInfo: SelectedCellInfo<some CollectionList>)
     func didErrorOccured(error: AppError)

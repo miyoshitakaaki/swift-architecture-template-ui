@@ -305,7 +305,9 @@ extension WebViewController: WKNavigationDelegate {
             }
 
             if let event = self.linkTapEventForAnalytics?(url.absoluteString) {
-                AnalyticsService.shared.sendEvent(event)
+                Task.detached {
+                    await AnalyticsService.shared.sendEvent(event)
+                }
             }
 
             if self.alwaysOpenSafariWhenLinkTap, url.scheme == "https" {

@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 
+@MainActor
 public func create<T: Form>(
     form: T,
     navContent: T.NavContent,
@@ -22,6 +23,7 @@ public func create<T: Form>(
     return vc
 }
 
+@MainActor
 public func create<T: FormConfirmUIProtocol & FormConfirmProtocol>(formConfirm: T)
     -> FormConfirmController<T>
 {
@@ -33,6 +35,7 @@ public func create<T: FormConfirmUIProtocol & FormConfirmProtocol>(formConfirm: 
     return vc
 }
 
+@MainActor
 public func create<T: CollectionList>(
     collection: T,
     content: T.NavContent,
@@ -50,6 +53,7 @@ public func create<T: CollectionList>(
     return vc
 }
 
+@MainActor
 public func create<T: Table>(
     table: T,
     content: T.NavContent,

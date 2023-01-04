@@ -383,21 +383,18 @@ private extension WebViewController {
     func setupBackButton() {
         self.backButton.isHidden = self.showWebBackButton == .whenHasHistory
 
-        if #available(iOS 14.0, *) {
-            self.backButton.addAction(.init(handler: { [weak self] _ in
+        self.backButton.addAction(.init(handler: { [weak self] _ in
 
-                guard let self else { return }
+            guard let self else { return }
 
-                if self.webView.canGoBack {
-                    self.webView.goBack()
-                } else {
-                    self.navigationController?.popViewController(animated: true)
-                }
+            if self.webView.canGoBack {
+                self.webView.goBack()
+            } else {
+                self.navigationController?.popViewController(animated: true)
+            }
 
-            }), for: .touchUpInside)
-        } else {
-            // Fallback on earlier versions
-        }
+        }), for: .touchUpInside)
+
         let backItem = UIBarButtonItem(customView: backButton)
         self.navigationItem.leftBarButtonItem = backItem
     }

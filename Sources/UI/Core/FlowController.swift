@@ -2,6 +2,7 @@ import Combine
 import UIKit
 import Utility
 
+@MainActor
 public protocol FlowDelegate: AnyObject {
     func didFinished()
 }

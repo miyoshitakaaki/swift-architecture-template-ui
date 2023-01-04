@@ -1,5 +1,6 @@
 import UIKit
 
+@MainActor
 public protocol Action {
     associatedtype Responder
     func execute(responder: Responder)

@@ -117,31 +117,29 @@ extension DiffableCollectionUI: UserInterface {
     }
 
     func reloadSection(section: S, fetchRemote: Bool) {
-        if #available(iOS 14.0, *) {
-            section.fetch(fetchRemote: fetchRemote)
-                .receive(on: DispatchQueue.main)
-                .sink { finished in
+        section.fetch(fetchRemote: fetchRemote)
+            .receive(on: DispatchQueue.main)
+            .sink { finished in
 
-                    switch finished {
-                    case .finished:
-                        break
+                switch finished {
+                case .finished:
+                    break
 
-                    case let .failure(error):
-                        self.delegate?.didErrorOccured(error: error)
-                    }
+                case let .failure(error):
+                    self.delegate?.didErrorOccured(error: error)
+                }
 
-                } receiveValue: { [weak self] result in
+            } receiveValue: { [weak self] result in
 
-                    guard let self else { return }
+                guard let self else { return }
 
-                    var snapshot = self.dataSource.snapshot()
-                    snapshot.reloadSections([section])
-                    snapshot.appendItems(result, toSection: section)
-                    self.dataSource.apply(snapshot, animatingDifferences: false)
+                var snapshot = self.dataSource.snapshot()
+                snapshot.reloadSections([section])
+                snapshot.appendItems(result, toSection: section)
+                self.dataSource.apply(snapshot, animatingDifferences: false)
 
-                    self.collectionView.refreshControl?.endRefreshing()
-                }.store(in: &cancellables)
-        }
+                self.collectionView.refreshControl?.endRefreshing()
+            }.store(in: &self.cancellables)
     }
 
     func reload(
@@ -206,23 +204,19 @@ private extension DiffableCollectionUI {
             self.collectionView.refreshControl = UIRefreshControl()
         }
 
-        if #available(iOS 14.0, *) {
-            self.collectionView.refreshControl?.addAction(.init(handler: { [weak self] _ in
-                self?.reload(pullToRefresh: true, fetchRemote: true) { [weak self] result in
+        self.collectionView.refreshControl?.addAction(.init(handler: { [weak self] _ in
+            self?.reload(pullToRefresh: true, fetchRemote: true) { [weak self] result in
 
-                    switch result {
-                    case let .success(sections):
-                        sections.forEach { [weak self] section in
-                            self?.reloadSection(section: section, fetchRemote: true)
-                        }
-
-                    case .failure:
-                        break
+                switch result {
+                case let .success(sections):
+                    sections.forEach { [weak self] section in
+                        self?.reloadSection(section: section, fetchRemote: true)
                     }
+
+                case .failure:
+                    break
                 }
-            }), for: .valueChanged)
-        } else {
-            fatalError("not supprt under ios 14")
-        }
+            }
+        }), for: .valueChanged)
     }
 }

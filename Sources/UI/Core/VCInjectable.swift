@@ -1,6 +1,7 @@
 import Combine
 import UIKit
 
+@MainActor
 public protocol VCInjectable: ViewController {
     associatedtype VM: ViewModel
     associatedtype UI: UserInterface

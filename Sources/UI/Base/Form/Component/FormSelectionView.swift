@@ -1,6 +1,7 @@
 import Combine
 import UIKit
 
+@MainActor
 public protocol Selection: UIView, Publisher where Output == Bool, Failure == Never {
     var isEnabled: Bool { get set }
     init(title: String, dottedLine: Bool, togglable: Bool)

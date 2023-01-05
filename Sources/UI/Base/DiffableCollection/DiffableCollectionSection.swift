@@ -4,6 +4,7 @@ import Utility
 
 public struct EmptyContent: Hashable {}
 
+@MainActor
 public protocol DiffableCollectionSection: Hashable {
     associatedtype CellRegistration
     associatedtype SupplementaryRegistration

@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 
+@MainActor
 public protocol SegmentedControl: UIControl {
     init(items: [Any]?)
     var selectedSegmentIndex: Int { get set }

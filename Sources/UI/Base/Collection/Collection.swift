@@ -53,11 +53,13 @@ public extension CollectionLayout {
     }
 }
 
+@MainActor
 public protocol CollectionHeaderLayout: UICollectionReusableView {
     associatedtype ViewData: Equatable & Hashable
     func updateHeader(data: ViewData)
 }
 
+@MainActor
 public protocol CollectionFooterLayout: UICollectionReusableView {
     associatedtype ViewData: Equatable & Hashable
     func updateFooter(data: ViewData)

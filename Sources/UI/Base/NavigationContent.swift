@@ -1,5 +1,6 @@
 import UIKit
 
+@MainActor
 public protocol NavigationContent {
     var rightNavigationItems: [UIBarButtonItem] { get }
     var leftNavigationItems: [UIBarButtonItem] { get }

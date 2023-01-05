@@ -136,7 +136,11 @@ extension DiffableCollectionUI: UserInterface {
                 var snapshot = self.dataSource.snapshot()
                 snapshot.reloadSections([section])
                 snapshot.appendItems(result, toSection: section)
-                self.dataSource.apply(snapshot, animatingDifferences: false)
+                if #available(iOS 15.0, *) {
+                    self.dataSource.applySnapshotUsingReloadData(snapshot)
+                } else {
+                    self.dataSource.apply(snapshot, animatingDifferences: false)
+                }
 
                 self.collectionView.refreshControl?.endRefreshing()
             }.store(in: &self.cancellables)
@@ -176,7 +180,11 @@ extension DiffableCollectionUI: UserInterface {
 
                 var snapshot = NSDiffableDataSourceSnapshot<S, S.Item>()
                 snapshot.appendSections(allCases)
-                self.dataSource.apply(snapshot, animatingDifferences: false)
+                if #available(iOS 15.0, *) {
+                    self.dataSource.applySnapshotUsingReloadData(snapshot)
+                } else {
+                    self.dataSource.apply(snapshot, animatingDifferences: false)
+                }
 
                 completion(.success(allCases))
             }.store(in: &self.cancellables)

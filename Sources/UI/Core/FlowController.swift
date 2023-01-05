@@ -160,6 +160,7 @@ public extension FlowController where T == NavigationController {
         }
     }
 
+    @MainActor
     func show(error: AppError, okAction: ((UIAlertAction) -> Void)? = nil) {
         switch error {
         case let .normal(title, message):
@@ -250,6 +251,7 @@ public extension FlowController where T == TabBarController {
         self.navigation.viewControllers?.first
     }
 
+    @MainActor
     func show(error: AppError) {
         switch error {
         case let .normal(title, message):

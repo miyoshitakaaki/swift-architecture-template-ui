@@ -2,6 +2,7 @@ import Combine
 import UIKit
 import Utility
 
+@MainActor
 public protocol FormUIProtocol {
     var backgroundColor: UIColor { get }
     var optionalButtonTitle: String { get }

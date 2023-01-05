@@ -1,6 +1,7 @@
 import Combine
 import UIKit
 
+@MainActor
 public final class FormUI {
     private let scrollView: ScrollView
 

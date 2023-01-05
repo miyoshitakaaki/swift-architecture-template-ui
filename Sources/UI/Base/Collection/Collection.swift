@@ -2,6 +2,7 @@ import Combine
 import UIKit
 import Utility
 
+@MainActor
 public protocol CollectionList: List, AnalyticsScreenName {
     associatedtype NavContent: NavigationContent
     associatedtype Cell: CollectionLayout
@@ -32,6 +33,7 @@ public extension CollectionList {
     }}
 }
 
+@MainActor
 public protocol CollectionLayout: UICollectionViewCell {
     associatedtype ViewData: Hashable
     var viewData: ViewData? { get set }

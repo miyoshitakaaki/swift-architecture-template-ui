@@ -1,5 +1,6 @@
 import UIKit
 
+@MainActor
 public protocol UserInterface {
     func setupNavigationBar(
         navigationBar: UINavigationBar?,

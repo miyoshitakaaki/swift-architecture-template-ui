@@ -25,6 +25,7 @@ public extension Table {
     var skeletonItems: Items? { nil }
 }
 
+@MainActor
 public protocol TableViewCell: UITableViewCell {
     associatedtype ViewData: Hashable
     var viewData: ViewData? { get set }
@@ -38,6 +39,7 @@ public extension TableViewCell {
     }
 }
 
+@MainActor
 public protocol TableViewHeaderFooter: UITableViewHeaderFooterView {
     associatedtype ViewData: Hashable
     var viewData: ViewData? { get set }

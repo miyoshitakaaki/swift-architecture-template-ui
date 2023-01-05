@@ -1,5 +1,6 @@
 import UIKit
 
+@MainActor
 open class ListUI<T: List>: NSObject, SegmentedPageContainerProtocol {
     private let list: T
 

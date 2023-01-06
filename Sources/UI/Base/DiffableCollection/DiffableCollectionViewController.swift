@@ -85,9 +85,7 @@ public final class DiffableCollectionViewController<
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        if self.reloadType != nil {
-            self.reload()
-        }
+        self.reload()
     }
 
     override public func presentationControllerDidDismiss(
@@ -95,9 +93,7 @@ public final class DiffableCollectionViewController<
     ) {
         super.presentationControllerDidDismiss(presentationController)
 
-        if self.reloadType != nil {
-            self.reload()
-        }
+        self.reload()
     }
 
     public func willfetchAll(pullToRefresh: Bool) {
@@ -123,9 +119,7 @@ public final class DiffableCollectionViewController<
 
             guard isVisible else { return }
 
-            if self.reloadType != nil {
-                self.reload()
-            }
+            self.reload()
         }
 
         self.needRefreshNotificationNames.forEach { notificationName in

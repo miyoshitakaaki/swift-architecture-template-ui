@@ -12,6 +12,7 @@ public protocol DiffableCollectionSection: Hashable {
 
     static var pullToRefreshable: Bool { get }
     static var sections: [Self] { get }
+    static var fetchAllMinuteInterval: Int? { get }
     static func reload(fetchRemote: Bool) -> AnyPublisher<[Self], AppError>
 
     var headerText: String { get }
@@ -44,4 +45,5 @@ public protocol DiffableCollectionSection: Hashable {
 
 public extension DiffableCollectionSection {
     static var pullToRefreshable: Bool { false }
+    static var fetchAllMinuteInterval: Int? { nil }
 }

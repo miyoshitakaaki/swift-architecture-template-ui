@@ -18,6 +18,7 @@ public final class DiffableCollectionViewController<
     public var cancellables: Set<AnyCancellable> = []
 
     private var reloadType: ReloadType?
+    private var lastFetchAllDate: Date?
 
     override public var screenNameForAnalytics: [AnalyticsScreen] { self._screenNameForAnalytics }
 
@@ -120,7 +121,19 @@ public final class DiffableCollectionViewController<
 
             let isVisible = self.isViewLoaded && self.view.window != nil
 
-            guard isVisible else { return }
+            let needFetch: Bool = {
+                if
+                    let fetchAllMinuteInterval = S.fetchAllMinuteInterval,
+                    let lastFetchAllDate = self.lastFetchAllDate
+                {
+                    let ago = Date().addingTimeInterval(.init(fetchAllMinuteInterval * 60 * -1))
+                    return ago.compare(lastFetchAllDate) == .orderedDescending
+                } else {
+                    return true
+                }
+            }()
+
+            guard isVisible, needFetch else { return }
 
             if self.reloadType != nil {
                 self.reload()
@@ -182,6 +195,8 @@ public final class DiffableCollectionViewController<
                 }
             }
         case .remote:
+            self.lastFetchAllDate = .init()
+
             self.ui.reload(fetchRemote: true) { result in
                 switch result {
                 case let .success(sections):

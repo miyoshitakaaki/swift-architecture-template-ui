@@ -150,7 +150,7 @@ public final class TableViewController<T: Table>: ViewController,
                 object: nil,
                 queue: .current
             ) { _ in
-                self.reloadType = .remote
+                self.reloadType = .remote()
             }
         }
     }

@@ -137,7 +137,7 @@ public final class CollectionViewController<
                 object: nil,
                 queue: .current
             ) { [weak self] _ in
-                self?.reloadType = .remote
+                self?.reloadType = .remote()
             }
         }
     }

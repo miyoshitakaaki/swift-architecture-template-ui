@@ -28,17 +28,19 @@ public final class DiffableCollectionViewController<
     private let _screenEventForAnalytics: [AnalyticsEvent]
     private let _screenNameForAnalytics: [AnalyticsScreen]
     private let needRefreshNotificationNames: [Notification.Name]
+    private let needForceRefreshNotificationNames: [Notification.Name]
     private let needSectionRefreshNotificationNames: [(
         name: Notification.Name,
         sectionIndexes: [Int]
     )]
 
     public init(
-        initialReloadType: ReloadType = .remote,
+        initialReloadType: ReloadType = .remote(),
         content: C,
         screenNameForAnalytics: [AnalyticsScreen] = [],
         screenEventForAnalytics: [AnalyticsEvent] = [],
         needRefreshNotificationNames: [Notification.Name] = [],
+        needForceRefreshNotificationNames: [Notification.Name] = [],
         needSectionRefreshNotificationNames: [(
             name: Notification.Name,
             sectionIndexes: [Int]
@@ -49,6 +51,7 @@ public final class DiffableCollectionViewController<
         self._screenNameForAnalytics = screenNameForAnalytics
         self._screenEventForAnalytics = screenEventForAnalytics
         self.needRefreshNotificationNames = needRefreshNotificationNames
+        self.needForceRefreshNotificationNames = needForceRefreshNotificationNames
         self.needSectionRefreshNotificationNames = needSectionRefreshNotificationNames
         super.init(nibName: nil, bundle: nil)
     }
@@ -77,7 +80,6 @@ public final class DiffableCollectionViewController<
         self.addObserver()
 
         self.reload()
-        self.reloadType = nil
     }
 
     override public func viewWillAppear(_ animated: Bool) {
@@ -85,7 +87,6 @@ public final class DiffableCollectionViewController<
 
         if self.reloadType != nil {
             self.reload()
-            self.reloadType = nil
         }
     }
 
@@ -96,7 +97,6 @@ public final class DiffableCollectionViewController<
 
         if self.reloadType != nil {
             self.reload()
-            self.reloadType = nil
         }
     }
 
@@ -121,23 +121,10 @@ public final class DiffableCollectionViewController<
 
             let isVisible = self.isViewLoaded && self.view.window != nil
 
-            let needFetch: Bool = {
-                if
-                    let fetchAllMinuteInterval = S.fetchAllMinuteInterval,
-                    let lastFetchAllDate = self.lastFetchAllDate
-                {
-                    let ago = Date().addingTimeInterval(.init(fetchAllMinuteInterval * 60 * -1))
-                    return ago.compare(lastFetchAllDate) == .orderedDescending
-                } else {
-                    return true
-                }
-            }()
-
-            guard isVisible, needFetch else { return }
+            guard isVisible else { return }
 
             if self.reloadType != nil {
                 self.reload()
-                self.reloadType = nil
             }
         }
 
@@ -147,7 +134,17 @@ public final class DiffableCollectionViewController<
                 object: nil,
                 queue: .current
             ) { [weak self] _ in
-                self?.reloadType = .remote
+                self?.reloadType = .remote()
+            }
+        }
+
+        self.needForceRefreshNotificationNames.forEach { notificationName in
+            NotificationCenter.default.addObserver(
+                forName: notificationName,
+                object: nil,
+                queue: .current
+            ) { [weak self] _ in
+                self?.reloadType = .remote(force: true)
             }
         }
 
@@ -163,6 +160,10 @@ public final class DiffableCollectionViewController<
     }
 
     private func reload() {
+        defer {
+            self.reloadType = nil
+        }
+
         guard let reloadType = self.reloadType else { return }
 
         switch reloadType {
@@ -194,7 +195,24 @@ public final class DiffableCollectionViewController<
                     break
                 }
             }
-        case .remote:
+        case let .remote(force):
+
+            let needFetchAll: Bool = {
+                if force { return true }
+
+                if
+                    let fetchAllMinuteInterval = S.fetchAllMinuteInterval,
+                    let lastFetchAllDate = self.lastFetchAllDate
+                {
+                    let ago = Date().addingTimeInterval(.init(fetchAllMinuteInterval * 60 * -1))
+                    return ago.compare(lastFetchAllDate) == .orderedDescending
+                } else {
+                    return true
+                }
+            }()
+
+            guard needFetchAll else { return }
+
             self.lastFetchAllDate = .init()
 
             self.ui.reload(fetchRemote: true) { result in

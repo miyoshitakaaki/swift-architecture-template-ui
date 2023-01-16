@@ -1,6 +1,7 @@
 import Combine
 import UIKit
 
+@MainActor
 public final class FormConfirmUI {
     private let scrollView: UIScrollView
 

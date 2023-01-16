@@ -2,6 +2,7 @@ import Combine
 import UIKit
 import Utility
 
+@MainActor
 public protocol FormConfirmProtocol: AnyObject, AnalyticsScreenName {
     associatedtype InputType
     associatedtype OutputType: Equatable
@@ -11,6 +12,7 @@ public protocol FormConfirmProtocol: AnyObject, AnalyticsScreenName {
     var complete: AnyPublisher<OutputType, AppError> { get }
 }
 
+@MainActor
 public protocol FormConfirmUIProtocol {
     var completionButtonStyle: ViewStyle<UIButton> { get }
     var completionButtonTitle: String { get }

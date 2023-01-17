@@ -15,16 +15,7 @@ public protocol AnalyticsScreenView: UIViewController, AnalyticsScreenName {}
 
 public extension AnalyticsScreenView {
     func sendScreenView() {
-        self.screenNameForAnalytics.forEach { item in
-            Task.detached {
-                await AnalyticsService.shared.sendScreen(screen: item)
-            }
-        }
-
-        self.screenEventForAnalytics.forEach { item in
-            Task.detached {
-                await AnalyticsService.shared.sendEvent(item)
-            }
-        }
+        self.screenNameForAnalytics.forEach(AnalyticsService.sendScreen)
+        self.screenEventForAnalytics.forEach(AnalyticsService.sendEvent)
     }
 }

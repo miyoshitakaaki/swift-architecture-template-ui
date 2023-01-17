@@ -12,16 +12,12 @@ open class ViewController: UIViewController, AnalyticsScreenView,
         self.sendScreenView()
         super.viewWillAppear(animated)
 
-        Task.detached {
-            await AnalyticsService.shared.log(Self.className)
-        }
+        AnalyticsService.log(Self.className)
     }
 
     open func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         self.sendScreenView()
 
-        Task.detached {
-            await AnalyticsService.shared.log(Self.className)
-        }
+        AnalyticsService.log(Self.className)
     }
 }

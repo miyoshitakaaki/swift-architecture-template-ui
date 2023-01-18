@@ -23,7 +23,7 @@ extension WebViewController: VCInjectable {
 
 // MARK: - stored properties
 
-open class WebViewController: ViewController, UIGestureRecognizerDelegate {
+open class WebViewController: ViewController, UIGestureRecognizerDelegate, ActivityPresentable {
     public var viewModel: VM!
     public var ui: UI!
     public var cancellables: Set<AnyCancellable> = []
@@ -87,8 +87,10 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate {
 
     private let progressView: UIProgressView = .init(frame: .zero)
     private var observation: NSKeyValueObservation?
+    private var loadingObservation: NSKeyValueObservation?
 
     private let showProgress: Bool
+    private let showLoadingIndicator: Bool
     private let prohibitPopup: Bool
     private let scheme: String?
     private let showWebBackButton: ShowWebBackButton
@@ -126,6 +128,7 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate {
         url: String? = nil,
         localFilePath: String? = nil,
         showProgress: Bool = false,
+        showLoadingIndicator: Bool = false,
         prohibitPopup: Bool = true,
         scheme: String? = nil,
         showWebBackButton: ShowWebBackButton = .always,
@@ -144,6 +147,7 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate {
         self.url = url
         self.localFilePath = localFilePath
         self.showProgress = showProgress
+        self.showLoadingIndicator = showLoadingIndicator
         self.prohibitPopup = prohibitPopup
         self.scheme = scheme
         self.showWebBackButton = showWebBackButton
@@ -196,7 +200,11 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate {
         }
 
         if self.showProgress {
-            self.setupObservation()
+            self.setupProgressObservation()
+        }
+
+        if self.showLoadingIndicator {
+            self.setupLoadingIndicator()
         }
 
         if self.needPullToRefresh {
@@ -457,7 +465,7 @@ private extension WebViewController {
         self.webView.evaluateJavaScript(script, completionHandler: nil)
     }
 
-    func setupObservation() {
+    func setupProgressObservation() {
         self.webView.topLineToSelf(self.progressView, constant: 0, height: 3)
         self.progressView.progressTintColor = UIColor.rgba(17, 76, 190, 1)
         self.observation = self.webView
@@ -480,6 +488,22 @@ private extension WebViewController {
                     )
                 } else {
                     self.progressView.alpha = 1.0
+                }
+            }
+    }
+
+    func setupLoadingIndicator() {
+        self.loadingObservation = self.webView
+            .observe(\.isLoading, options: .new) { [weak self] _, change in
+
+                guard let self else { return }
+
+                let isPullToRefreshing = self.webView.scrollView.refreshControl?.isRefreshing
+
+                if change.newValue == true, isPullToRefreshing != true {
+                    self.presentActivity()
+                } else {
+                    self.dismissActivity()
                 }
             }
     }

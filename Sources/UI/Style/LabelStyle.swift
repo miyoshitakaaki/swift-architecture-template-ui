@@ -28,4 +28,10 @@ public extension Stylable where Self == UILabel {
         self.lineBreakMode = mode
         return self
     }
+
+    func width(_ value: CGFloat) -> Self {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.widthAnchor.constraint(equalToConstant: value).isActive = true
+        return self
+    }
 }

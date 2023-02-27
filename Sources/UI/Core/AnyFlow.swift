@@ -21,6 +21,8 @@ open class AnyFlow<Flow: FlowBase>: UIViewController, FlowController,
 
     public let root: Flow.Child
 
+    public let from: any FlowBase.Type
+
     public let alertMessageAlignment: NSTextAlignment?
 
     public let alertTintColor: UIColor?
@@ -30,12 +32,14 @@ open class AnyFlow<Flow: FlowBase>: UIViewController, FlowController,
     public required init(
         navigation: NavigationController,
         root: Flow.Child,
+        from: any FlowBase.Type,
         alertMessageAlignment: NSTextAlignment?,
         alertTintColor: UIColor?
     ) {
         self.isFirstFlow = navigation.viewControllers.isEmpty
         self.navigation = navigation
         self.root = root
+        self.from = from
         self.alertMessageAlignment = alertMessageAlignment
         self.alertTintColor = alertTintColor
         super.init(nibName: nil, bundle: nil)

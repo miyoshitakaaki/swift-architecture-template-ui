@@ -21,7 +21,7 @@ open class AnyFlow<Flow: FlowBase>: UIViewController, FlowController,
 
     public let root: Flow.Child
 
-    public let from: any FlowBase.Type
+    public let from: any FlowController.Type
 
     public let alertMessageAlignment: NSTextAlignment?
 
@@ -32,7 +32,7 @@ open class AnyFlow<Flow: FlowBase>: UIViewController, FlowController,
     public required init(
         navigation: NavigationController,
         root: Flow.Child,
-        from: any FlowBase.Type,
+        from: any FlowController.Type,
         alertMessageAlignment: NSTextAlignment?,
         alertTintColor: UIColor?
     ) {

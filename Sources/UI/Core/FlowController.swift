@@ -21,14 +21,14 @@ public protocol FlowBase {
 
     var root: Child { get }
     var navigation: T { get }
-    var from: any FlowBase.Type { get }
+    var from: any FlowController.Type { get }
     var alertMessageAlignment: NSTextAlignment? { get }
     var alertTintColor: UIColor? { get }
 
     init(
         navigation: T,
         root: Child,
-        from: any FlowBase.Type,
+        from: any FlowController.Type,
         alertMessageAlignment: NSTextAlignment?,
         alertTintColor: UIColor?
     )
@@ -36,7 +36,7 @@ public protocol FlowBase {
 
 open class BaseFlow<Child>: FlowBase {
     public let root: Child
-    public let from: any FlowBase.Type
+    public let from: any FlowController.Type
     public let navigation: NavigationController
     public let alertMessageAlignment: NSTextAlignment?
     public let alertTintColor: UIColor?
@@ -44,7 +44,7 @@ open class BaseFlow<Child>: FlowBase {
     public required init(
         navigation: NavigationController,
         root: Child,
-        from: any FlowBase.Type,
+        from: any FlowController.Type,
         alertMessageAlignment: NSTextAlignment?,
         alertTintColor: UIColor?
     ) {
@@ -128,7 +128,7 @@ public extension FlowController where T == NavigationController {
     func start<F: FlowController>(
         flowType: F.Type,
         root: F.Child,
-        from: any FlowBase.Type = Self.self,
+        from: any FlowController.Type = Self.self,
         delegate: FlowDelegate,
         showType: ShowType,
         alertMessageAlignment: NSTextAlignment?,

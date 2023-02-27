@@ -128,7 +128,6 @@ public extension FlowController where T == NavigationController {
     func start<F: FlowController>(
         flowType: F.Type,
         root: F.Child,
-        from: any FlowController.Type = Self.self,
         delegate: FlowDelegate,
         showType: ShowType,
         alertMessageAlignment: NSTextAlignment?,
@@ -139,7 +138,7 @@ public extension FlowController where T == NavigationController {
             let flow = F(
                 navigation: navigation,
                 root: root,
-                from: from,
+                from: Self.self,
                 alertMessageAlignment: alertMessageAlignment,
                 alertTintColor: alertTintColor
             )
@@ -159,7 +158,7 @@ public extension FlowController where T == NavigationController {
             let flow = F(
                 navigation: self.navigation,
                 root: root,
-                from: from,
+                from: Self.self,
                 alertMessageAlignment: alertMessageAlignment,
                 alertTintColor: alertTintColor
             )

@@ -120,6 +120,8 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate, Activ
 
     private let titleForURLPatterns: [(title: String, pattern: String)]
 
+    private let webviewInterceptHandlers: [(handler: (_ url: URL) -> Void, pattern: String)]
+
     private let needRefreshNotificationNames: [Notification.Name]
 
     private let noNeedAccessoryView: Bool
@@ -141,6 +143,7 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate, Activ
         navigationContent: NavigationContent,
         needPullToRefresh: Bool = false,
         titleForURLPatterns: [(title: String, pattern: String)] = [],
+        webviewInterceptHandlers: [(handler: (_ url: URL) -> Void, pattern: String)] = [],
         needRefreshNotificationNames: [Notification.Name] = [],
         noNeedAccessoryView: Bool = false
     ) {
@@ -160,6 +163,7 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate, Activ
         self.navigationContent = navigationContent
         self.needPullToRefresh = needPullToRefresh
         self.titleForURLPatterns = titleForURLPatterns
+        self.webviewInterceptHandlers = webviewInterceptHandlers
         self.needRefreshNotificationNames = needRefreshNotificationNames
         self.noNeedAccessoryView = noNeedAccessoryView
 
@@ -316,7 +320,14 @@ extension WebViewController: WKNavigationDelegate {
                 AnalyticsService.sendEvent(event)
             }
 
-            if self.alwaysOpenSafariWhenLinkTap, url.scheme == "https" {
+            if
+                let pattern = self.webviewInterceptHandlers.first(where: { _, pattern in
+                    url.absoluteString.match(pattern: pattern)
+                })
+            {
+                pattern.handler(url)
+                decisionHandler(.cancel)
+            } else if self.alwaysOpenSafariWhenLinkTap, url.scheme == "https" {
                 UIApplication.shared.open(url)
                 decisionHandler(.cancel)
             } else if navigationAction.targetFrame == nil {

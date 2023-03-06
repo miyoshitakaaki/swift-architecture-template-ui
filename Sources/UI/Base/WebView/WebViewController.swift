@@ -23,7 +23,9 @@ extension WebViewController: VCInjectable {
 
 // MARK: - stored properties
 
-open class WebViewController: ViewController, UIGestureRecognizerDelegate, ActivityPresentable {
+open class WebViewController: ViewController, UIGestureRecognizerDelegate, ActivityPresentable,
+    AlertPresentable
+{
     public var viewModel: VM!
     public var ui: UI!
     public var cancellables: Set<AnyCancellable> = []
@@ -287,6 +289,54 @@ extension WebViewController: WKUIDelegate {
         type: WKMediaCaptureType
     ) async -> WKPermissionDecision {
         .grant
+    }
+
+    public func webView(
+        _ webView: WKWebView,
+        runJavaScriptAlertPanelWithMessage message: String,
+        initiatedByFrame frame: WKFrameInfo,
+        completionHandler: @escaping () -> Void
+    ) {
+        self.present(title: "", message: message) { _ in
+            completionHandler()
+        }
+    }
+
+    public func webView(
+        _ webView: WKWebView,
+        runJavaScriptConfirmPanelWithMessage message: String,
+        initiatedByFrame frame: WKFrameInfo,
+        completionHandler: @escaping (Bool) -> Void
+    ) {
+        self.present(title: "", message: message) { _ in
+            completionHandler(true)
+        } cancelAction: { _ in
+            completionHandler(false)
+        }
+    }
+
+    public func webView(
+        _ webView: WKWebView,
+        runJavaScriptTextInputPanelWithPrompt prompt: String,
+        defaultText: String?,
+        initiatedByFrame frame: WKFrameInfo,
+        completionHandler: @escaping (String?) -> Void
+    ) {
+        let alertController = UIAlertController(title: "", message: prompt, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default) { _ in
+            if let textField = alertController.textFields?.first {
+                completionHandler(textField.text)
+            } else {
+                completionHandler("")
+            }
+        }
+        let calcelAction = UIAlertAction(title: "Cancel", style: .cancel) {
+            _ in completionHandler(nil)
+        }
+        alertController.addAction(okAction)
+        alertController.addAction(calcelAction)
+        alertController.addTextField { $0.text = defaultText }
+        present(alertController, animated: true, completion: nil)
     }
 }
 

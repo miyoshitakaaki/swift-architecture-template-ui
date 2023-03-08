@@ -175,8 +175,8 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
             calender.locale = .current
             picker.calendar = calender
 
-            picker.addAction(.init(handler: { _ in
-                self.text = picker.date.string(to: dateFormat)
+            picker.addAction(.init(handler: { [weak self] _ in
+                self?.text = picker.date.string(to: dateFormat)
             }), for: .valueChanged)
 
             self.inputView = picker

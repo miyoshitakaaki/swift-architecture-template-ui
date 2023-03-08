@@ -1,6 +1,11 @@
 import UIKit
 
 actor ImageLoader {
+    private enum LoaderStatus {
+        case inProgress(Task<UIImage, Error>)
+        case fetched(String)
+    }
+
     static let shared: ImageLoader = .init()
 
     private var images: [URLRequest: LoaderStatus] = [:]
@@ -23,8 +28,8 @@ actor ImageLoader {
 
         if let status = images[urlRequest] {
             switch status {
-            case let .fetched(image):
-                return image
+            case let .fetched(fileName):
+                return self.getImage(fileName: fileName) ?? defaultImage
             case let .inProgress(task):
                 return try await task.value
             }
@@ -40,13 +45,44 @@ actor ImageLoader {
 
         let image = try await task.value
 
-        self.images[urlRequest] = .fetched(image)
+        let fileName = url.lastPathComponent
+
+        if self.fileExist(fileName: fileName) == false {
+            self.saveFile(image: image, fileName: fileName)
+        }
+
+        self.images[urlRequest] = .fetched(fileName)
 
         return image
     }
 
-    private enum LoaderStatus {
-        case inProgress(Task<UIImage, Error>)
-        case fetched(UIImage)
+    private func getFileURL(fileName: String) -> URL? {
+        guard
+            let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+                .first else { return nil }
+        return docDir.appendingPathComponent(fileName)
+    }
+
+    private func getImage(fileName: String) -> UIImage? {
+        guard let path = getFileURL(fileName: fileName)?.path else { return nil }
+        return UIImage(contentsOfFile: path)
+    }
+
+    private func saveFile(image: UIImage, fileName: String) {
+        guard let imageData = image.jpegData(compressionQuality: 1.0) else { return }
+
+        guard let url = getFileURL(fileName: fileName) else { return }
+
+        do {
+            try imageData.write(to: url)
+            print("Image saved.")
+        } catch {
+            print("Failed to save the image:", error)
+        }
+    }
+
+    private func fileExist(fileName: String) -> Bool {
+        guard let path = getFileURL(fileName: fileName)?.path else { return false }
+        return FileManager.default.fileExists(atPath: path)
     }
 }

@@ -149,8 +149,8 @@ public final class TableViewController<T: Table>: ViewController,
                 forName: notificationName,
                 object: nil,
                 queue: .current
-            ) { _ in
-                self.reloadType = .remote()
+            ) { [weak self] _ in
+                self?.reloadType = .remote()
             }
         }
     }
@@ -259,8 +259,8 @@ public final class TableViewController<T: Table>: ViewController,
             }.store(in: &self.cancellables)
 
         self.ui.additionalLoadingIndexPathPublisher
-            .sink {
-                self.viewModel.loadSubject.send((nil, true))
+            .sink { [weak self] in
+                self?.viewModel.loadSubject.send((nil, true))
             }.store(in: &self.cancellables)
     }
 

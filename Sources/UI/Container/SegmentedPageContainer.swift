@@ -1,11 +1,13 @@
+import Combine
 import Foundation
 import UIKit
+import Utility
 
 @MainActor
 public protocol SegmentedControl: UIControl {
     init(items: [Any]?)
     var selectedSegmentIndex: Int { get set }
-    func showBadge(show: Bool, index: Int, number: Int)
+    func showBadge(show: Bool, index: Int, number: Int?)
 }
 
 public protocol SegmentedPageContainerProtocol {
@@ -30,6 +32,11 @@ public extension SegmentedPageContainerProtocol {
 open class SegmentedPageContainer<T: SegmentedControl>: UIPageViewController,
     UIPageViewControllerDataSource, UIPageViewControllerDelegate
 {
+    public enum BadgeDisplay {
+        case show(number: Int?)
+        case hide
+    }
+
     private let tabHeight: CGFloat = 32
     private let margin: CGFloat = 16
 
@@ -51,17 +58,58 @@ open class SegmentedPageContainer<T: SegmentedControl>: UIPageViewController,
 
     private let initialIndex: Int
 
+    private var cancellable: Set<AnyCancellable> = []
+
     public init(
         viewControllers: [UIViewController],
         tabItems: [String],
         hidesBarsOnSwipe: Bool = true,
-        initialIndex: Int = 0
+        initialIndex: Int = 0,
+        badgeNotificationName: [Notification.Name?] = [],
+        badgePublishers: [AnyPublisher<BadgeDisplay, AppError>] = []
     ) {
         self.vcs = viewControllers
         self.tab = T(items: tabItems)
         self.hidesBarsOnSwipe = hidesBarsOnSwipe
         self.initialIndex = initialIndex
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
+
+        badgePublishers.enumerated().forEach { index, publisher in
+            publisher
+                .receive(on: DispatchQueue.main)
+                .sink { _ in
+                } receiveValue: { badge in
+                    switch badge {
+                    case let .show(number):
+                        self.showBadge(show: true, index: index, number: number)
+                    case .hide:
+                        self.showBadge(show: false, index: index, number: nil)
+                    }
+                }.store(in: &self.cancellable)
+        }
+
+        badgeNotificationName.enumerated().forEach { index, name in
+            guard let name else { return }
+
+            NotificationCenter.default
+                .addObserver(forName: name, object: nil, queue: .main) { _ in
+                    badgePublishers[safe: index]?
+                        .receive(on: DispatchQueue.main)
+                        .sink { complete in
+                            print(complete)
+                        } receiveValue: { [weak self] result in
+
+                            switch result {
+                            case let .show(number):
+                                self?.showBadge(show: true, index: index, number: number)
+
+                            case .hide:
+                                self?.showBadge(show: false, index: index, number: nil)
+                            }
+                        }
+                        .store(in: &self.cancellable)
+                }
+        }
     }
 
     @available(*, unavailable)
@@ -156,7 +204,7 @@ open class SegmentedPageContainer<T: SegmentedControl>: UIPageViewController,
         self.vcs = vcs
     }
 
-    public func showBadge(show: Bool, index: Int, number: Int) {
+    public func showBadge(show: Bool, index: Int, number: Int?) {
         self.tab.showBadge(show: show, index: index, number: number)
     }
 

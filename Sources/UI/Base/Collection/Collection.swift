@@ -16,7 +16,7 @@ public protocol CollectionList: List, AnalyticsScreenName {
     var topViewSubject: PassthroughSubject<Parameter, Never> { get }
     var fetchPublisher: ((parameter: Parameter?, isAdditional: Bool))
         -> AnyPublisher<Items, AppError> { get }
-    var deletePublisher: (Cell.ViewData) -> AnyPublisher<Void, AppError> { get }
+    var delete: (Cell.ViewData) async -> Result<Void, AppError> { get }
     var floatingButton: UIButton? { get }
     var skeletonItems: Items? { get }
     var titleForItemCount: ((Int) -> String)? { get }
@@ -28,8 +28,8 @@ public extension CollectionList {
     var skeletonItems: Items? { nil }
     var titleForItemCount: ((Int) -> String)? { nil }
 
-    var deletePublisher: (Cell.ViewData) -> AnyPublisher<Void, AppError> {{ _ in
-        Just(()).setFailureType(to: AppError.self).eraseToAnyPublisher()
+    var delete: (Cell.ViewData) async -> Result<Void, AppError> {{ _ in
+        Result.success(())
     }}
 }
 

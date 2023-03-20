@@ -156,21 +156,11 @@ extension CollectionUI: UserInterface {
 
         guard let identifier = self.dataSource.itemIdentifier(for: indexPath) else { return }
 
-        self.collection.deletePublisher(identifier)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] finished in
-                guard let self else { return }
+        Task {
+            let result = await self.collection.delete(identifier)
 
-                switch finished {
-                case .finished:
-                    break
-                case let .failure(error):
-                    self.errorPublisher.send(error)
-                }
-
-            } receiveValue: { [weak self] _ in
-                guard let self else { return }
-
+            switch result {
+            case .success:
                 var snapshot = self.dataSource.snapshot()
                 snapshot.deleteItems([identifier])
                 self.dataSource.apply(snapshot, animatingDifferences: true)
@@ -180,7 +170,11 @@ extension CollectionUI: UserInterface {
                 self.collection.floatingButton?.isHidden = snapshot.itemIdentifiers.isEmpty
 
                 self.deletePublisher.send(self.dataSource.snapshot().numberOfItems)
-            }.store(in: &self.cancellables)
+
+            case let .failure(error):
+                self.errorPublisher.send(error)
+            }
+        }
 
     }}
 

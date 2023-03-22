@@ -78,7 +78,10 @@ open class SegmentedPageContainer<T: SegmentedControl>: UIPageViewController,
             publisher
                 .receive(on: DispatchQueue.main)
                 .sink { _ in
-                } receiveValue: { badge in
+                } receiveValue: { [weak self] badge in
+
+                    guard let self else { return }
+
                     switch badge {
                     case let .show(number):
                         self.showBadge(show: true, index: index, number: number)
@@ -92,19 +95,21 @@ open class SegmentedPageContainer<T: SegmentedControl>: UIPageViewController,
             guard let name else { return }
 
             NotificationCenter.default
-                .addObserver(forName: name, object: nil, queue: .main) { _ in
+                .addObserver(forName: name, object: nil, queue: .main) { [weak self] _ in
+                    guard let self else { return }
+
                     badgePublishers[safe: index]?
                         .receive(on: DispatchQueue.main)
                         .sink { complete in
                             print(complete)
-                        } receiveValue: { [weak self] result in
+                        } receiveValue: { result in
 
                             switch result {
                             case let .show(number):
-                                self?.showBadge(show: true, index: index, number: number)
+                                self.showBadge(show: true, index: index, number: number)
 
                             case .hide:
-                                self?.showBadge(show: false, index: index, number: nil)
+                                self.showBadge(show: false, index: index, number: nil)
                             }
                         }
                         .store(in: &self.cancellable)

@@ -1,4 +1,3 @@
-import Combine
 import UIKit
 import Utility
 
@@ -59,9 +58,8 @@ open class BaseFlow<Child>: FlowBase {
 public protocol FlowController: UIViewController, FlowBase, AlertPresentable {
     var skipViewDidLoadStart: Bool { get }
     var delegate: FlowDelegate? { get set }
-    var cancellables: Set<AnyCancellable> { get set }
     var childProvider: (Child) -> UIViewController { get }
-    var asyncChildProvider: ((Child) -> AnyPublisher<UIViewController, Never>)? { get }
+    var asyncChildProvider: ((Child) async -> UIViewController)? { get }
     func clear()
 }
 
@@ -72,7 +70,7 @@ public extension FlowController {
         UIViewController(nibName: nil, bundle: nil)
     }}
 
-    var asyncChildProvider: ((Child) -> AnyPublisher<UIViewController, Never>)? { nil }
+    var asyncChildProvider: ((Child) async -> UIViewController)? { nil }
 
     func showApplication(url: String) {
         if let url = URL(string: url), UIApplication.shared.canOpenURL(url) {
@@ -92,23 +90,20 @@ public extension FlowController where T == NavigationController {
 
     func show(_ child: Child, root: Bool = false) {
         if let provider = self.asyncChildProvider {
-            provider(child)
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] vc in
+            Task { @MainActor in
+                let vc = await provider(child)
 
-                    guard let self else { return }
-
-                    if root {
-                        if self.navigation.viewControllers.isEmpty {
-                            self.add(self.navigation)
-                            self.navigation.viewControllers = [vc]
-                        } else {
-                            self.add(vc)
-                        }
+                if root {
+                    if self.navigation.viewControllers.isEmpty {
+                        self.add(self.navigation)
+                        self.navigation.viewControllers = [vc]
                     } else {
-                        self.navigation.pushViewController(vc, animated: true)
+                        self.add(vc)
                     }
-                }.store(in: &self.cancellables)
+                } else {
+                    self.navigation.pushViewController(vc, animated: true)
+                }
+            }
         } else {
             let vc = self.childProvider(child)
 

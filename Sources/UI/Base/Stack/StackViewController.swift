@@ -26,12 +26,12 @@ public final class StackViewController<T: Stack>: ViewController {
 
     private let content: NavigationContent
 
-    private let fetch: () -> Void
+    private let fetch: () async -> Void
 
     public init(
         component: T,
         content: NavigationContent,
-        fetch: @escaping () -> Void
+        fetch: @escaping () async -> Void
     ) {
         self.component = component
         self.fetch = fetch
@@ -58,7 +58,9 @@ public final class StackViewController<T: Stack>: ViewController {
 
         self.setupNavigationBar(content: self.content)
 
-        self.fetch()
+        Task {
+            await self.fetch()
+        }
     }
 
     override public func viewWillAppear(_ animated: Bool) {

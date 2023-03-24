@@ -39,14 +39,14 @@ public final class ListViewModel<
     public let loadingState: CurrentValueSubject<LoadingState<Items, AppError>, Never> =
         .init(.standby())
 
-    private let fetchPublisher: ((parameter: Parameter?, isAdditional: Bool))
-        -> AnyPublisher<Items, AppError>
+    private let fetch: ((parameter: Parameter?, isAdditional: Bool)) async
+        -> Result<Items, AppError>
 
     public init(
-        fetchPublisher: @escaping ((parameter: Parameter?, isAdditional: Bool))
-            -> AnyPublisher<Items, AppError>
+        fetch: @escaping ((parameter: Parameter?, isAdditional: Bool)) async
+            -> Result<Items, AppError>
     ) {
-        self.fetchPublisher = fetchPublisher
+        self.fetch = fetch
     }
 
     public func bind() -> AnyCancellable {
@@ -68,43 +68,50 @@ public final class ListViewModel<
                         .eraseToAnyPublisher()
                 }
 
-                return self.fetchPublisher(query)
-                    .map { new in
-                        let current = self.loadingState.value.value ?? []
-
-                        if query.isAdditional {
-                            if new.isEmpty {
-                                return LoadingState<Items, AppError>.standby(current)
-                            } else {
-                                let result = new.reduce(current) { partialResult, item in
-                                    var sections = partialResult
-
-                                    let index = sections.firstIndex { section in
-                                        section.section == item.section
-                                    }
-
-                                    if let index {
-                                        sections[index].items += item.items
-                                    } else {
-                                        sections.append(item)
-                                    }
-
-                                    return sections
-                                }
-                                return LoadingState<Items, AppError>.done(result)
-                            }
-                        } else {
-                            if new.isEmpty {
-                                return LoadingState<Items, AppError>.done([])
-                            } else {
-                                return LoadingState<Items, AppError>.done(new)
-                            }
+                return Deferred {
+                    Future<Items, AppError> { promise in
+                        Task {
+                            let result = await self.fetch(query)
+                            promise(result)
                         }
                     }
-                    .catch { error in
-                        Just(LoadingState<Items, AppError>.failed(error))
+                }
+                .map { new in
+                    let current = self.loadingState.value.value ?? []
+
+                    if query.isAdditional {
+                        if new.isEmpty {
+                            return LoadingState<Items, AppError>.standby(current)
+                        } else {
+                            let result = new.reduce(current) { partialResult, item in
+                                var sections = partialResult
+
+                                let index = sections.firstIndex { section in
+                                    section.section == item.section
+                                }
+
+                                if let index {
+                                    sections[index].items += item.items
+                                } else {
+                                    sections.append(item)
+                                }
+
+                                return sections
+                            }
+                            return LoadingState<Items, AppError>.done(result)
+                        }
+                    } else {
+                        if new.isEmpty {
+                            return LoadingState<Items, AppError>.done([])
+                        } else {
+                            return LoadingState<Items, AppError>.done(new)
+                        }
                     }
-                    .eraseToAnyPublisher()
+                }
+                .catch { error in
+                    Just(LoadingState<Items, AppError>.failed(error))
+                }
+                .eraseToAnyPublisher()
             }
             .subscribe(self.loadingState)
     }

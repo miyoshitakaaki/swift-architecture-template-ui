@@ -14,8 +14,8 @@ public protocol CollectionList: List, AnalyticsScreenName {
 
     var composableLayout: UICollectionViewCompositionalLayout { get }
     var topViewSubject: PassthroughSubject<Parameter, Never> { get }
-    var fetchPublisher: ((parameter: Parameter?, isAdditional: Bool))
-        -> AnyPublisher<Items, AppError> { get }
+    var fetch: ((parameter: Parameter?, isAdditional: Bool)) async
+        -> Result<Items, AppError> { get }
     var delete: (Cell.ViewData) async -> Result<Void, AppError> { get }
     var floatingButton: UIButton? { get }
     var skeletonItems: Items? { get }

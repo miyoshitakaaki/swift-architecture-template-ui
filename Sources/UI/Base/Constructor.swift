@@ -47,7 +47,7 @@ public func create<T: CollectionList>(
         needRefreshNotificationNames: needRefreshNotificationNames
     )
     vc.inject(
-        viewModel: .init(fetchPublisher: collection.fetchPublisher),
+        viewModel: .init(fetch: collection.fetch),
         ui: .init(collection: collection)
     )
     return vc
@@ -65,7 +65,7 @@ public func create<T: Table>(
         needRefreshNotificationNames: needRefreshNotificationNames
     )
     vc.inject(
-        viewModel: .init(fetchPublisher: table.fetchPublisher),
+        viewModel: .init(fetch: table.fetch),
         ui: .init(table: table)
     )
     return vc

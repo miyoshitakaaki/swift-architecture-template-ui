@@ -1,4 +1,3 @@
-import Combine
 import UIKit
 import Utility
 
@@ -14,8 +13,8 @@ public protocol Table: List, AnalyticsScreenName {
     typealias Items = [ListSection<Cell.ViewData, Header.ViewData, Footer.ViewData>]
 
     var showSearchBar: Bool { get }
-    var fetchPublisher: ((parameter: Parameter?, isAdditional: Bool))
-        -> AnyPublisher<Items, AppError> { get }
+    var fetch: ((parameter: Parameter?, isAdditional: Bool)) async
+        -> Result<Items, AppError> { get }
     func mapper(entities: [[Entity]]) -> Items
     var skeletonItems: Items? { get }
 }

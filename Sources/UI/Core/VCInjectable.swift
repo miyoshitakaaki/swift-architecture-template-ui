@@ -1,4 +1,3 @@
-import Combine
 import UIKit
 
 @MainActor
@@ -8,24 +7,20 @@ public protocol VCInjectable: ViewController {
 
     var viewModel: VM! { get set }
     var ui: UI! { get set }
-    var cancellables: Set<AnyCancellable> { get set }
 
     func inject(
         viewModel: VM,
-        ui: UI,
-        cancellables: Set<AnyCancellable>
+        ui: UI
     )
 }
 
 public extension VCInjectable {
     func inject(
         viewModel: VM,
-        ui: UI,
-        cancellables: Set<AnyCancellable> = []
+        ui: UI
     ) {
         self.viewModel = viewModel
         self.ui = ui
-        self.cancellables = cancellables
     }
 
     func setupNavigationBar(content: NavigationContent) {

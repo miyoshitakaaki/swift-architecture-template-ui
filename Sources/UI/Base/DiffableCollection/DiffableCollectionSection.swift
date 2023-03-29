@@ -1,4 +1,3 @@
-import Combine
 import UIKit
 import Utility
 
@@ -20,7 +19,7 @@ public protocol DiffableCollectionSection: Hashable {
 
     func fetch(
         fetchRemote: Bool
-    ) -> AnyPublisher<[Item], AppError>
+    ) async -> Result<[Item], AppError>
 
     func layout(
         section: Int,

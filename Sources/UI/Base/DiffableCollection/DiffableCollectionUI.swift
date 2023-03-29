@@ -153,41 +153,29 @@ extension DiffableCollectionUI: UserInterface {
     ) {
         self.uiDelegate?.willfetchAll(pullToRefresh: pullToRefresh)
 
-        S.reload(fetchRemote: fetchRemote)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] finished in
+        Task {
+            let result = await S.reload(fetchRemote: fetchRemote)
 
-                guard let self else { return }
+            self.collectionView.refreshControl?.endRefreshing()
+            self.uiDelegate?.didfetchAll()
 
-                self.collectionView.refreshControl?.endRefreshing()
-
-                self.uiDelegate?.didfetchAll()
-
-                switch finished {
-                case .finished:
-                    break
-
-                case let .failure(error):
-                    self.delegate?.didErrorOccured(error: error)
-                    completion(.failure(error))
-                }
-
-            } receiveValue: { [weak self] allCases in
-
-                guard let self else { return }
-
-                self.uiDelegate?.didfetchAll()
-
+            switch result {
+            case let .success(allCases):
                 var snapshot = NSDiffableDataSourceSnapshot<S, S.Item>()
                 snapshot.appendSections(allCases)
                 if #available(iOS 15.0, *) {
-                    self.dataSource.applySnapshotUsingReloadData(snapshot)
+                    await self.dataSource.applySnapshotUsingReloadData(snapshot)
                 } else {
                     self.dataSource.apply(snapshot, animatingDifferences: false)
                 }
 
                 completion(.success(allCases))
-            }.store(in: &self.cancellables)
+
+            case let .failure(error):
+                self.delegate?.didErrorOccured(error: error)
+                completion(.failure(error))
+            }
+        }
     }
 }
 

@@ -13,7 +13,7 @@ public protocol DiffableCollectionSection: Hashable {
     static var pullToRefreshable: Bool { get }
     static var sections: [Self] { get }
     static var fetchAllMinuteInterval: Int? { get }
-    static func reload(fetchRemote: Bool) -> AnyPublisher<[Self], AppError>
+    static func reload(fetchRemote: Bool) async -> Result<[Self], AppError>
 
     var headerText: String { get }
     var headerSecondaryText: String { get }

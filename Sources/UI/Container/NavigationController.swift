@@ -1,10 +1,11 @@
 import UIKit
+import Utility
 
 public protocol NavigationControllerDelegate: AnyObject {
     func didPopViewController(viewController: UIViewController?)
 }
 
-open class NavigationController: UINavigationController {
+open class NavigationController: UINavigationController, AlertPresentable {
     public enum CloseButtonPosition {
         case left, right
     }
@@ -19,6 +20,8 @@ open class NavigationController: UINavigationController {
 
     private let navigationTintColor: UIColor
 
+    private let closeConfirmAlertMessage: String?
+
     public weak var navigationControllerDelegate: NavigationControllerDelegate?
 
     public init(
@@ -28,12 +31,14 @@ open class NavigationController: UINavigationController {
         closeButtonFontSize: CGFloat,
         closeButtonPosition: CloseButtonPosition,
         closeButtonColor: UIColor,
-        navigationTintColor: UIColor
+        navigationTintColor: UIColor,
+        closeConfirmAlertMessage: String? = nil
     ) {
         self.hideBackButtonText = hideBackButtonText
         self.showCloseButton = showCloseButton
         self.closeButtonPosition = closeButtonPosition
         self.navigationTintColor = navigationTintColor
+        self.closeConfirmAlertMessage = closeConfirmAlertMessage
 
         self.closeButton = {
             let button = UIButton()
@@ -53,12 +58,14 @@ open class NavigationController: UINavigationController {
         closeButtonFontSize: CGFloat,
         closeButtonPosition: CloseButtonPosition,
         closeButtonColor: UIColor,
-        navigationTintColor: UIColor
+        navigationTintColor: UIColor,
+        closeConfirmAlertMessage: String? = nil
     ) {
         self.hideBackButtonText = hideBackButtonText
         self.showCloseButton = showCloseButton
         self.closeButtonPosition = closeButtonPosition
         self.navigationTintColor = navigationTintColor
+        self.closeConfirmAlertMessage = closeConfirmAlertMessage
 
         self.closeButton = {
             let button = UIButton()
@@ -114,7 +121,19 @@ open class NavigationController: UINavigationController {
     }
 
     @objc func close() {
-        self.dismiss(animated: true)
+        if let closeConfirmAlertMessage = self.closeConfirmAlertMessage {
+            self.present(
+                title: "",
+                message: closeConfirmAlertMessage
+            ) { [weak self] _ in
+                self?.dismiss(animated: true)
+            } cancelAction: { _ in
+                LogService.log("cencel")
+            }
+
+        } else {
+            self.dismiss(animated: true)
+        }
     }
 }
 

@@ -1,4 +1,3 @@
-import Combine
 import Foundation
 import UIKit
 import Utility
@@ -8,6 +7,7 @@ public protocol DiffableCollectionUIDelegate: AnyObject {
     func didfetchAll()
 }
 
+@MainActor
 public final class DiffableCollectionUI<
     S: DiffableCollectionSection
 >: NSObject,
@@ -79,8 +79,6 @@ public final class DiffableCollectionUI<
     public weak var delegate: (any DiffableCollectionEvent)?
     public weak var uiDelegate: DiffableCollectionUIDelegate?
 
-    private var cancellables: Set<AnyCancellable> = []
-
     private let cellRegistration: S.CellRegistration
     private let supplementaryRegistration: S.SupplementaryRegistration
 
@@ -117,33 +115,21 @@ extension DiffableCollectionUI: UserInterface {
     }
 
     func reloadSection(section: S, fetchRemote: Bool) {
-        section.fetch(fetchRemote: fetchRemote)
-            .receive(on: DispatchQueue.main)
-            .sink { finished in
+        Task {
+            let result = await section.fetch(fetchRemote: fetchRemote)
 
-                switch finished {
-                case .finished:
-                    break
-
-                case let .failure(error):
-                    self.delegate?.didErrorOccured(error: error)
-                }
-
-            } receiveValue: { [weak self] result in
-
-                guard let self else { return }
-
+            switch result {
+            case let .success(result):
                 var snapshot = self.dataSource.snapshot()
                 snapshot.reloadSections([section])
                 snapshot.appendItems(result, toSection: section)
-                if #available(iOS 15.0, *) {
-                    self.dataSource.applySnapshotUsingReloadData(snapshot)
-                } else {
-                    self.dataSource.apply(snapshot, animatingDifferences: false)
-                }
-
+                self.dataSource.apply(snapshot, animatingDifferences: false)
                 self.collectionView.refreshControl?.endRefreshing()
-            }.store(in: &self.cancellables)
+
+            case let .failure(error):
+                self.delegate?.didErrorOccured(error: error)
+            }
+        }
     }
 
     func reload(
@@ -163,12 +149,7 @@ extension DiffableCollectionUI: UserInterface {
             case let .success(allCases):
                 var snapshot = NSDiffableDataSourceSnapshot<S, S.Item>()
                 snapshot.appendSections(allCases)
-                if #available(iOS 15.0, *) {
-                    await self.dataSource.applySnapshotUsingReloadData(snapshot)
-                } else {
-                    self.dataSource.apply(snapshot, animatingDifferences: false)
-                }
-
+                self.dataSource.apply(snapshot, animatingDifferences: false)
                 completion(.success(allCases))
 
             case let .failure(error):

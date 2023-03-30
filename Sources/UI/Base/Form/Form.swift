@@ -84,7 +84,7 @@ public protocol Form: AnyObject, FormUIProtocol, AnalyticsScreenName {
     var data: AnyPublisher<Input, Never> { get }
     var fetch: () async -> Result<Input, AppError> { get }
     var confirmAlertTitle: String? { get }
-    func complete(_ input: Input) -> AnyPublisher<Input, AppError>
+    func complete(_ input: Input) async -> Result<Input, AppError>
 }
 
 public extension Form {
@@ -96,9 +96,7 @@ public extension Form {
         data.map(\.isValid).eraseToAnyPublisher()
     }
 
-    func complete(_ input: Input) -> AnyPublisher<Input, AppError> {
-        Just(input).setFailureType(to: AppError.self).eraseToAnyPublisher()
-    }
+    func complete(_ input: Input) async -> Result<Input, AppError> { .success(input) }
 
     func stack(
         views: [UIView],

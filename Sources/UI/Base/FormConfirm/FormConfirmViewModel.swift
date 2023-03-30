@@ -5,9 +5,9 @@ import Utility
 public final class FormConfirmViewModel<T: Equatable>: ViewModel {
     let loadingState: CurrentValueSubject<LoadingState<T, AppError>, Never> = .init(.standby())
 
-    private let complete: AnyPublisher<T, AppError>
+    private let complete: () async -> Result<T, AppError>
 
-    public init(complete: AnyPublisher<T, AppError>) {
+    public init(complete: @escaping () async -> Result<T, AppError>) {
         self.complete = complete
     }
 
@@ -23,12 +23,18 @@ public final class FormConfirmViewModel<T: Equatable>: ViewModel {
                         .eraseToAnyPublisher()
                 }
 
-                return self.complete
-                    .map(LoadingState<T, AppError>.done)
-                    .catch { error in
-                        Just(LoadingState<T, AppError>.failed(error))
+                return Future<LoadingState<T, AppError>, Never> { promise in
+                    Task {
+                        let result = await self.complete()
+
+                        switch result {
+                        case let .success(value):
+                            promise(.success(LoadingState<T, AppError>.done(value)))
+                        case let .failure(error):
+                            promise(.success(LoadingState<T, AppError>.failed(error)))
+                        }
                     }
-                    .eraseToAnyPublisher()
+                }.eraseToAnyPublisher()
             }
             .subscribe(self.loadingState)
     }

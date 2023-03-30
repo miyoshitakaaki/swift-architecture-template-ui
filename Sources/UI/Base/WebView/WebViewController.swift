@@ -1,4 +1,3 @@
-import Combine
 import UIKit
 import Utility
 import WebKit
@@ -28,7 +27,6 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate, Activ
 {
     public var viewModel: VM!
     public var ui: UI!
-    public var cancellables: Set<AnyCancellable> = []
 
     // Ref: https://stackoverflow.com/questions/71678534/swift-seturlschemehandler-causes-a-memory-leak-wkwebview
     private lazy var leakAvoider: LeakAvoider = .init(delegate: self)

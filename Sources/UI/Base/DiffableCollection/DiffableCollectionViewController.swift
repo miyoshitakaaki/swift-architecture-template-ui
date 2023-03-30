@@ -1,4 +1,3 @@
-import Combine
 import UIKit
 import Utility
 
@@ -15,7 +14,6 @@ public final class DiffableCollectionViewController<
 >: ViewController, ActivityPresentable, DiffableCollectionUIDelegate {
     public var viewModel: VM!
     public var ui: UI!
-    public var cancellables: Set<AnyCancellable> = []
 
     private var reloadType: ReloadType?
     private var lastFetchAllDate: Date?

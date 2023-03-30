@@ -1,4 +1,3 @@
-import Combine
 import UIKit
 import Utility
 
@@ -12,7 +11,6 @@ extension StackViewController: VCInjectable {
 public final class StackViewController<T: Stack>: ViewController {
     public var viewModel: VM!
     public var ui: UI!
-    public var cancellables: Set<AnyCancellable> = []
 
     override public var screenNameForAnalytics: [AnalyticsScreen] {
         self.component.screenNameForAnalytics

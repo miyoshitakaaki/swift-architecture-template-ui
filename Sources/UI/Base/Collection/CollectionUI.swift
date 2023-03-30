@@ -10,8 +10,6 @@ public struct SelectedCellInfo<T: CollectionList> {
 }
 
 public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewDelegate {
-    private var cancellables: Set<AnyCancellable> = []
-
     private lazy var collectionView: UICollectionView = .init(
         frame: .zero,
         collectionViewLayout: collection.composableLayout

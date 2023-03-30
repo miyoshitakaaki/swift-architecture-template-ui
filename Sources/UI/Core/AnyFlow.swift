@@ -58,13 +58,15 @@ open class AnyFlow<Flow: FlowBase>: UIViewController, FlowController,
 
         if self.asyncChildProvider == nil {
             self.start()
+        } else if self.navigation.viewControllers.isEmpty == false {
+            self.start()
         }
     }
 
     override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        if self.navigation.viewControllers.isEmpty == true || self.asyncChildProvider != nil {
+        if self.navigation.viewControllers.isEmpty == true {
             self.start()
         }
     }

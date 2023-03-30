@@ -1,4 +1,3 @@
-import Combine
 import UIKit
 import Utility
 
@@ -9,7 +8,7 @@ public protocol FormConfirmProtocol: AnyObject, AnalyticsScreenName {
 
     var data: InputType { get }
     var title: String { get }
-    var complete: AnyPublisher<OutputType, AppError> { get }
+    var complete: () async -> Result<OutputType, AppError> { get }
 }
 
 @MainActor

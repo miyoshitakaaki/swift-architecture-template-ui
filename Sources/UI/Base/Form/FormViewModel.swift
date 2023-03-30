@@ -20,7 +20,7 @@ public final class FormViewModel<T: Form>: ViewModel {
     private let confirmAlertTitle: String?
     private let isOptional: Bool
     private let fetch: () async -> Result<T.Input, AppError>
-    private let complete: (T.Input) -> AnyPublisher<T.Input, AppError>
+    private let complete: (T.Input) async -> Result<T.Input, AppError>
 
     weak var delegate: FormViewModelDelegate?
 
@@ -28,7 +28,7 @@ public final class FormViewModel<T: Form>: ViewModel {
         confirmAlertTitle: String?,
         isOptional: Bool,
         fetch: @escaping () async -> Result<T.Input, AppError>,
-        complete: @escaping (T.Input) -> AnyPublisher<T.Input, AppError>
+        complete: @escaping (T.Input) async -> Result<T.Input, AppError>
     ) {
         self.confirmAlertTitle = confirmAlertTitle
         self.isOptional = isOptional
@@ -142,50 +142,59 @@ public final class FormViewModel<T: Form>: ViewModel {
                     .eraseToAnyPublisher()
 
                 case .confirmOk:
-                    return self.complete(self.input.value)
-                        .map(LoadingState<T.Input, AppError>.done)
-                        .catch { error in
+                    return Future<LoadingState<T.Input, AppError>, Never> { promise in
+                        Task {
+                            let result = await self.complete(self.input.value)
 
-                            switch error as AppError {
-                            case let .normal(title, message):
-                                return Just(
-                                    LoadingState<T.Input, AppError>.failed(
-                                        .notice(
+                            switch result {
+                            case let .success(value):
+                                promise(.success(.done(value)))
+                            case let .failure(error):
+                                switch error as AppError {
+                                case let .normal(title, message):
+                                    promise(
+                                        .success(.failed(.notice(
                                             title: title,
                                             message: message
-                                        )
+                                        )))
                                     )
-                                )
-                            default:
-                                return Just(LoadingState<T.Input, AppError>.failed(error))
+                                default:
+                                    promise(.success(.failed(error)))
+                                }
                             }
-
-                        }.eraseToAnyPublisher()
+                        }
+                    }
+                    .eraseToAnyPublisher()
 
                 case .confirmCancel:
                     return Just(LoadingState<T.Input, AppError>.standby())
                         .eraseToAnyPublisher()
 
                 case .none:
-                    return self.complete(self.input.value)
-                        .map(LoadingState<T.Input, AppError>.done)
-                        .catch { error in
 
-                            switch error as AppError {
-                            case let .normal(title, message):
-                                return Just(
-                                    LoadingState<T.Input, AppError>.failed(
-                                        .notice(
+                    return Future<LoadingState<T.Input, AppError>, Never> { promise in
+                        Task {
+                            let result = await self.complete(self.input.value)
+
+                            switch result {
+                            case let .success(value):
+                                promise(.success(.done(value)))
+                            case let .failure(error):
+                                switch error as AppError {
+                                case let .normal(title, message):
+                                    promise(
+                                        .success(.failed(.notice(
                                             title: title,
                                             message: message
-                                        )
+                                        )))
                                     )
-                                )
-                            default:
-                                return Just(LoadingState<T.Input, AppError>.failed(error))
+                                default:
+                                    promise(.success(.failed(error)))
+                                }
                             }
-
-                        }.eraseToAnyPublisher()
+                        }
+                    }
+                    .eraseToAnyPublisher()
                 }
             }
             .subscribe(self.loadingState)

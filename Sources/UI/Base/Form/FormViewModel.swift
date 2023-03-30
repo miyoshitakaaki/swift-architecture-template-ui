@@ -19,7 +19,7 @@ public final class FormViewModel<T: Form>: ViewModel {
 
     private let confirmAlertTitle: String?
     private let isOptional: Bool
-    private let fetch: AnyPublisher<T.Input, AppError>
+    private let fetch: () async -> Result<T.Input, AppError>
     private let complete: (T.Input) -> AnyPublisher<T.Input, AppError>
 
     weak var delegate: FormViewModelDelegate?
@@ -27,7 +27,7 @@ public final class FormViewModel<T: Form>: ViewModel {
     public init(
         confirmAlertTitle: String?,
         isOptional: Bool,
-        fetch: AnyPublisher<T.Input, AppError>,
+        fetch: @escaping () async -> Result<T.Input, AppError>,
         complete: @escaping (T.Input) -> AnyPublisher<T.Input, AppError>
     ) {
         self.confirmAlertTitle = confirmAlertTitle
@@ -49,20 +49,24 @@ public final class FormViewModel<T: Form>: ViewModel {
                 self.loadingState.send(.loading())
             })
             .flatMap { _ in
-                self.fetch
-                    .handleEvents(receiveOutput: { _ in
+                Future { promise in
+                    Task {
+                        let result = await self.fetch()
+
                         self.loadingState.send(.standby())
-                    }, receiveCompletion: { complete in
-                        switch complete {
+
+                        switch result {
+                        case let .success(value):
+                            self.loadingState.send(.standby())
+                            promise(.success(value))
+
                         case let .failure(error):
                             self.loadingState.send(.failed(error))
-                        case .finished:
-                            break
+                            promise(.success(.init()))
                         }
-                    })
-                    .replaceError(with: .init())
+                    }
+                }
             }
-            .handleEvents(receiveOutput: { _ in self.loadingState.send(.standby()) })
             .subscribe(self.input)
     }
 

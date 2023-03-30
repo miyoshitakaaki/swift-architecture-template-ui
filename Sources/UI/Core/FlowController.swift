@@ -56,7 +56,6 @@ open class BaseFlow<Child>: FlowBase {
 }
 
 public protocol FlowController: UIViewController, FlowBase, AlertPresentable {
-    var skipViewDidLoadStart: Bool { get }
     var delegate: FlowDelegate? { get set }
     var childProvider: (Child) -> UIViewController { get }
     var asyncChildProvider: ((Child) async -> UIViewController)? { get }
@@ -64,8 +63,6 @@ public protocol FlowController: UIViewController, FlowBase, AlertPresentable {
 }
 
 public extension FlowController {
-    var skipViewDidLoadStart: Bool { false }
-
     var childProvider: (Child) -> UIViewController {{ _ in
         UIViewController(nibName: nil, bundle: nil)
     }}

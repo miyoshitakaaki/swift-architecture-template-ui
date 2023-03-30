@@ -4,8 +4,6 @@ import Utility
 open class AnyFlow<Flow: FlowBase>: UIViewController, FlowController,
     AlertPresentable where Flow.T == NavigationController
 {
-    open var skipViewDidLoadStart: Bool { false }
-
     open var childProvider: (Flow.Child) -> UIViewController {{ _ in
         .init(nibName: nil, bundle: nil)
     }}
@@ -58,7 +56,7 @@ open class AnyFlow<Flow: FlowBase>: UIViewController, FlowController,
 
         self.view.backgroundColor = .white
 
-        if self.skipViewDidLoadStart == false {
+        if self.asyncChildProvider == nil {
             self.start()
         }
     }
@@ -66,7 +64,7 @@ open class AnyFlow<Flow: FlowBase>: UIViewController, FlowController,
     override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        if self.navigation.viewControllers.isEmpty == true {
+        if self.navigation.viewControllers.isEmpty == true || self.asyncChildProvider != nil {
             self.start()
         }
     }

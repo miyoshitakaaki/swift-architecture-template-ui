@@ -392,14 +392,14 @@ extension FormTextField: UIPickerViewDelegate, UIPickerViewDataSource {
             self.text = data[row]
         } else if case let .doubleList(data1, data2) = self.picker {
             if component == 0 {
-                doubleList.0 = data1[row]
+                self.doubleList.0 = data1[row]
             }
 
             if component == 1 {
-                doubleList.1 = data2[row]
+                self.doubleList.1 = data2[row]
             }
 
-            self.text = doubleList.0 + "." + doubleList.1
+            self.text = self.doubleList.0 + "." + self.doubleList.1
         }
     }
 }

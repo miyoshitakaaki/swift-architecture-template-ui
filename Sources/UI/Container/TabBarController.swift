@@ -116,11 +116,11 @@ private extension UIViewController {
     var isScrolledToTop: Bool {
         for subView in view.subviews {
             if let scrollView = subView as? UIScrollView {
-                return (scrollView.contentOffset.y == 0)
+                return scrollView.contentOffset.y == 0
             }
 
             if let webview = subView as? WKWebView {
-                return (webview.scrollView.contentOffset.y == 0)
+                return webview.scrollView.contentOffset.y == 0
             }
         }
 

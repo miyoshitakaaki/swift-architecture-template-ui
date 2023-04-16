@@ -72,7 +72,7 @@ public final class DiffableCollectionUI<
             collectionView: collectionView,
             cellProvider: cellProvider
         )
-        dataSource.supplementaryViewProvider = supplementaryViewProvider
+        dataSource.supplementaryViewProvider = self.supplementaryViewProvider
         return dataSource
     }()
 

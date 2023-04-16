@@ -99,7 +99,7 @@ private extension FormSelectionItemView {
         sender.view?.subviews.forEach { view in
             if let button = view as? CheckMarkButton {
                 button.toggle()
-                togglePublisher.send(button.checkFlag)
+                self.togglePublisher.send(button.checkFlag)
             }
         }
     }
@@ -113,7 +113,7 @@ public extension FormSelectionItemView {
             if let button = view as? CheckMarkButton {
                 button.checkFlag = flag
                 button.setNeedsDisplay()
-                togglePublisher.send(button.checkFlag)
+                self.togglePublisher.send(button.checkFlag)
             }
         }
     }

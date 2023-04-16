@@ -19,8 +19,8 @@ public class NoticeLabel: UILabel {
 
     override open var intrinsicContentSize: CGSize {
         var intrinsicContentSize = super.intrinsicContentSize
-        intrinsicContentSize.width += (insets.left + insets.right)
-        intrinsicContentSize.height += (insets.top + insets.bottom)
+        intrinsicContentSize.width += (self.insets.left + self.insets.right)
+        intrinsicContentSize.height += (self.insets.top + self.insets.bottom)
         return intrinsicContentSize
     }
 

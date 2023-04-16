@@ -39,13 +39,13 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate, Activ
 
         let config = WKWebViewConfiguration()
         if let scheme = self.scheme {
-            config.setURLSchemeHandler(leakAvoider, forURLScheme: scheme)
+            config.setURLSchemeHandler(self.leakAvoider, forURLScheme: scheme)
         }
-        config.setURLSchemeHandler(leakAvoider, forURLScheme: "tel")
-        config.setURLSchemeHandler(leakAvoider, forURLScheme: "mailto")
-        config.setURLSchemeHandler(leakAvoider, forURLScheme: "facetime")
-        config.setURLSchemeHandler(leakAvoider, forURLScheme: "sms")
-        config.setURLSchemeHandler(leakAvoider, forURLScheme: "maps")
+        config.setURLSchemeHandler(self.leakAvoider, forURLScheme: "tel")
+        config.setURLSchemeHandler(self.leakAvoider, forURLScheme: "mailto")
+        config.setURLSchemeHandler(self.leakAvoider, forURLScheme: "facetime")
+        config.setURLSchemeHandler(self.leakAvoider, forURLScheme: "sms")
+        config.setURLSchemeHandler(self.leakAvoider, forURLScheme: "maps")
 
         let userContentController = WKUserContentController()
         self.javascriptEvent.forEach { event in

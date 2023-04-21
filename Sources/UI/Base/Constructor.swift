@@ -1,5 +1,7 @@
+import Combine
 import Foundation
 import UIKit
+import Utility
 
 @MainActor
 public func create<T: Form>(
@@ -68,5 +70,38 @@ public func create<T: Table>(
         viewModel: .init(fetch: table.fetch),
         ui: .init(table: table)
     )
+    return vc
+}
+
+@MainActor
+public func create<T: DiffableCollectionSection, N: NavigationContent>(
+    type: T.Type,
+    initialReloadType: ReloadType,
+    content: N,
+    screenNameForAnalytics: [AnalyticsScreen],
+    screenEventForAnalytics: [AnalyticsEvent],
+    needRefreshNotificationNames: [Notification.Name],
+    needForceRefreshNotificationNames: [Notification.Name],
+    delegate: any DiffableCollectionEvent
+) -> DiffableCollectionViewController<T, N> {
+    let vc = DiffableCollectionViewController<T, N>(
+        initialReloadType: initialReloadType,
+        content: content,
+        screenNameForAnalytics: screenNameForAnalytics,
+        screenEventForAnalytics: screenEventForAnalytics,
+        needRefreshNotificationNames: needRefreshNotificationNames,
+        needForceRefreshNotificationNames: needForceRefreshNotificationNames
+    )
+
+    let pagingInfoSubject = PassthroughSubject<PagingSectionFooterView.PagingInfo, Never>()
+
+    let ui = DiffableCollectionUI<T>.init(
+        cellRegistration: .init(),
+        supplementaryRegistration: .init(pagingInfoSubject: pagingInfoSubject),
+        pagingInfoSubject: pagingInfoSubject
+    )
+    ui.delegate = delegate
+    vc.inject(viewModel: .init(), ui: ui)
+
     return vc
 }

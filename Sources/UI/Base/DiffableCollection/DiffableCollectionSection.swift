@@ -1,12 +1,17 @@
+import Combine
 import UIKit
 import Utility
 
 public struct EmptyContent: Hashable {}
 
+public protocol PagingInfoInitializable {
+    init(pagingInfoSubject: PassthroughSubject<PagingSectionFooterView.PagingInfo, Never>)
+}
+
 @MainActor
 public protocol DiffableCollectionSection: Hashable {
-    associatedtype CellRegistration
-    associatedtype SupplementaryRegistration
+    associatedtype CellRegistration: Initializable
+    associatedtype SupplementaryRegistration: PagingInfoInitializable
     associatedtype Item: Hashable
 
     static var pullToRefreshable: Bool { get }
@@ -24,7 +29,8 @@ public protocol DiffableCollectionSection: Hashable {
     func layout(
         section: Int,
         environment: NSCollectionLayoutEnvironment,
-        items: [Item]
+        items: [Item],
+        pagingInfoSubject: PassthroughSubject<PagingSectionFooterView.PagingInfo, Never>
     ) -> NSCollectionLayoutSection
 
     func cellRegistration(

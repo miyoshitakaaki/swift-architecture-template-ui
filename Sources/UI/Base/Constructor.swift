@@ -82,7 +82,8 @@ public func create<T: DiffableCollectionSection, N: NavigationContent>(
     screenEventForAnalytics: [AnalyticsEvent],
     needRefreshNotificationNames: [Notification.Name],
     needForceRefreshNotificationNames: [Notification.Name],
-    delegate: any DiffableCollectionEvent
+    delegate: any DiffableCollectionEvent,
+    initialPagingInfo: [PagingSectionFooterView.InitialPagingInfo]
 ) -> DiffableCollectionViewController<T, N> {
     let vc = DiffableCollectionViewController<T, N>(
         initialReloadType: initialReloadType,
@@ -97,7 +98,10 @@ public func create<T: DiffableCollectionSection, N: NavigationContent>(
 
     let ui = DiffableCollectionUI<T>.init(
         cellRegistration: .init(),
-        supplementaryRegistration: .init(pagingInfoSubject: pagingInfoSubject),
+        supplementaryRegistration: .init(
+            initialPagingInfo: initialPagingInfo,
+            pagingInfoSubject: pagingInfoSubject
+        ),
         pagingInfoSubject: pagingInfoSubject
     )
     ui.delegate = delegate

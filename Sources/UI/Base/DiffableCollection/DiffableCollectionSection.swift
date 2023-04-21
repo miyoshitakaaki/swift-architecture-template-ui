@@ -5,7 +5,10 @@ import Utility
 public struct EmptyContent: Hashable {}
 
 public protocol PagingInfoInitializable {
-    init(pagingInfoSubject: PassthroughSubject<PagingSectionFooterView.PagingInfo, Never>)
+    init(
+        initialPagingInfo: [PagingSectionFooterView.InitialPagingInfo],
+        pagingInfoSubject: PassthroughSubject<PagingSectionFooterView.PagingInfo, Never>
+    )
 }
 
 @MainActor

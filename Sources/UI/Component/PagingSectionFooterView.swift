@@ -2,6 +2,16 @@ import Combine
 import UIKit
 
 public class PagingSectionFooterView: UICollectionReusableView {
+    public struct InitialPagingInfo {
+        public let count: Int
+        public let section: Int
+
+        public init(count: Int, section: Int) {
+            self.count = count
+            self.section = section
+        }
+    }
+
     public struct PagingInfo: Equatable, Hashable {
         let sectionIndex: Int
         let currentPage: Int

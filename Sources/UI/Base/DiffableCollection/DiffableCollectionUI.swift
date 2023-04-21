@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import UIKit
 import Utility
@@ -23,7 +24,12 @@ public final class DiffableCollectionUI<
                 let snapShot = self.dataSource.snapshot()
                 let sectionItem = snapShot.sectionIdentifiers[section]
                 let items = snapShot.itemIdentifiers(inSection: sectionItem)
-                return sectionItem.layout(section: section, environment: environment, items: items)
+                return sectionItem.layout(
+                    section: section,
+                    environment: environment,
+                    items: items,
+                    pagingInfoSubject: self.pagingInfoSubject
+                )
             }
         )
     )
@@ -72,7 +78,7 @@ public final class DiffableCollectionUI<
             collectionView: collectionView,
             cellProvider: cellProvider
         )
-        dataSource.supplementaryViewProvider = supplementaryViewProvider
+        dataSource.supplementaryViewProvider = self.supplementaryViewProvider
         return dataSource
     }()
 
@@ -81,13 +87,16 @@ public final class DiffableCollectionUI<
 
     private let cellRegistration: S.CellRegistration
     private let supplementaryRegistration: S.SupplementaryRegistration
+    private let pagingInfoSubject: PassthroughSubject<PagingSectionFooterView.PagingInfo, Never>
 
     public init(
         cellRegistration: S.CellRegistration,
-        supplementaryRegistration: S.SupplementaryRegistration
+        supplementaryRegistration: S.SupplementaryRegistration,
+        pagingInfoSubject: PassthroughSubject<PagingSectionFooterView.PagingInfo, Never>
     ) {
         self.cellRegistration = cellRegistration
         self.supplementaryRegistration = supplementaryRegistration
+        self.pagingInfoSubject = pagingInfoSubject
     }
 
     public func collectionView(

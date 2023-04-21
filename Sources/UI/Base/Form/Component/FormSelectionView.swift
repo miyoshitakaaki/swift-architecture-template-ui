@@ -22,7 +22,7 @@ public final class FormSelectionView<T: Selection>: UIView {
         .map { $0.eraseToAnyPublisher() }
 
     private lazy var checkButtonPublishers: AnyPublisher<(Int, Bool), Never> = {
-        let p = itemViews.enumerated().map { index, item in
+        let p = self.itemViews.enumerated().map { index, item in
             item.map { flag in (index, flag) }.eraseToAnyPublisher()
         }
         return Publishers.MergeMany(p)
@@ -82,7 +82,7 @@ private extension FormSelectionView {
             view.axis = .vertical
             view.distribution = .equalSpacing
             view.alignment = .fill
-            view.spacing = stackSpace
+            view.spacing = self.stackSpace
             view.backgroundColor = .clear
             return view
         }()
@@ -98,7 +98,7 @@ private extension FormSelectionView {
             let view: T = .init(
                 title: content,
                 dottedLine: index < contents.count - 1,
-                togglable: singleSelect == false
+                togglable: self.singleSelect == false
             )
             stackView.addArrangedSubviews(
                 view,
@@ -125,7 +125,7 @@ public extension FormSelectionView {
         self.itemViews.enumerated().forEach { index, view in
             view.changeButtonFlag(flags[index])
             if flags[index] {
-                currentValue.send((index, flags[index]))
+                self.currentValue.send((index, flags[index]))
             }
         }
     }

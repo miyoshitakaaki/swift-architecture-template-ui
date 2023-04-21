@@ -79,7 +79,7 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
             collectionView: collectionView,
             cellProvider: cellProvider
         )
-        dataSource.supplementaryViewProvider = supplementaryViewProvider
+        dataSource.supplementaryViewProvider = self.supplementaryViewProvider
         return dataSource
     }()
 

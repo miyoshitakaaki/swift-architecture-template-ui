@@ -7,7 +7,8 @@ public struct EmptyContent: Hashable {}
 public protocol PagingInfoInitializable {
     init(
         initialPagingInfo: [PagingSectionFooterView.InitialPagingInfo],
-        pagingInfoSubject: PassthroughSubject<PagingSectionFooterView.PagingInfo, Never>
+        pagingInfoSubject: PassthroughSubject<PagingSectionFooterView.PagingInfo, Never>,
+        pagingControlSubject: PassthroughSubject<PagingSectionFooterView.PagingInfo, Never>
     )
 }
 

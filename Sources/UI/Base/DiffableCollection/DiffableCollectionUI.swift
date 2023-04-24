@@ -88,15 +88,19 @@ public final class DiffableCollectionUI<
     private let cellRegistration: S.CellRegistration
     private let supplementaryRegistration: S.SupplementaryRegistration
     private let pagingInfoSubject: PassthroughSubject<PagingSectionFooterView.PagingInfo, Never>
+    private let pageControlSubject: PassthroughSubject<PagingSectionFooterView.PagingInfo, Never>
+    private var cancellable: Set<AnyCancellable> = []
 
     public init(
         cellRegistration: S.CellRegistration,
         supplementaryRegistration: S.SupplementaryRegistration,
-        pagingInfoSubject: PassthroughSubject<PagingSectionFooterView.PagingInfo, Never>
+        pagingInfoSubject: PassthroughSubject<PagingSectionFooterView.PagingInfo, Never>,
+        pageControlSubject: PassthroughSubject<PagingSectionFooterView.PagingInfo, Never>
     ) {
         self.cellRegistration = cellRegistration
         self.supplementaryRegistration = supplementaryRegistration
         self.pagingInfoSubject = pagingInfoSubject
+        self.pageControlSubject = pageControlSubject
     }
 
     public func collectionView(
@@ -111,6 +115,17 @@ public final class DiffableCollectionUI<
 extension DiffableCollectionUI: UserInterface {
     public func setupView(rootview: UIView) {
         setupCollectionView(rootview: rootview)
+    }
+
+    func bind() {
+        self.pageControlSubject.sink { info in
+            self.collectionView.scrollToItem(
+                at: IndexPath(row: info.currentPage, section: info.sectionIndex),
+                at: .centeredHorizontally,
+                animated: true
+            )
+            print(info)
+        }.store(in: &self.cancellable)
     }
 
     func setupBottomAnchor(hasTabber: Bool, rootview: UIView) {

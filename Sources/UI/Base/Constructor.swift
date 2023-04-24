@@ -95,14 +95,17 @@ public func create<T: DiffableCollectionSection, N: NavigationContent>(
     )
 
     let pagingInfoSubject = PassthroughSubject<PagingSectionFooterView.PagingInfo, Never>()
+    let pageControlSubject = PassthroughSubject<PagingSectionFooterView.PagingInfo, Never>()
 
     let ui = DiffableCollectionUI<T>.init(
         cellRegistration: .init(),
         supplementaryRegistration: .init(
             initialPagingInfo: initialPagingInfo,
-            pagingInfoSubject: pagingInfoSubject
+            pagingInfoSubject: pagingInfoSubject,
+            pagingControlSubject: pageControlSubject
         ),
-        pagingInfoSubject: pagingInfoSubject
+        pagingInfoSubject: pagingInfoSubject,
+        pageControlSubject: pageControlSubject
     )
     ui.delegate = delegate
     vc.inject(viewModel: .init(), ui: ui)

@@ -31,7 +31,11 @@ public class PagingSectionFooterView: UICollectionReusableView {
         return control
     }()
 
-    private var pagingInfoToken: AnyCancellable?
+    private var cancellable: Set<AnyCancellable> = []
+
+    private var subject: PassthroughSubject<PagingInfo, Never>?, section: Int?
+
+    private var pageControlsubject: PassthroughSubject<PagingInfo, Never>?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -47,13 +51,25 @@ public class PagingSectionFooterView: UICollectionReusableView {
         self.pageControl.numberOfPages = numberOfPages
     }
 
-    public func subscribeTo(subject: PassthroughSubject<PagingInfo, Never>, for section: Int) {
-        self.pagingInfoToken = subject
+    public func subscribeTo(
+        subject: PassthroughSubject<PagingInfo, Never>,
+        pageControlsubject: PassthroughSubject<PagingInfo, Never>,
+        for section: Int
+    ) {
+        self.subject = subject
+        self.section = section
+        self.pageControlsubject = pageControlsubject
+
+        subject
             .filter { $0.sectionIndex == section }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] pagingInfo in
-                self?.pageControl.currentPage = pagingInfo.currentPage
-            }
+                guard let self else { return }
+
+                if self.pageControl.currentPage != pagingInfo.currentPage {
+                    self.pageControl.currentPage = pagingInfo.currentPage
+                }
+            }.store(in: &self.cancellable)
     }
 
     private func setupView() {
@@ -65,12 +81,16 @@ public class PagingSectionFooterView: UICollectionReusableView {
             self.pageControl.centerXAnchor.constraint(equalTo: centerXAnchor),
             self.pageControl.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
+
+        self.pageControl.addTarget(
+            self,
+            action: #selector(self.pageControlValueChanged),
+            for: .valueChanged
+        )
     }
 
-    override public func prepareForReuse() {
-        super.prepareForReuse()
-
-        self.pagingInfoToken?.cancel()
-        self.pagingInfoToken = nil
+    @objc private func pageControlValueChanged() {
+        self.pageControlsubject?
+            .send(.init(sectionIndex: self.section!, currentPage: self.pageControl.currentPage))
     }
 }

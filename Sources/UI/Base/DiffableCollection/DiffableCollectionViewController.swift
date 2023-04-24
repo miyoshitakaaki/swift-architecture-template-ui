@@ -70,6 +70,8 @@ public final class DiffableCollectionViewController<
 
         self.ui.setupView(rootview: view)
 
+        self.ui.bind()
+
         self.ui.setupBottomAnchor(
             hasTabber: self.tabBarController != nil,
             rootview: view

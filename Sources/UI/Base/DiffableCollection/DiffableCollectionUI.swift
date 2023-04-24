@@ -119,12 +119,26 @@ extension DiffableCollectionUI: UserInterface {
 
     func bind() {
         self.pageControlSubject.sink { info in
-            self.collectionView.scrollToItem(
-                at: IndexPath(row: info.currentPage, section: info.sectionIndex),
-                at: .centeredHorizontally,
-                animated: true
-            )
-            print(info)
+
+            let visiableItems = self.collectionView.indexPathsForVisibleItems
+                .filter { $0.section == info.sectionIndex }
+                .sorted()
+
+            if
+                let nextIndexPath = visiableItems.last,
+                let nextCell = self.collectionView.cellForItem(at: nextIndexPath),
+                let horizontalScrollView = nextCell.superview as? UIScrollView
+            {
+                horizontalScrollView.scrollRectToVisible(
+                    .init(
+                        x: info.isFirstIndex ? info.offset : nextCell.frame.origin.x - info.offset,
+                        y: nextCell.frame.origin.y,
+                        width: nextCell.frame.width,
+                        height: nextCell.frame.height
+                    ),
+                    animated: true
+                )
+            }
         }.store(in: &self.cancellable)
     }
 

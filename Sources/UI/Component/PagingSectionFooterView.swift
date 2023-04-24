@@ -5,37 +5,51 @@ public class PagingSectionFooterView: UICollectionReusableView {
     public struct InitialPagingInfo {
         public let count: Int
         public let section: Int
+        public let offset: CGFloat
 
-        public init(count: Int, section: Int) {
+        public init(count: Int, section: Int, offset: CGFloat) {
             self.count = count
             self.section = section
+            self.offset = offset
         }
     }
 
     public struct PagingInfo: Equatable, Hashable {
         let sectionIndex: Int
         let currentPage: Int
+        let isFirstIndex: Bool
+        let offset: CGFloat
 
-        public init(sectionIndex: Int, currentPage: Int) {
+        public init(sectionIndex: Int, currentPage: Int, isFirstIndex: Bool, offset: CGFloat) {
             self.sectionIndex = sectionIndex
             self.currentPage = currentPage
+            self.isFirstIndex = isFirstIndex
+            self.offset = offset
         }
     }
 
     private lazy var pageControl: UIPageControl = {
         let control = UIPageControl()
         control.translatesAutoresizingMaskIntoConstraints = false
-        control.isUserInteractionEnabled = true
+        control.isUserInteractionEnabled = false
         control.currentPageIndicatorTintColor = .systemOrange
         control.pageIndicatorTintColor = .systemGray5
         return control
     }()
 
-    private var cancellable: Set<AnyCancellable> = []
+    private var pagingInfoToken: AnyCancellable?
+
+    private var timerToken: AnyCancellable?
 
     private var subject: PassthroughSubject<PagingInfo, Never>?, section: Int?
 
     private var pageControlsubject: PassthroughSubject<PagingInfo, Never>?
+
+    private var initialPagingInfo: InitialPagingInfo? {
+        didSet {
+            self.pageControl.numberOfPages = self.initialPagingInfo!.count
+        }
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -47,8 +61,8 @@ public class PagingSectionFooterView: UICollectionReusableView {
         self.setupView()
     }
 
-    public func configure(with numberOfPages: Int) {
-        self.pageControl.numberOfPages = numberOfPages
+    public func configure(initialPagingInfo: InitialPagingInfo) {
+        self.initialPagingInfo = initialPagingInfo
     }
 
     public func subscribeTo(
@@ -60,7 +74,7 @@ public class PagingSectionFooterView: UICollectionReusableView {
         self.section = section
         self.pageControlsubject = pageControlsubject
 
-        subject
+        self.pagingInfoToken = subject
             .filter { $0.sectionIndex == section }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] pagingInfo in
@@ -69,7 +83,7 @@ public class PagingSectionFooterView: UICollectionReusableView {
                 if self.pageControl.currentPage != pagingInfo.currentPage {
                     self.pageControl.currentPage = pagingInfo.currentPage
                 }
-            }.store(in: &self.cancellable)
+            }
     }
 
     private func setupView() {
@@ -82,15 +96,40 @@ public class PagingSectionFooterView: UICollectionReusableView {
             self.pageControl.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
 
-        self.pageControl.addTarget(
-            self,
-            action: #selector(self.pageControlValueChanged),
-            for: .valueChanged
-        )
+        self.timerToken = Timer.publish(every: 4.0, on: .main, in: .common)
+            .autoconnect()
+            .sink { [weak self] _ in
+                guard let self else { return }
+
+                if self.pageControl.currentPage + 1 == self.pageControl.numberOfPages {
+                    self.pageControl.currentPage = 0
+                } else {
+                    self.pageControl.currentPage += 1
+                }
+
+                self.pageControlValueChanged()
+            }
     }
 
     @objc private func pageControlValueChanged() {
         self.pageControlsubject?
-            .send(.init(sectionIndex: self.section!, currentPage: self.pageControl.currentPage))
+            .send(
+                .init(
+                    sectionIndex: self.section!,
+                    currentPage: self.pageControl.currentPage,
+                    isFirstIndex: self.pageControl.currentPage == 0,
+                    offset: self.initialPagingInfo!.offset
+                )
+            )
+    }
+
+    override public func prepareForReuse() {
+        super.prepareForReuse()
+
+        self.pagingInfoToken?.cancel()
+        self.pagingInfoToken = nil
+
+        self.timerToken?.cancel()
+        self.timerToken = nil
     }
 }

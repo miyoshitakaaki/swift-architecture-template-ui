@@ -22,6 +22,10 @@ let package = Package(
             url: "https://github.com/Juanpe/SkeletonView.git",
             .upToNextMajor(from: "1.0.0")
         ),
+        .package(
+            url: "https://github.com/kean/Nuke",
+            .upToNextMajor(from: "10.0.0")
+        ),
     ],
     targets: [
         .target(
@@ -29,6 +33,7 @@ let package = Package(
             dependencies: [
                 .product(name: "Utility", package: "swift-architecture-template-utility"),
                 .product(name: "SkeletonView", package: "SkeletonView"),
+                .product(name: "Nuke", package: "Nuke"),
             ]
         ),
         .testTarget(

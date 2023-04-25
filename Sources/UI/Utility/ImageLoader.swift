@@ -1,5 +1,6 @@
 import UIKit
 
+@globalActor
 actor ImageLoader {
     private enum LoaderStatus {
         case inProgress(Task<UIImage, Error>)

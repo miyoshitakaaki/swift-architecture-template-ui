@@ -89,18 +89,21 @@ public final class DiffableCollectionUI<
     private let supplementaryRegistration: S.SupplementaryRegistration
     private let pagingInfoSubject: PassthroughSubject<PagingSectionFooterView.PagingInfo, Never>
     private let pageControlSubject: PassthroughSubject<PagingSectionFooterView.PagingInfo, Never>
+    private let bottomFixedView: BottomFixedViewProtocol?
     private var cancellable: Set<AnyCancellable> = []
 
     public init(
         cellRegistration: S.CellRegistration,
         supplementaryRegistration: S.SupplementaryRegistration,
         pagingInfoSubject: PassthroughSubject<PagingSectionFooterView.PagingInfo, Never>,
-        pageControlSubject: PassthroughSubject<PagingSectionFooterView.PagingInfo, Never>
+        pageControlSubject: PassthroughSubject<PagingSectionFooterView.PagingInfo, Never>,
+        bottomFixedView: BottomFixedViewProtocol? = nil
     ) {
         self.cellRegistration = cellRegistration
         self.supplementaryRegistration = supplementaryRegistration
         self.pagingInfoSubject = pagingInfoSubject
         self.pageControlSubject = pageControlSubject
+        self.bottomFixedView = bottomFixedView
     }
 
     public func collectionView(
@@ -114,7 +117,8 @@ public final class DiffableCollectionUI<
 
 extension DiffableCollectionUI: UserInterface {
     public func setupView(rootview: UIView) {
-        setupCollectionView(rootview: rootview)
+        self.setupCollectionView(rootview: rootview)
+        self.setupBottomFixedView(rootView: rootview)
     }
 
     func bind() {
@@ -144,8 +148,13 @@ extension DiffableCollectionUI: UserInterface {
 
     func setupBottomAnchor(hasTabber: Bool, rootview: UIView) {
         if hasTabber {
-            self.collectionView.bottomAnchor
-                .constraint(equalTo: rootview.safeAreaLayoutGuide.bottomAnchor).isActive = true
+            if let view = self.bottomFixedView {
+                self.collectionView.bottomAnchor
+                    .constraint(equalTo: view.topAnchor).isActive = true
+            } else {
+                self.collectionView.bottomAnchor
+                    .constraint(equalTo: rootview.safeAreaLayoutGuide.bottomAnchor).isActive = true
+            }
         } else {
             self.collectionView.bottomAnchor
                 .constraint(equalTo: rootview.bottomAnchor).isActive = true
@@ -175,6 +184,8 @@ extension DiffableCollectionUI: UserInterface {
         fetchRemote: Bool = true,
         completion: @escaping (Result<[S], AppError>) -> Void
     ) {
+        self.bottomFixedView?.reload()
+
         self.uiDelegate?.willfetchAll(pullToRefresh: pullToRefresh)
 
         Task {
@@ -199,7 +210,7 @@ extension DiffableCollectionUI: UserInterface {
 }
 
 private extension DiffableCollectionUI {
-    private func setupCollectionView(rootview: UIView) {
+    func setupCollectionView(rootview: UIView) {
         rootview.addSubviews(
             self.collectionView,
             constraints:
@@ -233,5 +244,17 @@ private extension DiffableCollectionUI {
                 }
             }
         }), for: .valueChanged)
+    }
+
+    func setupBottomFixedView(rootView: UIView) {
+        if let view = self.bottomFixedView {
+            rootView.addSubviews(
+                view,
+                constraints:
+                view.bottomAnchor.constraint(equalTo: rootView.safeAreaLayoutGuide.bottomAnchor),
+                view.leadingAnchor.constraint(equalTo: rootView.safeAreaLayoutGuide.leadingAnchor),
+                view.trailingAnchor.constraint(equalTo: rootView.safeAreaLayoutGuide.trailingAnchor)
+            )
+        }
     }
 }

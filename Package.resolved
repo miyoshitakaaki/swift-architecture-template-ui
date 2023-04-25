@@ -1,21 +1,21 @@
 {
   "pins" : [
     {
+      "identity" : "skeletonview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Juanpe/SkeletonView.git",
+      "state" : {
+        "revision" : "739a4f5d78731bebc48811c75fa9e1f4c4cef23e",
+        "version" : "1.30.4"
+      }
+    },
+    {
       "identity" : "swift-architecture-template-utility",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/miyoshi-cq/swift-architecture-template-utility",
       "state" : {
-        "revision" : "f7e40b4f61cf8055acc632b6c4ba145e1972abe4",
-        "version" : "0.1.2"
-      }
-    },
-    {
-      "identity" : "swift-collections",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-collections.git",
-      "state" : {
-        "revision" : "48254824bb4248676bf7ce56014ff57b142b77eb",
-        "version" : "1.0.2"
+        "revision" : "04604f4518c4fc456ee521c3d407eebd09a5f109",
+        "version" : "0.18.4"
       }
     }
   ],

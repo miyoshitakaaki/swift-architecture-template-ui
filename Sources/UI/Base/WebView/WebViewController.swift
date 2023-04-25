@@ -145,7 +145,8 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate, Activ
         titleForURLPatterns: [(title: String, pattern: String)] = [],
         webviewInterceptHandlers: [(handler: (_ url: URL) -> Void, pattern: String)] = [],
         needRefreshNotificationNames: [Notification.Name] = [],
-        noNeedAccessoryView: Bool = false
+        noNeedAccessoryView: Bool = false,
+        configure: (WKWebView) -> Void = { _ in }
     ) {
         self.url = url
         self.localFilePath = localFilePath
@@ -168,6 +169,8 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate, Activ
         self.noNeedAccessoryView = noNeedAccessoryView
 
         super.init(nibName: nil, bundle: nil)
+
+        configure(self.webView)
     }
 
     @available(*, unavailable)

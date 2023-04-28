@@ -39,7 +39,7 @@ public class PagingSectionFooterView: UICollectionReusableView {
 
     private var pagingInfoToken: AnyCancellable?
 
-    private var timerToken: AnyCancellable?
+    private var timer: Timer?
 
     private var subject: PassthroughSubject<PagingInfo, Never>?, section: Int?
 
@@ -96,19 +96,17 @@ public class PagingSectionFooterView: UICollectionReusableView {
             self.pageControl.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
 
-        self.timerToken = Timer.publish(every: 4.0, on: .main, in: .common)
-            .autoconnect()
-            .sink { [weak self] _ in
-                guard let self else { return }
+        self.timer = Timer.scheduledTimer(withTimeInterval: 4, repeats: true) { [weak self] _ in
+            guard let self else { return }
 
-                if self.pageControl.currentPage + 1 == self.pageControl.numberOfPages {
-                    self.pageControl.currentPage = 0
-                } else {
-                    self.pageControl.currentPage += 1
-                }
-
-                self.pageControlValueChanged()
+            if self.pageControl.currentPage + 1 == self.pageControl.numberOfPages {
+                self.pageControl.currentPage = 0
+            } else {
+                self.pageControl.currentPage += 1
             }
+
+            self.pageControlValueChanged()
+        }
     }
 
     @objc private func pageControlValueChanged() {
@@ -129,7 +127,6 @@ public class PagingSectionFooterView: UICollectionReusableView {
         self.pagingInfoToken?.cancel()
         self.pagingInfoToken = nil
 
-        self.timerToken?.cancel()
-        self.timerToken = nil
+        self.timer = nil
     }
 }

@@ -26,6 +26,7 @@ public struct ListSection<
     }
 }
 
+@MainActor
 public final class ListViewModel<
     T: Hashable,
     Parameter,

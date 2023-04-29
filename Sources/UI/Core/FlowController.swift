@@ -78,9 +78,7 @@ public extension FlowController {
 
 public extension FlowController where T == NavigationController {
     func clear() {
-        DispatchQueue.main.async {
-            self.navigation.viewControllers = []
-        }
+        self.navigation.viewControllers = []
     }
 
     var rootViewController: UIViewController? {
@@ -245,9 +243,7 @@ public extension FlowController where T == NavigationController {
 
 public extension FlowController where T == TabBarController {
     func clear() {
-        DispatchQueue.main.async {
-            self.navigation.viewControllers = []
-        }
+        self.navigation.viewControllers = []
     }
 
     var rootViewController: UIViewController? {

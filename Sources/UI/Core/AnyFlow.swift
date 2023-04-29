@@ -1,6 +1,7 @@
 import UIKit
 import Utility
 
+@MainActor
 open class AnyFlow<Flow: FlowBase>: UIViewController, FlowController,
     AlertPresentable where Flow.T == NavigationController
 {
@@ -45,12 +46,6 @@ open class AnyFlow<Flow: FlowBase>: UIViewController, FlowController,
         fatalError("init(coder:) has not been implemented")
     }
 
-    deinit {
-        if self.isFirstFlow {
-            self.clear()
-        }
-    }
-
     override open func viewDidLoad() {
         super.viewDidLoad()
 
@@ -79,6 +74,14 @@ open class AnyFlow<Flow: FlowBase>: UIViewController, FlowController,
         super.viewDidLayoutSubviews()
 
         children.first?.view.frame = view.bounds
+    }
+
+    override open func viewDidDisappear(_ animated: Bool) {
+        if self.isFirstFlow {
+            self.clear()
+        }
+
+        super.viewDidDisappear(animated)
     }
 
     override open func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {

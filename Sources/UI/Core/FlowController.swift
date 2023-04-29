@@ -14,6 +14,7 @@ public enum ShowType {
         push
 }
 
+@MainActor
 public protocol FlowBase {
     associatedtype T
     associatedtype Child
@@ -33,6 +34,7 @@ public protocol FlowBase {
     )
 }
 
+@MainActor
 open class BaseFlow<Child>: FlowBase {
     public let root: Child
     public let from: any FlowController.Type
@@ -40,7 +42,7 @@ open class BaseFlow<Child>: FlowBase {
     public let alertMessageAlignment: NSTextAlignment?
     public let alertTintColor: UIColor?
 
-    public required init(
+    public required nonisolated init(
         navigation: NavigationController,
         root: Child,
         from: any FlowController.Type,
@@ -55,6 +57,7 @@ open class BaseFlow<Child>: FlowBase {
     }
 }
 
+@MainActor
 public protocol FlowController: UIViewController, FlowBase, AlertPresentable {
     var delegate: FlowDelegate? { get set }
     var childProvider: (Child) -> UIViewController { get }
@@ -62,6 +65,7 @@ public protocol FlowController: UIViewController, FlowBase, AlertPresentable {
     func clear()
 }
 
+@MainActor
 public extension FlowController {
     var childProvider: (Child) -> UIViewController {{ _ in
         UIViewController(nibName: nil, bundle: nil)
@@ -76,6 +80,7 @@ public extension FlowController {
     }
 }
 
+@MainActor
 public extension FlowController where T == NavigationController {
     func clear() {
         self.navigation.viewControllers = []
@@ -159,7 +164,6 @@ public extension FlowController where T == NavigationController {
         }
     }
 
-    @MainActor
     func show(error: AppError, okAction: ((UIAlertAction) -> Void)? = nil) {
         switch error {
         case let .normal(title, message):
@@ -241,6 +245,7 @@ public extension FlowController where T == NavigationController {
     }
 }
 
+@MainActor
 public extension FlowController where T == TabBarController {
     func clear() {
         self.navigation.viewControllers = []
@@ -250,7 +255,6 @@ public extension FlowController where T == TabBarController {
         self.navigation.viewControllers?.first
     }
 
-    @MainActor
     func show(error: AppError) {
         switch error {
         case let .normal(title, message):

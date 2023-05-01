@@ -161,7 +161,7 @@ extension DiffableCollectionUI: UserInterface {
         }
     }
 
-    func reloadSection(section: S, fetchRemote: Bool) {
+    func setItems(section: S, fetchRemote: Bool) {
         Task {
             let result = await section.fetch(fetchRemote: fetchRemote)
 
@@ -178,7 +178,7 @@ extension DiffableCollectionUI: UserInterface {
         }
     }
 
-    func reload(
+    func setSections(
         pullToRefresh: Bool = false,
         fetchRemote: Bool = true,
         completion: @escaping (Result<[S], AppError>) -> Void
@@ -230,12 +230,12 @@ private extension DiffableCollectionUI {
         }
 
         self.collectionView.refreshControl?.addAction(.init(handler: { [weak self] _ in
-            self?.reload(pullToRefresh: true, fetchRemote: true) { [weak self] result in
+            self?.setSections(pullToRefresh: true, fetchRemote: true) { [weak self] result in
 
                 switch result {
                 case let .success(sections):
                     sections.forEach { [weak self] section in
-                        self?.reloadSection(section: section, fetchRemote: true)
+                        self?.setItems(section: section, fetchRemote: true)
                     }
 
                 case .failure:

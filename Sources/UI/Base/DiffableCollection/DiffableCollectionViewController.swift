@@ -162,11 +162,11 @@ public final class DiffableCollectionViewController<
 
         switch reloadType {
         case .local:
-            self.ui.reload(fetchRemote: false) { result in
+            self.ui.setSections(fetchRemote: false) { result in
                 switch result {
                 case let .success(sections):
                     sections.forEach { [weak self] section in
-                        self?.ui.reloadSection(section: section, fetchRemote: false)
+                        self?.ui.setItems(section: section, fetchRemote: false)
                     }
 
                 case .failure:
@@ -174,14 +174,14 @@ public final class DiffableCollectionViewController<
                 }
             }
         case let .remoteOnlySection(indexes):
-            self.ui.reload(fetchRemote: false) { result in
+            self.ui.setSections(fetchRemote: false) { result in
                 switch result {
                 case let .success(sections):
                     sections.enumerated().forEach { [weak self] index, section in
                         if indexes.contains(index) {
-                            self?.ui.reloadSection(section: section, fetchRemote: true)
+                            self?.ui.setItems(section: section, fetchRemote: true)
                         } else {
-                            self?.ui.reloadSection(section: section, fetchRemote: false)
+                            self?.ui.setItems(section: section, fetchRemote: false)
                         }
                     }
 
@@ -209,11 +209,11 @@ public final class DiffableCollectionViewController<
 
             self.lastFetchAllDate = .init()
 
-            self.ui.reload(fetchRemote: true) { result in
+            self.ui.setSections(fetchRemote: true) { result in
                 switch result {
                 case let .success(sections):
                     sections.forEach { [weak self] section in
-                        self?.ui.reloadSection(section: section, fetchRemote: true)
+                        self?.ui.setItems(section: section, fetchRemote: true)
                     }
 
                 case .failure:

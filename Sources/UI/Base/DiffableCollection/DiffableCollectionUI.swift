@@ -168,7 +168,6 @@ extension DiffableCollectionUI: UserInterface {
             switch result {
             case let .success(result):
                 var snapshot = self.dataSource.snapshot()
-                snapshot.reloadSections([section])
                 snapshot.appendItems(result, toSection: section)
                 self.dataSource.apply(snapshot, animatingDifferences: false)
                 self.collectionView.refreshControl?.endRefreshing()

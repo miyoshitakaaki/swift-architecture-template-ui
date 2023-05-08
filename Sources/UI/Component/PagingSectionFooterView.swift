@@ -6,11 +6,18 @@ public class PagingSectionFooterView: UICollectionReusableView {
         public let count: Int
         public let section: Int
         public let offset: CGFloat
+        public let color: UIColor
 
-        public init(count: Int, section: Int, offset: CGFloat) {
+        public init(
+            count: Int,
+            section: Int,
+            offset: CGFloat,
+            color: UIColor
+        ) {
             self.count = count
             self.section = section
             self.offset = offset
+            self.color = color
         }
     }
 
@@ -20,7 +27,12 @@ public class PagingSectionFooterView: UICollectionReusableView {
         let isFirstIndex: Bool
         let offset: CGFloat
 
-        public init(sectionIndex: Int, currentPage: Int, isFirstIndex: Bool, offset: CGFloat) {
+        public init(
+            sectionIndex: Int,
+            currentPage: Int,
+            isFirstIndex: Bool,
+            offset: CGFloat
+        ) {
             self.sectionIndex = sectionIndex
             self.currentPage = currentPage
             self.isFirstIndex = isFirstIndex
@@ -47,7 +59,9 @@ public class PagingSectionFooterView: UICollectionReusableView {
 
     private var initialPagingInfo: InitialPagingInfo? {
         didSet {
-            self.pageControl.numberOfPages = self.initialPagingInfo!.count
+            guard let initialPagingInfo else { return }
+            self.pageControl.currentPageIndicatorTintColor = initialPagingInfo.color
+            self.pageControl.numberOfPages = initialPagingInfo.count
         }
     }
 

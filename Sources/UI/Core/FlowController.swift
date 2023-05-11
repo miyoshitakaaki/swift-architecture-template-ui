@@ -22,6 +22,7 @@ public protocol FlowBase {
     var root: Child { get }
     var navigation: T { get }
     var from: any FlowController.Type { get }
+    var present: Bool { get }
     var alertMessageAlignment: NSTextAlignment? { get }
     var alertTintColor: UIColor? { get }
 
@@ -29,6 +30,7 @@ public protocol FlowBase {
         navigation: T,
         root: Child,
         from: any FlowController.Type,
+        present: Bool,
         alertMessageAlignment: NSTextAlignment?,
         alertTintColor: UIColor?
     )
@@ -38,6 +40,7 @@ public protocol FlowBase {
 open class BaseFlow<Child>: FlowBase {
     public let root: Child
     public let from: any FlowController.Type
+    public let present: Bool
     public let navigation: NavigationController
     public let alertMessageAlignment: NSTextAlignment?
     public let alertTintColor: UIColor?
@@ -46,12 +49,14 @@ open class BaseFlow<Child>: FlowBase {
         navigation: NavigationController,
         root: Child,
         from: any FlowController.Type,
+        present: Bool,
         alertMessageAlignment: NSTextAlignment?,
         alertTintColor: UIColor?
     ) {
         self.navigation = navigation
         self.root = root
         self.from = from
+        self.present = present
         self.alertMessageAlignment = alertMessageAlignment
         self.alertTintColor = alertTintColor
     }
@@ -136,6 +141,7 @@ public extension FlowController where T == NavigationController {
                 navigation: navigation,
                 root: root,
                 from: Self.self,
+                present: true,
                 alertMessageAlignment: alertMessageAlignment,
                 alertTintColor: alertTintColor
             )
@@ -156,6 +162,7 @@ public extension FlowController where T == NavigationController {
                 navigation: self.navigation,
                 root: root,
                 from: Self.self,
+                present: false,
                 alertMessageAlignment: alertMessageAlignment,
                 alertTintColor: alertTintColor
             )

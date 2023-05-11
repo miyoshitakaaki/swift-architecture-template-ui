@@ -82,6 +82,7 @@ public func create<T: DiffableCollectionSection, N: NavigationContent>(
     screenEventForAnalytics: [AnalyticsEvent],
     needRefreshNotificationNames: [Notification.Name],
     needForceRefreshNotificationNames: [Notification.Name],
+    needSectionRefreshNotificationNames: [(name: Notification.Name, sectionIndexes: [Int])] = [],
     delegate: any DiffableCollectionEvent,
     initialPagingInfo: [PagingSectionFooterView.InitialPagingInfo],
     bottomFixedView: BottomFixedViewProtocol?
@@ -92,7 +93,8 @@ public func create<T: DiffableCollectionSection, N: NavigationContent>(
         screenNameForAnalytics: screenNameForAnalytics,
         screenEventForAnalytics: screenEventForAnalytics,
         needRefreshNotificationNames: needRefreshNotificationNames,
-        needForceRefreshNotificationNames: needForceRefreshNotificationNames
+        needForceRefreshNotificationNames: needForceRefreshNotificationNames,
+        needSectionRefreshNotificationNames: needSectionRefreshNotificationNames
     )
 
     let pagingInfoSubject = PassthroughSubject<PagingSectionFooterView.PagingInfo, Never>()

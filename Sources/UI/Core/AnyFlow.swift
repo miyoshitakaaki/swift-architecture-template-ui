@@ -23,19 +23,20 @@ open class AnyFlow<Flow: FlowBase>: UIViewController, FlowController,
 
     public let alertTintColor: UIColor?
 
-    private let isFirstFlow: Bool
+    public let present: Bool
 
     public required init(
         navigation: NavigationController,
         root: Flow.Child,
         from: any FlowController.Type,
+        present: Bool,
         alertMessageAlignment: NSTextAlignment?,
         alertTintColor: UIColor?
     ) {
-        self.isFirstFlow = navigation.viewControllers.isEmpty
         self.navigation = navigation
         self.root = root
         self.from = from
+        self.present = present
         self.alertMessageAlignment = alertMessageAlignment
         self.alertTintColor = alertTintColor
         super.init(nibName: nil, bundle: nil)
@@ -77,7 +78,7 @@ open class AnyFlow<Flow: FlowBase>: UIViewController, FlowController,
     }
 
     override open func viewDidDisappear(_ animated: Bool) {
-        if self.isFirstFlow {
+        if self.present {
             self.clear()
         }
 

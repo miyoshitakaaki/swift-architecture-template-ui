@@ -78,14 +78,14 @@ public func create<T: DiffableCollectionSection, N: NavigationContent>(
     type: T.Type,
     initialReloadType: ReloadType,
     content: N,
-    screenNameForAnalytics: [AnalyticsScreen],
-    screenEventForAnalytics: [AnalyticsEvent],
-    needRefreshNotificationNames: [Notification.Name],
-    needForceRefreshNotificationNames: [Notification.Name],
+    screenNameForAnalytics: [AnalyticsScreen] = [],
+    screenEventForAnalytics: [AnalyticsEvent] = [],
+    needRefreshNotificationNames: [Notification.Name] = [],
+    needForceRefreshNotificationNames: [Notification.Name] = [],
     needSectionRefreshNotificationNames: [(name: Notification.Name, sectionIndexes: [Int])] = [],
     delegate: any DiffableCollectionEvent,
-    initialPagingInfo: [PagingSectionFooterView.InitialPagingInfo],
-    bottomFixedView: BottomFixedViewProtocol?
+    initialPagingInfo: [PagingSectionFooterView.InitialPagingInfo] = [],
+    bottomFixedView: BottomFixedViewProtocol? = nil
 ) -> DiffableCollectionViewController<T, N> {
     let vc = DiffableCollectionViewController<T, N>(
         initialReloadType: initialReloadType,

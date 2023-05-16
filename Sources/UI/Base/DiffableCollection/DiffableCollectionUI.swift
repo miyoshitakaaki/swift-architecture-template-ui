@@ -133,9 +133,21 @@ extension DiffableCollectionUI: UserInterface {
                 let nextCell = self.collectionView.cellForItem(at: nextIndexPath),
                 let horizontalScrollView = nextCell.superview as? UIScrollView
             {
+                let x: CGFloat = {
+                    if #available(iOS 15, *) {
+                        return info.isFirstIndex
+                            ? info.offset
+                            : nextCell.frame.origin.x - info.offset
+                    } else {
+                        return info.isFirstIndex
+                            ? -info.offset
+                            : nextCell.frame.origin.x + info.offset
+                    }
+                }()
+
                 horizontalScrollView.scrollRectToVisible(
                     .init(
-                        x: info.isFirstIndex ? info.offset : nextCell.frame.origin.x - info.offset,
+                        x: x,
                         y: nextCell.frame.origin.y,
                         width: nextCell.frame.width,
                         height: nextCell.frame.height

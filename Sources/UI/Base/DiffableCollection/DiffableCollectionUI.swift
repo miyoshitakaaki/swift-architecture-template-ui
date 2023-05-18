@@ -160,13 +160,8 @@ extension DiffableCollectionUI: UserInterface {
 
     func setupBottomAnchor(hasTabber: Bool, rootview: UIView) {
         if hasTabber {
-            if let view = self.bottomFixedView {
-                self.collectionView.bottomAnchor
-                    .constraint(equalTo: view.topAnchor).isActive = true
-            } else {
-                self.collectionView.bottomAnchor
-                    .constraint(equalTo: rootview.safeAreaLayoutGuide.bottomAnchor).isActive = true
-            }
+            self.collectionView.bottomAnchor
+                .constraint(equalTo: rootview.safeAreaLayoutGuide.bottomAnchor).isActive = true
         } else {
             self.collectionView.bottomAnchor
                 .constraint(equalTo: rootview.bottomAnchor).isActive = true

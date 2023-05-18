@@ -12,7 +12,11 @@ public struct SelectedCellInfo<T: CollectionList> {
 public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewDelegate {
     private lazy var collectionView: UICollectionView = .init(
         frame: .zero,
-        collectionViewLayout: collection.composableLayout
+        collectionViewLayout: UICollectionViewCompositionalLayout(
+            sectionProvider: { [weak self] _, _ in
+                self?.collection.sectionLayout
+            }
+        )
     )
 
     private var cellProvider: (UICollectionView, IndexPath, T.Cell.ViewData)

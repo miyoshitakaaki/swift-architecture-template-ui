@@ -9,8 +9,8 @@ public extension NSCollectionLayoutSection {
         itemWidth: CGFloat,
         itemHeight: NSCollectionLayoutDimension,
         interGroupSpacing: CGFloat = 16,
-        headerHeight: CGFloat,
-        footerHeight: CGFloat = 56,
+        headerHeight: NSCollectionLayoutDimension? = nil,
+        footerHeight: NSCollectionLayoutDimension? = nil,
         leading: CGFloat = 16,
         trailing: CGFloat = 16,
         bottom: CGFloat = 48,
@@ -74,11 +74,11 @@ public extension NSCollectionLayoutSection {
         )
         section.orthogonalScrollingBehavior = orthogonalScrollingBehavior
 
-        if showHeader {
+        if let headerHeight, showHeader {
             let sectionHeaderItem = NSCollectionLayoutBoundarySupplementaryItem(
                 layoutSize: NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
-                    heightDimension: .absolute(headerHeight)
+                    heightDimension: headerHeight
                 ),
                 elementKind: UICollectionView.elementKindSectionHeader,
                 alignment: .top
@@ -87,11 +87,11 @@ public extension NSCollectionLayoutSection {
             section.boundarySupplementaryItems += [sectionHeaderItem]
         }
 
-        if showFooter {
+        if let footerHeight, showFooter {
             let sectionFooterItem = NSCollectionLayoutBoundarySupplementaryItem(
                 layoutSize: NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
-                    heightDimension: .absolute(footerHeight)
+                    heightDimension: footerHeight
                 ),
                 elementKind: UICollectionView.elementKindSectionFooter,
                 alignment: .bottom

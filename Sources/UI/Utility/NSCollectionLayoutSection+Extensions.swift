@@ -5,6 +5,7 @@ import UIKit
 public extension NSCollectionLayoutSection {
     static func create(
         isVertical: Bool,
+        rowCount: Int = 1,
         itemWidth: CGFloat,
         itemHeight: NSCollectionLayoutDimension,
         interGroupSpacing: CGFloat = 16,
@@ -33,12 +34,14 @@ public extension NSCollectionLayoutSection {
             if isVertical {
                 return NSCollectionLayoutGroup.vertical(
                     layoutSize: groupSize,
-                    subitems: [item]
+                    subitem: item,
+                    count: rowCount
                 )
             } else {
                 return NSCollectionLayoutGroup.horizontal(
                     layoutSize: groupSize,
-                    subitems: [item]
+                    subitem: item,
+                    count: rowCount
                 )
             }
         }()

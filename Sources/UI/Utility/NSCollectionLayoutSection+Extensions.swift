@@ -26,25 +26,43 @@ public extension NSCollectionLayoutSection {
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         let groupSize = NSCollectionLayoutSize(
-            widthDimension: .absolute(itemWidth),
+            widthDimension: .absolute(itemWidth * CGFloat(rowCount) + 16 * CGFloat(rowCount - 1)),
             heightDimension: itemHeight
         )
 
         let group = {
             if isVertical {
-                return NSCollectionLayoutGroup.vertical(
-                    layoutSize: groupSize,
-                    subitem: item,
-                    count: rowCount
-                )
+                if rowCount > 1 {
+                    return NSCollectionLayoutGroup.vertical(
+                        layoutSize: groupSize,
+                        subitem: item,
+                        count: rowCount
+                    )
+                } else {
+                    return NSCollectionLayoutGroup.vertical(
+                        layoutSize: groupSize,
+                        subitems: [item]
+                    )
+                }
             } else {
-                return NSCollectionLayoutGroup.horizontal(
-                    layoutSize: groupSize,
-                    subitem: item,
-                    count: rowCount
-                )
+                if rowCount > 1 {
+                    return NSCollectionLayoutGroup.horizontal(
+                        layoutSize: groupSize,
+                        subitem: item,
+                        count: rowCount
+                    )
+                } else {
+                    return NSCollectionLayoutGroup.horizontal(
+                        layoutSize: groupSize,
+                        subitems: [item]
+                    )
+                }
             }
         }()
+
+        if rowCount > 1 {
+            group.interItemSpacing = .fixed(16)
+        }
 
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = interGroupSpacing

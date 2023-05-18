@@ -15,6 +15,7 @@ public extension NSCollectionLayoutSection {
         bottom: CGFloat = 48,
         orthogonalScrollingBehavior: UICollectionLayoutSectionOrthogonalScrollingBehavior,
         showHeader: Bool,
+        pinToVisibleBounds: Bool = false,
         pagingInfoSubject: PassthroughSubject<PagingSectionFooterView.PagingInfo, Never>? = nil,
         showFooter: Bool
     ) -> NSCollectionLayoutSection {
@@ -61,7 +62,7 @@ public extension NSCollectionLayoutSection {
                 elementKind: UICollectionView.elementKindSectionHeader,
                 alignment: .top
             )
-
+            sectionHeaderItem.pinToVisibleBounds = pinToVisibleBounds
             section.boundarySupplementaryItems += [sectionHeaderItem]
         }
 

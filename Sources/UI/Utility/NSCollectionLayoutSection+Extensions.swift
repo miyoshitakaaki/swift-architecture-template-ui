@@ -11,14 +11,13 @@ public extension NSCollectionLayoutSection {
         interGroupSpacing: CGFloat = 16,
         headerHeight: NSCollectionLayoutDimension? = nil,
         footerHeight: NSCollectionLayoutDimension? = nil,
+        top: CGFloat = 16,
         leading: CGFloat = 16,
         trailing: CGFloat = 16,
         bottom: CGFloat = 48,
         orthogonalScrollingBehavior: UICollectionLayoutSectionOrthogonalScrollingBehavior,
-        showHeader: Bool,
         pinToVisibleBounds: Bool = false,
-        pagingInfoSubject: PassthroughSubject<PagingSectionFooterView.PagingInfo, Never>? = nil,
-        showFooter: Bool
+        pagingInfoSubject: PassthroughSubject<PagingSectionFooterView.PagingInfo, Never>? = nil
     ) -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
@@ -67,14 +66,14 @@ public extension NSCollectionLayoutSection {
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = interGroupSpacing
         section.contentInsets = NSDirectionalEdgeInsets(
-            top: 16,
+            top: top,
             leading: leading,
             bottom: bottom,
             trailing: trailing
         )
         section.orthogonalScrollingBehavior = orthogonalScrollingBehavior
 
-        if let headerHeight, showHeader {
+        if let headerHeight {
             let sectionHeaderItem = NSCollectionLayoutBoundarySupplementaryItem(
                 layoutSize: NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
@@ -87,7 +86,7 @@ public extension NSCollectionLayoutSection {
             section.boundarySupplementaryItems += [sectionHeaderItem]
         }
 
-        if let footerHeight, showFooter {
+        if let footerHeight {
             let sectionFooterItem = NSCollectionLayoutBoundarySupplementaryItem(
                 layoutSize: NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),

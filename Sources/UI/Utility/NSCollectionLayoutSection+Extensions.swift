@@ -15,7 +15,7 @@ public extension NSCollectionLayoutSection {
         leading: CGFloat = 16,
         trailing: CGFloat = 16,
         bottom: CGFloat = 48,
-        orthogonalScrollingBehavior: UICollectionLayoutSectionOrthogonalScrollingBehavior,
+        orthogonalScrollingBehavior: UICollectionLayoutSectionOrthogonalScrollingBehavior = .none,
         pinToVisibleBounds: Bool = false,
         pagingInfoSubject: PassthroughSubject<PagingSectionFooterView.PagingInfo, Never>? = nil
     ) -> NSCollectionLayoutSection {

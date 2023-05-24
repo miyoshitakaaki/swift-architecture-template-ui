@@ -96,4 +96,8 @@ open class AnyFlow<Flow: FlowBase>: UIViewController, FlowController,
     open func start() {
         self.show(self.root, root: true)
     }
+
+    open func didErrorOccured(error: AppError) {
+        self.show(error: error)
+    }
 }

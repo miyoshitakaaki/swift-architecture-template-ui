@@ -14,7 +14,7 @@ public struct SelectedTableCell<T: Table> {
 }
 
 @MainActor
-public protocol TableViewControllerDelegate: FlowController {
+public protocol TableViewControllerDelegate: AnyObject {
     func didItemSelected(cellData: SelectedTableCellInfo<some Table>)
     func didCellDequeued(cell: SelectedTableCell<some Table>)
     func didHeaderFooterDequeued(

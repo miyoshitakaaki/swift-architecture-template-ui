@@ -4,21 +4,9 @@ import UIKit
 import Utility
 
 @MainActor
-public protocol CollectionViewControllerDelegate: FlowController {
+public protocol CollectionViewControllerDelegate: AnyObject {
     func didItemSelected(selectedInfo: SelectedCellInfo<some CollectionList>)
     func didErrorOccured(error: AppError)
-}
-
-public extension CollectionViewControllerDelegate where T == NavigationController {
-    func didErrorOccured(error: AppError) {
-        self.show(error: error)
-    }
-}
-
-public extension CollectionViewControllerDelegate where T == TabBarController {
-    func didErrorOccured(error: AppError) {
-        self.show(error: error)
-    }
 }
 
 extension CollectionViewController: VCInjectable {

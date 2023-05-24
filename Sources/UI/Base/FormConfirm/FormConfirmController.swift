@@ -2,7 +2,7 @@ import Combine
 import UIKit
 import Utility
 
-public protocol FormConfirmControllerDelegate: FlowController {
+public protocol FormConfirmControllerDelegate: AnyObject {
     func didConfirmCompletionButtonTapped<T>(data: T)
     func didErrorOccured(error: AppError)
 }

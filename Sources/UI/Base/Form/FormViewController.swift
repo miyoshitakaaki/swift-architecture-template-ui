@@ -3,7 +3,7 @@ import UIKit
 import Utility
 
 @MainActor
-public protocol FormViewControllerDelegate: FlowController {
+public protocol FormViewControllerDelegate: AnyObject {
     func didCompletionButtonTapped<F: Form>(data: F.Input, form: F)
     func didErrorOccured(error: AppError)
 }

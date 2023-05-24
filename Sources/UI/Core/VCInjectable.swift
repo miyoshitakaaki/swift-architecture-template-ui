@@ -24,26 +24,41 @@ public extension VCInjectable {
     }
 
     func setupNavigationBar(content: NavigationContent) {
-        let target = (self.parent as? (any FlowController)) ?? self
+        func setup(target: UIViewController) {
+            target.navigationItem.rightBarButtonItems = content.rightNavigationItems
+            target.navigationItem.leftBarButtonItems = content.leftNavigationItems
+            self.setupNavigationTitle(content.title)
+            target.navigationItem.rightBarButtonItem?.tintColor = content
+                .rightBarButtonItemTintColor
+            target.navigationItem.leftBarButtonItem?.tintColor = content.leftBarButtonItemTintColor
+        }
 
-        target.navigationItem.rightBarButtonItems = content.rightNavigationItems
-        target.navigationItem.leftBarButtonItems = content.leftNavigationItems
-
-        self.setupNavigationTitle(content.title)
-
-        target.navigationItem.rightBarButtonItem?.tintColor = content.rightBarButtonItemTintColor
-        target.navigationItem.leftBarButtonItem?.tintColor = content.leftBarButtonItemTintColor
+        if self.parent is UIPageViewController {
+            setup(target: self)
+        } else if self.parent is UINavigationController {
+            setup(target: self)
+        } else {
+            setup(target: self.parent ?? self)
+        }
     }
 
     func setupNavigationTitle(_ title: String?) {
-        let target = (self.parent as? (any FlowController)) ?? self
+        func setup(target: UIViewController) {
+            if let title {
+                target.navigationItem.titleView = UILabel(style: .init(style: { label in
+                    label.font = .systemFont(ofSize: 17, weight: .semibold)
+                }), title: title)
+            } else {
+                target.navigationItem.titleView = UIView()
+            }
+        }
 
-        if let title {
-            target.navigationItem.titleView = UILabel(style: .init(style: { label in
-                label.font = .systemFont(ofSize: 17, weight: .semibold)
-            }), title: title)
+        if self.parent is UIPageViewController {
+            setup(target: self)
+        } else if self.parent is UINavigationController {
+            setup(target: self)
         } else {
-            target.navigationItem.titleView = UIView()
+            setup(target: self.parent ?? self)
         }
     }
 }

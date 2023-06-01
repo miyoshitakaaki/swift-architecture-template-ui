@@ -298,7 +298,14 @@ extension WebViewController: WKUIDelegate {
         initiatedByFrame frame: WKFrameInfo,
         completionHandler: @escaping () -> Void
     ) {
-        self.present(title: "", message: message) { _ in
+        // https://hanru-yeh.medium.com/wkwebview-crashed-when-window-alert-e00255b527da
+        let isVisible = self.isViewLoaded && self.view.window != nil
+
+        if isVisible {
+            self.present(title: "", message: message) { _ in
+                completionHandler()
+            }
+        } else {
             completionHandler()
         }
     }

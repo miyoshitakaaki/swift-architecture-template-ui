@@ -126,6 +126,12 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate, Activ
 
     private let noNeedAccessoryView: Bool
 
+    private let needLocationPermissionUrls: [String]
+
+    private let locationPermissionSuccessHandler: () -> Void
+
+    private let locationPermissionDenyHandler: () -> Void
+
     public init(
         url: String? = nil,
         localFilePath: String? = nil,
@@ -146,6 +152,9 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate, Activ
         webviewInterceptHandlers: [(handler: (_ url: URL) -> Void, pattern: String)] = [],
         needRefreshNotificationNames: [Notification.Name] = [],
         noNeedAccessoryView: Bool = false,
+        needLocationPermissionUrls: [String] = [],
+        locationPermissionSuccessHandler: @escaping () -> Void = {},
+        locationPermissionDenyHandler: @escaping () -> Void = {},
         configure: (WKWebView) -> Void = { _ in }
     ) {
         self.url = url
@@ -167,6 +176,9 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate, Activ
         self.webviewInterceptHandlers = webviewInterceptHandlers
         self.needRefreshNotificationNames = needRefreshNotificationNames
         self.noNeedAccessoryView = noNeedAccessoryView
+        self.needLocationPermissionUrls = needLocationPermissionUrls
+        self.locationPermissionSuccessHandler = locationPermissionSuccessHandler
+        self.locationPermissionDenyHandler = locationPermissionDenyHandler
 
         super.init(nibName: nil, bundle: nil)
 
@@ -362,6 +374,21 @@ extension WebViewController: WKURLSchemeHandler {
 }
 
 extension WebViewController: WKNavigationDelegate {
+    public func webView(
+        _ webView: WKWebView,
+        didStartProvisionalNavigation navigation: WKNavigation!
+    ) {
+        for url in self.needLocationPermissionUrls
+            where webView.url?.absoluteString.contains(url) == true
+        {
+            LocationUtility.shared.requestPermission { [weak self] in
+                self?.locationPermissionSuccessHandler()
+            } deniedHandler: { [weak self] in
+                self?.locationPermissionDenyHandler()
+            }
+        }
+    }
+
     open func webView(
         _ webView: WKWebView,
         decidePolicyFor navigationAction: WKNavigationAction,

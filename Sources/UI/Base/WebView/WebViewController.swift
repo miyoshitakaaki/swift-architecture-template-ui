@@ -59,6 +59,7 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate, Activ
     }()
 
     private let url: String?
+    private let httpBody: Data?
     private let localFilePath: String?
 
     private let backButton = UIButton(style: .init(style: { button in
@@ -134,6 +135,7 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate, Activ
 
     public init(
         url: String? = nil,
+        httpBody: Data? = nil,
         localFilePath: String? = nil,
         showProgress: Bool = false,
         showLoadingIndicator: Bool = false,
@@ -158,6 +160,7 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate, Activ
         configure: (WKWebView) -> Void = { _ in }
     ) {
         self.url = url
+        self.httpBody = httpBody
         self.localFilePath = localFilePath
         self.showProgress = showProgress
         self.showLoadingIndicator = showLoadingIndicator
@@ -288,7 +291,12 @@ private extension WebViewController {
             let urlString = self.url,
             let url = URL(string: urlString)
         {
-            self.webView.load(URLRequest(url: url))
+            var request = URLRequest(url: url)
+            if let httpBody {
+                request.httpMethod = "POST"
+                request.httpBody = httpBody
+            }
+            self.webView.load(request)
         }
     }
 }

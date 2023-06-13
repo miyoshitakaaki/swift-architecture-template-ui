@@ -7,6 +7,7 @@ import Utility
 public struct SelectedCellInfo<T: CollectionList> {
     public let indexPath: IndexPath
     public let viewData: T.Cell.ViewData?
+    public let cell: T.Cell?
 }
 
 public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewDelegate {
@@ -109,7 +110,8 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
         let cell = self.collectionView.cellForItem(at: indexPath) as? T.Cell
         self.didItemSelectedPublisher.send(SelectedCellInfo(
             indexPath: indexPath,
-            viewData: cell?.viewData
+            viewData: cell?.viewData,
+            cell: cell
         ))
     }
 

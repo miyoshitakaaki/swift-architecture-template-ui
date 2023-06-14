@@ -101,6 +101,11 @@ public final class CollectionViewController<
         }
     }
 
+    override public func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.ui.invalidateLayout()
+    }
+
     override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 

@@ -119,6 +119,10 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
         self.refreshPublisher.send()
     }
 
+    func invalidateLayout() {
+        self.collectionView.collectionViewLayout.invalidateLayout()
+    }
+
     func endRefresh() {
         self.collectionView.refreshControl?.endRefreshing()
     }

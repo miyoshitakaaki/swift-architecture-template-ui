@@ -202,8 +202,6 @@ extension CollectionUI: UserInterface {
         }
 
         self.dataSource.apply(snapshot, animatingDifferences: true)
-
-        self.collectionView.reloadData()
     }
 }
 

@@ -12,7 +12,7 @@ public protocol CollectionList: List, AnalyticsScreenName {
 
     typealias Items = [ListSection<Cell.ViewData, Header.ViewData, Footer.ViewData>]
 
-    var sectionLayout: NSCollectionLayoutSection { get }
+    var sectionLayout: (CGFloat) -> NSCollectionLayoutSection { get }
     var topViewSubject: PassthroughSubject<Parameter, Never> { get }
     var fetch: ((parameter: Parameter?, isAdditional: Bool)) async
         -> Result<Items, AppError> { get }

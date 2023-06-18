@@ -15,7 +15,8 @@ public final class CollectionUI<T: CollectionList>: ListUI<T>, UICollectionViewD
         frame: .zero,
         collectionViewLayout: UICollectionViewCompositionalLayout(
             sectionProvider: { [weak self] _, _ in
-                self?.collection.sectionLayout
+                let width = self?.collectionView.frame.size.width
+                return self?.collection.sectionLayout(width ?? 0)
             }
         )
     )

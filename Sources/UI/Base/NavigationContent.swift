@@ -7,6 +7,7 @@ public protocol NavigationContent {
     var title: String? { get }
     var rightBarButtonItemTintColor: UIColor { get }
     var leftBarButtonItemTintColor: UIColor { get }
+    var titleColor: UIColor? { get }
 }
 
 public extension NavigationContent {
@@ -19,6 +20,8 @@ public extension NavigationContent {
     var rightBarButtonItemTintColor: UIColor { .black }
 
     var leftBarButtonItemTintColor: UIColor { .clear }
+
+    var titleColor: UIColor? { nil }
 }
 
 public class TitleNavigationContent: NavigationContent {

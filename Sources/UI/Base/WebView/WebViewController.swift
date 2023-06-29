@@ -295,6 +295,10 @@ private extension WebViewController {
             if let httpBody {
                 request.httpMethod = "POST"
                 request.httpBody = httpBody
+                request.addValue(
+                    "application/x-www-form-urlencoded",
+                    forHTTPHeaderField: "Content-Type"
+                )
             }
             self.webView.load(request)
         }

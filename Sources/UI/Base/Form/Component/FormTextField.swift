@@ -90,6 +90,36 @@ public final class FormTextField: UITextField, UITextFieldDelegate {
         )
     }
 
+    override public func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        switch self.picker {
+        case .text:
+            return super.canPerformAction(action, withSender: sender)
+
+        default:
+            return false
+        }
+    }
+
+    override public func selectionRects(for range: UITextRange) -> [UITextSelectionRect] {
+        switch self.picker {
+        case .text:
+            return super.selectionRects(for: range)
+
+        default:
+            return []
+        }
+    }
+
+    override public func caretRect(for position: UITextPosition) -> CGRect {
+        switch self.picker {
+        case .text:
+            return super.caretRect(for: position)
+
+        default:
+            return .init(x: 0, y: 0, width: 0, height: 0)
+        }
+    }
+
     public func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         switch self.picker {
         case let .dateTime(complete):

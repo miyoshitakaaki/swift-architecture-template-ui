@@ -118,7 +118,10 @@ public final class FormViewModel<T: Form>: ViewModel {
 
                 return Just(FormHandling.none).eraseToAnyPublisher()
             }
-            .flatMap { [weak self] formError -> AnyPublisher<LoadingState<T.Input, AppError>, Never> in
+            .flatMap { [weak self] formError -> AnyPublisher<
+                LoadingState<T.Input, AppError>,
+                Never
+            > in
                 guard let self else {
                     return Just(LoadingState<T.Input, AppError>.done(T.Input()))
                         .eraseToAnyPublisher()

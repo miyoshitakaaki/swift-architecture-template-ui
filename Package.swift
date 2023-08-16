@@ -22,6 +22,7 @@ let package = Package(
             url: "https://github.com/Juanpe/SkeletonView.git",
             .upToNextMajor(from: "1.0.0")
         ),
+        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.2.0"),
     ],
     targets: [
         .target(

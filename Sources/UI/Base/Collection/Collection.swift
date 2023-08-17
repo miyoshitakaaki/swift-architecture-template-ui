@@ -18,14 +18,12 @@ public protocol CollectionList: List, AnalyticsScreenName {
         -> Result<Items, AppError> { get }
     var delete: (Cell.ViewData) async -> Result<Void, AppError> { get }
     var floatingButton: UIButton? { get }
-    var skeletonItems: Items? { get }
     var titleForItemCount: ((Int) -> String)? { get }
 }
 
 public extension CollectionList {
     var floatingButton: UIButton? { nil }
     var topViewSubject: PassthroughSubject<String, Never> { .init() }
-    var skeletonItems: Items? { nil }
     var titleForItemCount: ((Int) -> String)? { nil }
 
     var delete: (Cell.ViewData) async -> Result<Void, AppError> {{ _ in

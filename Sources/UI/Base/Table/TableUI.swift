@@ -1,5 +1,4 @@
 import Combine
-import SkeletonView
 import UIKit
 
 public final class TableUI<T: Table>: ListUI<T>, UITableViewDataSource, UITableViewDelegate {
@@ -211,7 +210,6 @@ extension TableUI: UserInterface {
         )
         self.tableView.dataSource = self
         self.tableView.delegate = self
-        self.tableView.isSkeletonable = true
     }
 
     func reload(items: T.Items) {

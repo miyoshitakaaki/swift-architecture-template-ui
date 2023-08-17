@@ -16,12 +16,10 @@ public protocol Table: List, AnalyticsScreenName {
     var fetch: ((parameter: Parameter?, isAdditional: Bool)) async
         -> Result<Items, AppError> { get }
     func mapper(entities: [[Entity]]) -> Items
-    var skeletonItems: Items? { get }
 }
 
 public extension Table {
     var showSearchBar: Bool { false }
-    var skeletonItems: Items? { nil }
 }
 
 @MainActor

@@ -18,10 +18,6 @@ let package = Package(
             url: "https://github.com/miyoshi-cq/swift-architecture-template-utility",
             .upToNextMajor(from: "0.1.0")
         ),
-        .package(
-            url: "https://github.com/Juanpe/SkeletonView.git",
-            .upToNextMajor(from: "1.0.0")
-        ),
         .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.2.0"),
     ],
     targets: [
@@ -29,7 +25,6 @@ let package = Package(
             name: "UI",
             dependencies: [
                 .product(name: "Utility", package: "swift-architecture-template-utility"),
-                .product(name: "SkeletonView", package: "SkeletonView"),
             ]
         ),
         .testTarget(

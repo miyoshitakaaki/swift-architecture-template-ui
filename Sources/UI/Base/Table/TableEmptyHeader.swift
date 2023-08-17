@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public final class TableEmptyHeader: UITableViewHeaderFooterView, TableViewHeaderFooter {
@@ -15,3 +16,4 @@ public final class TableEmptyHeader: UITableViewHeaderFooterView, TableViewHeade
         fatalError("init(coder:) has not been implemented")
     }
 }
+#endif

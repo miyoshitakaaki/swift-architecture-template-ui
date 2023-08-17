@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Combine
 import UIKit
 
@@ -145,3 +146,4 @@ extension FormConsentView: Publisher {
         self.checkPublisher.subscribe(subscriber)
     }
 }
+#endif

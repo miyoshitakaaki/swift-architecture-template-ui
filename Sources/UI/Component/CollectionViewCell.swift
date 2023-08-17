@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Foundation
 import UIKit
 
@@ -31,3 +32,4 @@ public class CollectionViewCell: UICollectionViewCell {
         clipsToBounds = true
     }
 }
+#endif

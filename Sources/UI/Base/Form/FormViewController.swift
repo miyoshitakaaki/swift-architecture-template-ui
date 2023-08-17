@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Combine
 import UIKit
 import Utility
@@ -127,3 +128,4 @@ extension FormViewController: FormViewModelDelegate {
         self.present(alert, animated: true)
     }
 }
+#endif

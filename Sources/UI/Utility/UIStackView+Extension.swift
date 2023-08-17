@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public extension UIStackView {
@@ -9,3 +10,4 @@ public extension UIStackView {
         constraints.forEach { $0.isActive = true }
     }
 }
+#endif

@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public final class FormSectionLabel: UILabel {
@@ -69,3 +70,4 @@ private extension FormSectionLabel {
         self.attributedText = attributedString
     }
 }
+#endif

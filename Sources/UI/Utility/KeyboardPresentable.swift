@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public protocol KeyboardPresentable: UIViewController {
@@ -48,3 +49,4 @@ public extension KeyboardPresentable {
         }
     }
 }
+#endif

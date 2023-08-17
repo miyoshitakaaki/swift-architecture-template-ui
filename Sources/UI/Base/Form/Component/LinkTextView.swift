@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public final class LinkTextView: UITextView {
@@ -35,3 +36,4 @@ public final class LinkTextView: UITextView {
         false
     }
 }
+#endif

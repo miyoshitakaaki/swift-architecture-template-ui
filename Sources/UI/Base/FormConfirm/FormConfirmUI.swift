@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Combine
 import UIKit
 
@@ -89,3 +90,4 @@ private extension FormConfirmUI {
         )
     }
 }
+#endif

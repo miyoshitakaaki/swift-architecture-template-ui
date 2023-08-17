@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public extension UIView {
@@ -61,3 +62,4 @@ public extension UIView {
         return firstItemMatch || secondItemMatch
     }
 }
+#endif

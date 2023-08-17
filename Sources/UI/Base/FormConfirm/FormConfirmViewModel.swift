@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Combine
 import UIKit
 import Utility
@@ -39,3 +40,4 @@ public final class FormConfirmViewModel<T: Equatable>: ViewModel {
             .subscribe(self.loadingState)
     }
 }
+#endif

@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 @MainActor
@@ -39,3 +40,4 @@ public class TitleNavigationContent: NavigationContent {
         self.title = title
     }
 }
+#endif

@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public class LeftArrowView: UIView {
@@ -17,3 +18,4 @@ public class LeftArrowView: UIView {
         arrow.stroke()
     }
 }
+#endif

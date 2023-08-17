@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public final class PaddingLabel: UILabel {
@@ -43,3 +44,4 @@ public final class PaddingLabel: UILabel {
         return intrinsicContentSize
     }
 }
+#endif

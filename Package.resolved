@@ -1,15 +1,6 @@
 {
   "pins" : [
     {
-      "identity" : "skeletonview",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Juanpe/SkeletonView.git",
-      "state" : {
-        "revision" : "739a4f5d78731bebc48811c75fa9e1f4c4cef23e",
-        "version" : "1.30.4"
-      }
-    },
-    {
       "identity" : "swift-architecture-template-utility",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/miyoshi-cq/swift-architecture-template-utility",

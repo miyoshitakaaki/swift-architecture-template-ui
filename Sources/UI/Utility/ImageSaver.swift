@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Combine
 import UIKit
 
@@ -20,3 +21,4 @@ public class ImageSaver: NSObject {
         }
     }
 }
+#endif

@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 import Utility
 
@@ -223,3 +224,4 @@ public final class DiffableCollectionViewController<
         }
     }
 }
+#endif

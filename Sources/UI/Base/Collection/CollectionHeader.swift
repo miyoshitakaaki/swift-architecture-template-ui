@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Foundation
 import UIKit
 
@@ -27,3 +28,4 @@ open class CollectionHeader: UICollectionReusableView, CollectionHeaderLayout {
         fatalError("init(coder:) has not been implemented")
     }
 }
+#endif

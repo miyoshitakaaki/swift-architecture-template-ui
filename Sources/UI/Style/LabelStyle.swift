@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public extension Stylable where Self == UILabel {
@@ -35,3 +36,4 @@ public extension Stylable where Self == UILabel {
         return self
     }
 }
+#endif

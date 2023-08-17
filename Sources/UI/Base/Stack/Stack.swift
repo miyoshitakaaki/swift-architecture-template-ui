@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public protocol Stack: AnalyticsScreenName {
@@ -13,3 +14,4 @@ public extension Stack {
         )
     }
 }
+#endif

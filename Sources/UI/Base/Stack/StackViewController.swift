@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 import Utility
 
@@ -69,3 +70,4 @@ public final class StackViewController<T: Stack>: ViewController {
         super.viewDidLayoutSubviews()
     }
 }
+#endif

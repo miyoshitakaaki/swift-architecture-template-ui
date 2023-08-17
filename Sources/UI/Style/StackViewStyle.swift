@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public extension Stylable where Self == UIStackView {
@@ -7,3 +8,4 @@ public extension Stylable where Self == UIStackView {
         view.forEach(self.addArrangedSubview)
     }
 }
+#endif

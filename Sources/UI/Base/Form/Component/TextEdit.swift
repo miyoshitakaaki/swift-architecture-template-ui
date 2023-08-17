@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Combine
 import UIKit
 
@@ -77,3 +78,4 @@ public final class TextEdit<T: UIControl>: Publisher where T: Publisher, T.Outpu
             .subscribe(subscriber)
     }
 }
+#endif

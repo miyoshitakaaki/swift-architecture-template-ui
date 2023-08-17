@@ -1,3 +1,4 @@
+#if !os(macOS)
 import AVFoundation
 import Combine
 import Foundation
@@ -246,3 +247,4 @@ private extension VideoPlayerViewController {
         }.store(in: &self.cancellable)
     }
 }
+#endif

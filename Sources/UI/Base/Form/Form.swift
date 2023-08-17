@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Combine
 import UIKit
 import Utility
@@ -156,3 +157,4 @@ public struct FormViewBuilder {
         components
     }
 }
+#endif

@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Combine
 import UIKit
 import Utility
@@ -265,3 +266,4 @@ public final class TableViewController<T: Table>: ViewController,
         self.delegate?.didSearchCancelButtonTapped()
     }
 }
+#endif

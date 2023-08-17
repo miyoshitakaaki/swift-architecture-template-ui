@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 import Utility
 
@@ -21,3 +22,4 @@ open class ViewController: UIViewController, AnalyticsScreenView,
         AnalyticsService.log(Self.className)
     }
 }
+#endif

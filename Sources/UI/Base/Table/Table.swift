@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 import Utility
 
@@ -41,3 +42,4 @@ public protocol TableViewHeaderFooter: UITableViewHeaderFooterView {
     associatedtype ViewData: Hashable
     var viewData: ViewData? { get set }
 }
+#endif

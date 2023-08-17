@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Combine
 import Foundation
 import UIKit
@@ -251,3 +252,4 @@ open class SegmentedPageContainer<T: SegmentedControl>: UIPageViewController,
         self.tab.selectedSegmentIndex = index
     }
 }
+#endif

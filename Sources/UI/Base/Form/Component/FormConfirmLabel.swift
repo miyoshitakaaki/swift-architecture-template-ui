@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public final class FormConfirmLabel: UILabel {
@@ -30,3 +31,4 @@ public final class FormConfirmLabel: UILabel {
         return intrinsicContentSize
     }
 }
+#endif

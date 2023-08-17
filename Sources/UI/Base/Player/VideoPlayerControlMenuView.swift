@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 import Utility
 
@@ -248,3 +249,4 @@ private extension VideoPlayerControlMenuView {
         self.progressSubject.send((.endDragging, TimeInterval(self.seekBar.value)))
     }
 }
+#endif

@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Combine
 import UIKit
 
@@ -132,3 +133,4 @@ public extension NSCollectionLayoutSection {
         return section
     }
 }
+#endif

@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 @available(iOS 14.0, *)
@@ -20,3 +21,4 @@ open class NoSelectionStyleCell: UICollectionViewListCell {
         super.updateConfiguration(using: state)
     }
 }
+#endif

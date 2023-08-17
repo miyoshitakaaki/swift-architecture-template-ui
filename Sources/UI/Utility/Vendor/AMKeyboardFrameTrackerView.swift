@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public protocol AMKeyboardFrameTrackerDelegate: AnyObject {
@@ -107,3 +108,4 @@ public class AMKeyboardFrameTrackerView: UIView {
         self.superview?.removeObserver(self, forKeyPath: #keyPath(center))
     }
 }
+#endif

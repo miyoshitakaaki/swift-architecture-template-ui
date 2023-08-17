@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public extension Stylable where Self: UIButton {
@@ -12,3 +13,4 @@ public extension Stylable where Self: UIButton {
         self.setImage(image, for: .normal)
     }
 }
+#endif

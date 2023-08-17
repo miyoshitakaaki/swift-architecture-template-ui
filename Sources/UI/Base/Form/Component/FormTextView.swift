@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Combine
 import UIKit
 
@@ -99,3 +100,4 @@ extension FormTextView: Publisher {
         self.textPublisher.subscribe(subscriber)
     }
 }
+#endif

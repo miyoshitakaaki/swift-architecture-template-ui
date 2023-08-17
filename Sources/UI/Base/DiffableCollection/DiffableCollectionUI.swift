@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Combine
 import Foundation
 import UIKit
@@ -264,3 +265,4 @@ private extension DiffableCollectionUI {
         }
     }
 }
+#endif

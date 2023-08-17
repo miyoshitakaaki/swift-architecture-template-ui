@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 import Utility
 import WebKit
@@ -678,3 +679,4 @@ class LeakAvoider: NSObject, WKURLSchemeHandler {
         super.init()
     }
 }
+#endif

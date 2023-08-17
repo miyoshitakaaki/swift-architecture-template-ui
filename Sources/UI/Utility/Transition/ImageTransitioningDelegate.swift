@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public final class ImageTransitioningDelegate<
@@ -29,3 +30,4 @@ public final class ImageTransitioningDelegate<
             : nil
     }
 }
+#endif

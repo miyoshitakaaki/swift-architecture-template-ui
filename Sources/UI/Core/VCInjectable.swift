@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 @MainActor
@@ -63,3 +64,4 @@ public extension VCInjectable {
         }
     }
 }
+#endif

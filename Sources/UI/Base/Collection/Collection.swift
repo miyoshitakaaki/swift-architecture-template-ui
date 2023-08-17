@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Combine
 import UIKit
 import Utility
@@ -62,3 +63,4 @@ public protocol CollectionFooterLayout: UICollectionReusableView {
     associatedtype ViewData: Equatable & Hashable
     func updateFooter(data: ViewData)
 }
+#endif

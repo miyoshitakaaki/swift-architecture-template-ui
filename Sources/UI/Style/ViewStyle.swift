@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public extension Stylable where Self == UIView {
@@ -12,3 +13,4 @@ public extension Stylable where Self == UIView {
         self.heightAnchor.constraint(equalToConstant: height).isActive = true
     }
 }
+#endif

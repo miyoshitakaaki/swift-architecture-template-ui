@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Combine
 import UIKit
 
@@ -127,3 +128,4 @@ extension FormSelectionItemView: Publisher {
         self.togglePublisher.subscribe(subscriber)
     }
 }
+#endif

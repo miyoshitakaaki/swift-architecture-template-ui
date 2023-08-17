@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 @globalActor
@@ -87,3 +88,4 @@ actor ImageLoader {
         return FileManager.default.fileExists(atPath: path)
     }
 }
+#endif

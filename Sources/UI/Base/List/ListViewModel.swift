@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Combine
 import UIKit
 import Utility
@@ -117,3 +118,4 @@ public final class ListViewModel<
             .subscribe(self.loadingState)
     }
 }
+#endif

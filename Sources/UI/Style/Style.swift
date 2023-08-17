@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Foundation
 import UIKit
 
@@ -34,3 +35,4 @@ public extension Stylable {
         style.style(self)
     }
 }
+#endif

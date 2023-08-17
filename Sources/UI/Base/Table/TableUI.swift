@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Combine
 import UIKit
 
@@ -218,3 +219,4 @@ extension TableUI: UserInterface {
         self.tableView.reloadData()
     }
 }
+#endif

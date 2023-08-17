@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Combine
 import UIKit
 import Utility
@@ -56,3 +57,4 @@ public extension DiffableCollectionSection {
     static var pullToRefreshable: Bool { false }
     static var fetchAllMinuteInterval: Int? { nil }
 }
+#endif

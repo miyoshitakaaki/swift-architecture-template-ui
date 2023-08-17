@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public final class UnderArrowView: UIView {
@@ -29,3 +30,4 @@ public final class UnderArrowView: UIView {
         path.stroke()
     }
 }
+#endif

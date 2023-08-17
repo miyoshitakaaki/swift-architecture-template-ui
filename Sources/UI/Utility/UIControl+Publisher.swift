@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Combine
 import Foundation
 import UIKit
@@ -68,3 +69,4 @@ public extension CombineCompatible where Self: UISwitch {
         self.publisher(for: [.allEditingEvents, .valueChanged]).map(\.isOn).eraseToAnyPublisher()
     }
 }
+#endif

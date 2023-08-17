@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Combine
 import Foundation
 import UIKit
@@ -116,3 +117,4 @@ public func create<T: DiffableCollectionSection, N: NavigationContent>(
 
     return vc
 }
+#endif

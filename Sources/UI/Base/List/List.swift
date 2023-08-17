@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 @MainActor
@@ -24,3 +25,4 @@ public extension List {
     var hasSegmentedPageContainer: Bool { false }
     var listUsecase: EmptyUsecase { .init() }
 }
+#endif

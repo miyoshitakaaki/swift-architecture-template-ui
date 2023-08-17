@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public final class BadgeSegmentedControl: UISegmentedControl, SegmentedControl {
@@ -65,3 +66,4 @@ public final class BadgeSegmentedControl: UISegmentedControl, SegmentedControl {
         }
     }
 }
+#endif

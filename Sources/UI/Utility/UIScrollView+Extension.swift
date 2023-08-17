@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public extension UIScrollView {
@@ -29,3 +30,4 @@ public extension UIScrollView {
         setContentOffset(offset, animated: animated)
     }
 }
+#endif

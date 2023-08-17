@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 import Utility
 
@@ -97,3 +98,4 @@ public extension AlertPresentable {
         self.present(alert, animated: true)
     }
 }
+#endif

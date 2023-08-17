@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Combine
 import UIKit
 
@@ -9,3 +10,4 @@ public extension UITextField {
             .eraseToAnyPublisher()
     }
 }
+#endif

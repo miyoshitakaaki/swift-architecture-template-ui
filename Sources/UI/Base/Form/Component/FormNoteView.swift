@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public final class FormNoteView: UIView {
@@ -41,3 +42,4 @@ public final class FormNoteView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 }
+#endif

@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public final class FormTitleLabel: UILabel {
@@ -40,3 +41,4 @@ public final class FormTitleLabel: UILabel {
         }
     }
 }
+#endif

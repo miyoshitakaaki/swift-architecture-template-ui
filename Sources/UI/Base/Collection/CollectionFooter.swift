@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Foundation
 import UIKit
 
@@ -27,3 +28,4 @@ open class CollectionFooter: UICollectionReusableView, CollectionFooterLayout {
 
     public func updateFooter(data: String) {}
 }
+#endif

@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 @MainActor
@@ -30,3 +31,4 @@ public class NoUserInterface: UserInterface {
         assertionFailure("no need to implement")
     }
 }
+#endif

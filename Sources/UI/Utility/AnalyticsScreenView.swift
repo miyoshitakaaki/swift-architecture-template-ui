@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 import Utility
 
@@ -19,3 +20,4 @@ public extension AnalyticsScreenView {
         self.screenEventForAnalytics.forEach(AnalyticsService.sendEvent)
     }
 }
+#endif

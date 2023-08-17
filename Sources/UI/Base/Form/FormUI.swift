@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Combine
 import UIKit
 
@@ -279,3 +280,4 @@ private extension FormUI {
         navigationItem.rightBarButtonItem = searchBarButtonItem
     }
 }
+#endif

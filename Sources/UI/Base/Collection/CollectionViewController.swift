@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Combine
 import UIKit
 import Utility
@@ -204,3 +205,4 @@ public final class CollectionViewController<
             .store(in: &self.cancellables)
     }
 }
+#endif

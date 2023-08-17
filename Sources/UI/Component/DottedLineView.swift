@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public class DottedLineView: UIView {
@@ -12,3 +13,4 @@ public class DottedLineView: UIView {
         dotted.stroke()
     }
 }
+#endif

@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public final class ScrollView: UIScrollView {
@@ -5,3 +6,4 @@ public final class ScrollView: UIScrollView {
         self.endEditing(true)
     }
 }
+#endif

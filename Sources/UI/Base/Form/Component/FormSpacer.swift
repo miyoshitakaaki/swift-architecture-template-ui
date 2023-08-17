@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public final class FormSpacer: UIView {
@@ -22,3 +23,4 @@ public final class FormSpacer: UIView {
         fatalError()
     }
 }
+#endif

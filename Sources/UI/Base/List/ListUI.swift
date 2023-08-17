@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 @MainActor
@@ -30,3 +31,4 @@ open class ListUI<T: List>: NSObject, SegmentedPageContainerProtocol {
         )
     }
 }
+#endif

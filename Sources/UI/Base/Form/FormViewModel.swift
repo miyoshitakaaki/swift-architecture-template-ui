@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Combine
 import UIKit
 import Utility
@@ -203,3 +204,4 @@ public final class FormViewModel<T: Form>: ViewModel {
             .subscribe(self.loadingState)
     }
 }
+#endif

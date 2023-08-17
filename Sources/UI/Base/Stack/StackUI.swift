@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Foundation
 import UIKit
 
@@ -62,3 +63,4 @@ extension StackUI: UserInterface {
         )
     }
 }
+#endif

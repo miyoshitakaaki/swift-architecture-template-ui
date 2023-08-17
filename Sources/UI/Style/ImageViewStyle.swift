@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public extension Stylable where Self == UIImageView {
@@ -6,3 +7,4 @@ public extension Stylable where Self == UIImageView {
         self.apply(style)
     }
 }
+#endif

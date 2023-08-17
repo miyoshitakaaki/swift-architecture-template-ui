@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 class ImagePresentedAnimator<
@@ -88,3 +89,4 @@ class ImagePresentedAnimator<
         animation.startAnimation()
     }
 }
+#endif

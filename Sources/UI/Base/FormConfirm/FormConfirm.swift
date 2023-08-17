@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 import Utility
 
@@ -27,3 +28,4 @@ public extension FormConfirmUIProtocol {
         }
     }
 }
+#endif

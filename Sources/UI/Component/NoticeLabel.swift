@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public class NoticeLabel: UILabel {
@@ -34,3 +35,4 @@ public class NoticeLabel: UILabel {
         self.numberOfLines = 0
     }
 }
+#endif

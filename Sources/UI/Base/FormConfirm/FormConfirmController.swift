@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Combine
 import UIKit
 import Utility
@@ -93,3 +94,4 @@ public final class FormConfirmController<T: FormConfirmProtocol>: ViewController
         self.tabBarController?.tabBar.isHidden = false
     }
 }
+#endif

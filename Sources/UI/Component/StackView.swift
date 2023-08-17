@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public final class StackView: UIStackView {
@@ -17,3 +18,4 @@ public final class StackView: UIStackView {
         fatalError("init(coder:) has not been implemented")
     }
 }
+#endif

@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Combine
 import UIKit
 import Utility
@@ -440,3 +441,4 @@ private extension String {
         return self.trimmingCharacters(in: whiteSpaces)
     }
 }
+#endif

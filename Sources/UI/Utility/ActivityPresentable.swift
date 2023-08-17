@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public protocol ActivityPresentable: UIViewController {
@@ -32,3 +33,4 @@ public extension ActivityPresentable {
         view.subviews.compactMap { $0 as? UIActivityIndicatorView }.first
     }
 }
+#endif

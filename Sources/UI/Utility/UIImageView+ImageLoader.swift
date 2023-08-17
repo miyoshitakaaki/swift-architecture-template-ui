@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public extension UIImageView {
@@ -25,3 +26,4 @@ public extension UIImageView {
         }
     }
 }
+#endif

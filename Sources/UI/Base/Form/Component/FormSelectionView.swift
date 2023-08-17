@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Combine
 import UIKit
 
@@ -141,3 +142,4 @@ extension FormSelectionView: Publisher {
         self.currentValue.subscribe(subscriber)
     }
 }
+#endif

@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 class ImageDismissedAnimator<
@@ -71,3 +72,4 @@ class ImageDismissedAnimator<
         animation.startAnimation()
     }
 }
+#endif

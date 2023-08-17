@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Combine
 import UIKit
 
@@ -144,3 +145,4 @@ public class PagingSectionFooterView: UICollectionReusableView {
         self.timer = nil
     }
 }
+#endif

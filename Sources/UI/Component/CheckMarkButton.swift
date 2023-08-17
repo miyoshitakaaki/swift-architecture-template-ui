@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public final class CheckMarkButton: UIButton {
@@ -54,3 +55,4 @@ private extension CheckMarkButton {
         path.stroke()
     }
 }
+#endif

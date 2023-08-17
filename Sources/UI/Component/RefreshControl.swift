@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 public final class RefreshControl: UIRefreshControl {
@@ -19,3 +20,4 @@ public final class RefreshControl: UIRefreshControl {
         self.frame = frame
     }
 }
+#endif

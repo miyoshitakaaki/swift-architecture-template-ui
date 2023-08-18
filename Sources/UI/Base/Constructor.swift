@@ -4,6 +4,12 @@ import Foundation
 import UIKit
 import Utility
 
+/// Form screen constructor
+/// - Parameters:
+///   - form: basic setting of form screen
+///   - navContent: navigation component setting
+///   - hideCompletionButton: hide completion button
+/// - Returns: ViewControler of form screen
 @MainActor
 public func create<T: Form>(
     form: T,
@@ -26,6 +32,9 @@ public func create<T: Form>(
     return vc
 }
 
+/// Form confirm screen constructor
+/// - Parameter formConfirm: basic setting of form confirm screen
+/// - Returns: ViewControler of form confirm screen
 @MainActor
 public func create<T: FormConfirmUIProtocol & FormConfirmProtocol>(formConfirm: T)
     -> FormConfirmController<T>
@@ -39,6 +48,12 @@ public func create<T: FormConfirmUIProtocol & FormConfirmProtocol>(formConfirm: 
 }
 
 @MainActor
+/// Collection screen constructor
+/// - Parameters:
+///   - collection: basic setting of collection screen
+///   - content: navigation component setting
+///   - needRefreshNotificationNames: reload contents when this notification is sent
+/// - Returns: ViewControler of collection screen
 public func create<T: CollectionList>(
     collection: T,
     content: T.NavContent,
@@ -57,6 +72,12 @@ public func create<T: CollectionList>(
 }
 
 @MainActor
+/// Table screen constructor
+/// - Parameters:
+///   - table: basic setting of table screen
+///   - content: navigation component setting
+///   - needRefreshNotificationNames: reload contents when this notification is sent
+/// - Returns: ViewControler of table screen
 public func create<T: Table>(
     table: T,
     content: T.NavContent,

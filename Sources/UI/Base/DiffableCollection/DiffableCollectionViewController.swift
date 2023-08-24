@@ -19,6 +19,15 @@ public final class DiffableCollectionViewController<
     private var reloadType: ReloadType?
     private var lastFetchAllDate: Date?
 
+    public var delegate: (any DiffableCollectionEvent)? {
+        get {
+            ui.delegate
+        }
+        set {
+            ui.delegate = newValue
+        }
+    }
+
     override public var screenNameForAnalytics: [AnalyticsScreen] { self._screenNameForAnalytics }
 
     override public var screenEventForAnalytics: [AnalyticsEvent] { self._screenEventForAnalytics }

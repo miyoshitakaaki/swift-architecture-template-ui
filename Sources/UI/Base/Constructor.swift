@@ -105,7 +105,6 @@ public func create<T: DiffableCollectionSection, N: NavigationContent>(
     needRefreshNotificationNames: [Notification.Name] = [],
     needForceRefreshNotificationNames: [Notification.Name] = [],
     needSectionRefreshNotificationNames: [(name: Notification.Name, sectionIndexes: [Int])] = [],
-    delegate: any DiffableCollectionEvent,
     initialPagingInfo: [PagingSectionFooterView.InitialPagingInfo] = [],
     bottomFixedView: BottomFixedViewProtocol? = nil
 ) -> DiffableCollectionViewController<T, N> {
@@ -133,7 +132,6 @@ public func create<T: DiffableCollectionSection, N: NavigationContent>(
         pageControlSubject: pageControlSubject,
         bottomFixedView: bottomFixedView
     )
-    ui.delegate = delegate
     vc.inject(viewModel: .init(), ui: ui)
 
     return vc

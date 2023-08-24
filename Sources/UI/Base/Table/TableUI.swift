@@ -44,13 +44,6 @@ public final class TableUI<T: Table>: ListUI<T>, UITableViewDataSource, UITableV
         _ tableView: UITableView,
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
-        if self.viewDataItems.isEmpty {
-            return tableView.dequeueReusableCell(
-                withIdentifier: T.EmptyCell.className,
-                for: indexPath
-            )
-        }
-
         guard let cell = tableView.dequeueReusableCell(withIdentifier: T.Cell.className) as? T.Cell
         else { return .init() }
         cell.viewData = self.viewDataItems[indexPath.section].items[indexPath.row]
@@ -200,7 +193,6 @@ extension TableUI: UserInterface {
             for: .valueChanged
         )
         self.tableView.register(T.Cell.self, forCellReuseIdentifier: T.Cell.className)
-        self.tableView.register(T.EmptyCell.self, forCellReuseIdentifier: T.EmptyCell.className)
         self.tableView.register(
             T.Header.self,
             forHeaderFooterViewReuseIdentifier: T.Header.className

@@ -4,119 +4,93 @@ Usage of Form and FormConfirm
 
 ## Overview
 
-Usage of Form and FormConfirm
+Usage of Form and FormConfirm.
 
 ### Form
 1. create Form setting class conform to ``Form``.
 
 ```swift
 class SampleForm: Form {
-typealias NavContent = TitleNavigationContent
+    typealias NavContent = TitleNavigationContent
 
-struct Input: Initializable, Equatable, Validatable {
-var title = ""
-var body = ""
+    struct Input: Initializable, Equatable, Validatable {
+        var title = ""
+        var body = ""
 
-var invalidTitle = ""
-}
+        var invalidTitle = ""
+    }
 
-var views: [UIView] {
-self.titleEdit.titleLabel
-FormSpacer(8)
-self.titleEdit.edit
-FormSpacer(8)
-self.bodyEdit.titleLabel
-FormSpacer(8)
-self.bodyEdit.edit
-FormSpacer(24)
-}
+    var views: [UIView] {
+        self.titleEdit.titleLabel
+        FormSpacer(8)
+        self.titleEdit.edit
+        FormSpacer(8)
+        self.bodyEdit.titleLabel
+        FormSpacer(8)
+        self.bodyEdit.edit
+        FormSpacer(24)
+    }
 
-var title: String { "サンプル" }
+    var title: String { "サンプル" }
 
-var completionButtonTitle: String { "保存" }
+    var completionButtonTitle: String { "保存" }
 
-var data: AnyPublisher<Input, Never> {
-self.titleEdit
-.combineLatest(self.bodyEdit)
-.map { title, body in
-var data = Input()
-data.title = title
-data.body = body
-return data
-}
-.eraseToAnyPublisher()
-}
+    var data: AnyPublisher<Input, Never> {
+        self.titleEdit
+            .combineLatest(self.bodyEdit)
+            .map { title, body in
+                var data = Input()
+                data.title = title
+                data.body = body
+                return data
+            }
+            .eraseToAnyPublisher()
+    }
 
-var fetch: () async -> Result<Input, AppError> {{ [weak self] in
-guard let self else { return .success(.init()) }
+    var fetch: () async -> Result<Input, AppError> {{ [weak self] in
+        guard let self else { return .success(.init()) }
 
-if self.isEdit {
-let result = await Domain.Usecase.Sample.Get.shared().execute(userId: 1)
+        if self.isEdit {
+            let result = await Domain.Usecase.Sample.Get.shared().execute(userId: 1)
 
-switch result {
-case let .success(entities):
-let input = entities.first
-.map { entity in
-Input(title: entity.title, body: entity.body)
-}
+            switch result {
+            case let .success(entities):
+                let input = entities.first
+                .map { entity in
+                    Input(title: entity.title, body: entity.body)
+                }
 
-guard let input else { return .success(.init()) }
+                guard let input else { return .success(.init()) }
 
-self.titleEdit.edit.text = input.title
-self.bodyEdit.edit.text = input.body
+                self.titleEdit.edit.text = input.title
+                self.bodyEdit.edit.text = input.body
 
-return .success(input)
-case let .failure(error):
-return .failure(error)
-}
+                return .success(input)
+            case let .failure(error):
+                return .failure(error)
+            }
 
-} else {
-return .success(.init())
-}
+        } else {
+            return .success(.init())
+        }
 
-}}
+    }}
 
-func complete(_ input: Input) async -> Result<Input, AppError> {
-if self.isEdit {
-let result = await Domain.Usecase.Sample.Update.shared().execute(
-title: input.title,
-body: input.body
-)
+    func complete(_ input: Input) async -> Result<Input, AppError> {
+        .success(input)
+    }
 
-switch result {
-case .success:
-return .success(.init())
+    private let titleEdit: TextEdit<FormTextField> =
+        create(edit: .standard(title: "タイトル", placeholder: ""))
 
-case let .failure(error):
-return .failure(error)
-}
-} else {
-let result = await Domain.Usecase.Sample.Register.shared().execute(
-title: input.title,
-body: input.body
-)
+    private let bodyEdit: TextEdit<FormTextField> =
+        create(edit: .standard(title: "本文", placeholder: ""))
 
-switch result {
-case .success:
-return .success(.init())
+    let isEdit: Bool
 
-case let .failure(error):
-return .failure(error)
-}
-}
-}
-
-private let titleEdit: TextEdit<FormTextField> =
-create(edit: .standard(title: "タイトル", placeholder: ""))
-
-private let bodyEdit: TextEdit<FormTextField> =
-create(edit: .standard(title: "本文", placeholder: ""))
-
-let isEdit: Bool
-
-init(isEdit: Bool) {
-self.isEdit = isEdit
-}
+    init(isEdit: Bool) {
+        self.isEdit = isEdit
+    }
 }
 
 ```
@@ -134,43 +108,43 @@ let vc = create(form: form, navContent: .init())
 ```swift
 @MainActor
 class SampleConfirm: FormConfirmUIProtocol, FormConfirmProtocol {
-var data: SampleForm.Input
+    var data: SampleForm.Input
 
-var views: [UIView] {
-[
-FormSectionLabel(title: "サンプル", leftInset: 32),
-FormTitleLabel(title: "Title", leftInset: 32),
-FormConfirmLabel(title: self.data.title, leftInset: 32),
-FormTitleLabel(title: "Body", leftInset: 32),
-FormConfirmLabel(title: self.data.body, leftInset: 32),
-FormSpacer(24),
-]
-}
+    var views: [UIView] {
+        [
+            FormSectionLabel(title: "サンプル", leftInset: 32),
+            FormTitleLabel(title: "Title", leftInset: 32),
+            FormConfirmLabel(title: self.data.title, leftInset: 32),
+            FormTitleLabel(title: "Body", leftInset: 32),
+            FormConfirmLabel(title: self.data.body, leftInset: 32),
+            FormSpacer(24),
+        ]
+    }
 
-var title: String { "サンプル確認" }
+    var title: String { "サンプル確認" }
 
-var completionButtonTitle: String { "完了" }
+    var completionButtonTitle: String { "完了" }
 
-init(data: SampleForm.Input) {
-self.data = data
-}
+    init(data: SampleForm.Input) {
+        self.data = data
+    }
 
-var complete: () async -> Result<Empty, AppError> {{ [weak self] in
-guard let self else { return .success(.init()) }
+    var complete: () async -> Result<Empty, AppError> {{ [weak self] in
+        guard let self else { return .success(.init()) }
 
-let result = await Domain.Usecase.Sample.Register.shared().execute(
-title: self.data.title,
-body: self.data.body
-)
+        let result = await Domain.Usecase.Sample.Register.shared().execute(
+            title: self.data.title,
+            body: self.data.body
+        )
 
-switch result {
-case .success:
-return .success(.init())
+        switch result {
+        case .success:
+            return .success(.init())
 
-case let .failure(error):
-return .failure(error)
-}
-}}
+        case let .failure(error):
+            return .failure(error)
+        }
+    }}
 }
 
 ```
@@ -180,5 +154,69 @@ return .failure(error)
 ```swift
 let confirm = SampleConfirm(data: .init(title: "title", body: "body"))
 let vc = create(formConfirm: confirm)
+
+```
+
+## Flow
+
+```swift
+import Navigation
+import UI
+import UIKit
+
+enum SampleFlowChild {
+    case form
+    case formConfirm(data: SampleForm.Input)
+}
+
+final class SampleFlow: AnyFlow<BaseFlow<SampleFlowChild>> {
+    override var childProvider: (SampleFlowChild) -> UIViewController {{ [weak self] child in
+        guard let self else { return .init(nibName: nil, bundle: nil) }
+
+        switch child {
+        case .form:
+            let vc = create(
+                form: SampleForm(isEdit: false),
+                navContent: TitleNavigationContent(title: "form")
+            )
+
+            vc.delegate = self
+
+            return vc
+
+        case let .formConfirm(data):
+            let vc = create(formConfirm: SampleConfirm(data: data))
+            return vc
+        }
+    }}
+
+    required init(
+        navigation: NavigationController,
+        root: SampleFlowChild,
+        from: any FlowController.Type,
+        present: Bool
+    ) {
+        super.init(
+            navigation: navigation,
+            root: root,
+            from: from,
+            present: present
+        )
+
+        self.tabBarItem.title = "Sample"
+        self.tabBarItem.image = Images.TabBar.tabItem1
+    }
+}
+
+extension SampleFlow: FormViewControllerDelegate {
+    func didCompletionButtonTapped<F>(data: F.Input, form: F) where F: UI.Form {
+        switch data {
+        case let data as SampleForm.Input:
+            self.show(.formConfirm(data: data))
+        default:
+            break
+        }
+    }
+}
 
 ```

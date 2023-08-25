@@ -1,4 +1,4 @@
-# create Form and FormConfirm UI
+# Create Form and FormConfirm UI
 
 Usage of Form and FormConfirm
 

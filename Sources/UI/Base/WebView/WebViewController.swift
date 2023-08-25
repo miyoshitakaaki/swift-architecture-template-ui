@@ -60,7 +60,6 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate, Activ
     }()
 
     private let url: String?
-    private let httpBody: Data?
     private let localFilePath: String?
 
     private let backButton = UIButton(style: .init(style: { button in
@@ -134,9 +133,33 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate, Activ
 
     private let locationPermissionDenyHandler: () -> Void
 
+    /// create webview
+    /// - Parameters:
+    ///   - url: initial page url of webview
+    ///   - localFilePath: file path for loading local html file
+    ///   - showProgress: show progress indicaator
+    ///   - showLoadingIndicator: show loading indicator
+    ///   - prohibitPopup: for prohiviting popup from webview
+    ///   - scheme: http scheme like https
+    ///   - showWebBackButton: when to show back button
+    ///   - javascriptEvent: javesctipt event handler
+    ///   - basicAuthAccount: loginid and password ob basic authentification
+    ///   - alwaysOpenSafariWhenLinkTap: always open safari or not when link is tapped
+    ///   - screenNameForAnalytics: send screen name for analytics when screen show
+    ///   - screenEventForAnalytics: senf event for analytics when screen show
+    ///   - linkTapEventForAnalytics: send event for analytics when web page is loaded
+    ///   - navigationContent: navigation bar setting
+    ///   - needPullToRefresh: need pulltorefresh or not
+    ///   - titleForURLPatterns: navigation bar title for url loaded
+    ///   - webviewInterceptHandlers: intercept handler when will load webpage.
+    ///   - needRefreshNotificationNames: reload when notification is posted
+    ///   - noNeedAccessoryView: need keyboard accessory or not
+    ///   - needLocationPermissionUrls: urls which webview need location permission
+    ///   - locationPermissionSuccessHandler: success handler of location permission
+    ///   - locationPermissionDenyHandler: deny handler of location permission
+    ///   - configure: other webview setting other than above
     public init(
         url: String? = nil,
-        httpBody: Data? = nil,
         localFilePath: String? = nil,
         showProgress: Bool = false,
         showLoadingIndicator: Bool = false,
@@ -161,7 +184,6 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate, Activ
         configure: (WKWebView) -> Void = { _ in }
     ) {
         self.url = url
-        self.httpBody = httpBody
         self.localFilePath = localFilePath
         self.showProgress = showProgress
         self.showLoadingIndicator = showLoadingIndicator
@@ -292,15 +314,7 @@ private extension WebViewController {
             let urlString = self.url,
             let url = URL(string: urlString)
         {
-            var request = URLRequest(url: url)
-            if let httpBody {
-                request.httpMethod = "POST"
-                request.httpBody = httpBody
-                request.addValue(
-                    "application/x-www-form-urlencoded",
-                    forHTTPHeaderField: "Content-Type"
-                )
-            }
+            let request = URLRequest(url: url)
             self.webView.load(request)
         }
     }

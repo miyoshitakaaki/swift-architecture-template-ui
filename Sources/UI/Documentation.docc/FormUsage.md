@@ -189,23 +189,6 @@ final class SampleFlow: AnyFlow<BaseFlow<SampleFlowChild>> {
             return vc
         }
     }}
-
-    required init(
-        navigation: NavigationController,
-        root: SampleFlowChild,
-        from: any FlowController.Type,
-        present: Bool
-    ) {
-        super.init(
-            navigation: navigation,
-            root: root,
-            from: from,
-            present: present
-        )
-
-        self.tabBarItem.title = "Sample"
-        self.tabBarItem.image = Images.TabBar.tabItem1
-    }
 }
 
 extension SampleFlow: FormViewControllerDelegate {

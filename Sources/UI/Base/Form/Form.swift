@@ -5,21 +5,37 @@ import Utility
 
 @MainActor
 public protocol FormUIProtocol {
+    /// screen background color
     var backgroundColor: UIColor { get }
+    /// completion button title when form is optional
     var optionalButtonTitle: String { get }
+    /// completion button title
     var completionButtonTitle: String { get }
+    /// completion button position
     var completionButtonPotition: CompletionButtonPosition { get }
+    /// completion button style when position is top
     var completionButtonPotitionTopStyle: ViewStyle<UIButton> { get }
+    /// completion button style when position is bottom
     var completionButtonPotitionBottomStyle: ViewStyle<UIButton> { get }
+    /// completion button enable style when position is bottom
     var bottomCompletionButtonEnableBackgroundStyle: ViewStyle<UIButton> { get }
+    /// completion button disable style when position is bottom
     var bottomCompletionButtondisableBackgroundStyle: ViewStyle<UIButton> { get }
+    /// form ui components
     @FormViewBuilder var views: [UIView] { get }
+    /// navigation bar title view
     var titleView: UIView? { get }
+    /// input data is valid or not
     var isValid: AnyPublisher<Bool, Never> { get }
+    /// show or not show alert when input data is invalid
     var showInvalidAlert: Bool { get }
+    /// form is optional or not
     var isOptional: Bool { get }
+    /// show accesoryview on keyboard or not
     var showAccessoryView: Bool { get }
+    /// accessoryView setter
     func set(inputAccessoryView: AMKeyboardFrameTrackerView)
+    /// chaange responder
     func focusNextResponder()
 }
 
@@ -76,15 +92,23 @@ public extension FormUIProtocol {
     }
 }
 
+/// Form  UI setting protocol
 @MainActor
 public protocol Form: AnyObject, FormUIProtocol, AnalyticsScreenName {
+    /// navigation content setting
     associatedtype NavContent: NavigationContent
+    /// form data type
     associatedtype Input: Initializable, Equatable, Validatable
 
+    /// show initial data or not
     var isEdit: Bool { get }
+    /// data binding between data model and ui
     var data: AnyPublisher<Input, Never> { get }
+    /// fetch content data
     var fetch: () async -> Result<Input, AppError> { get }
+    /// alert title when completion button is tapped
     var confirmAlertTitle: String? { get }
+    /// called when completion button tapped
     func complete(_ input: Input) async -> Result<Input, AppError>
 }
 

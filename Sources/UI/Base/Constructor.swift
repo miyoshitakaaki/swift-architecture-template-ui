@@ -47,13 +47,13 @@ public func create<T: FormConfirmUIProtocol & FormConfirmProtocol>(formConfirm: 
     return vc
 }
 
-@MainActor
 /// Collection screen constructor
 /// - Parameters:
 ///   - collection: basic setting of collection screen
 ///   - content: navigation component setting
 ///   - needRefreshNotificationNames: reload contents when this notification is sent
 /// - Returns: ViewControler of collection screen
+@MainActor
 public func create<T: CollectionList>(
     collection: T,
     content: T.NavContent,
@@ -71,13 +71,13 @@ public func create<T: CollectionList>(
     return vc
 }
 
-@MainActor
 /// Table screen constructor
 /// - Parameters:
 ///   - table: basic setting of table screen
 ///   - content: navigation component setting
 ///   - needRefreshNotificationNames: reload contents when this notification is sent
 /// - Returns: ViewControler of table screen
+@MainActor
 public func create<T: Table>(
     table: T,
     content: T.NavContent,
@@ -95,6 +95,20 @@ public func create<T: Table>(
     return vc
 }
 
+/// DiffableCollection constructor
+/// - Parameters:
+///   - type: DiffableCollection type
+///   - initialReloadType: data reload type
+///   - content: navigation bar setting
+///   - screenNameForAnalytics: send screen name for analytics when screen show
+///   - screenEventForAnalytics: senf event for analytics when screen show
+///   - needRefreshNotificationNames: reload contents when this notification is sent
+///   - needForceRefreshNotificationNames: force reload contents when this notification is sent
+///   - needSectionRefreshNotificationNames: reload only one section contents when this notification
+/// is sent
+///   - initialPagingInfo: paging indicator setting
+///   - bottomFixedView: bottom fixed view
+/// - Returns: ViewControler of DiffableCollection screen
 @MainActor
 public func create<T: DiffableCollectionSection, N: NavigationContent>(
     type: T.Type,

@@ -146,7 +146,7 @@ open class WebViewController: ViewController, UIGestureRecognizerDelegate, Activ
     ///   - basicAuthAccount: loginid and password ob basic authentification
     ///   - alwaysOpenSafariWhenLinkTap: always open safari or not when link is tapped
     ///   - screenNameForAnalytics: send screen name for analytics when screen show
-    ///   - screenEventForAnalytics: senf event for analytics when screen show
+    ///   - screenEventForAnalytics: send event for analytics when screen show
     ///   - linkTapEventForAnalytics: send event for analytics when web page is loaded
     ///   - navigationContent: navigation bar setting
     ///   - needPullToRefresh: need pulltorefresh or not

@@ -2,13 +2,19 @@
 import UIKit
 import Utility
 
+/// Form confirm UI setting protocol
 @MainActor
 public protocol FormConfirmProtocol: AnyObject, AnalyticsScreenName {
+    /// form inpu type
     associatedtype InputType
+    /// form output type
     associatedtype OutputType: Equatable
 
+    /// input data
     var data: InputType { get }
+    /// navigation bar title
     var title: String { get }
+    /// called when completion button is tapped
     var complete: () async -> Result<OutputType, AppError> { get }
 }
 

@@ -196,13 +196,6 @@ public final class CollectionViewController<
             }).store(in: &self.cancellables)
 
         self.viewModel.bind().store(in: &self.cancellables)
-
-        self.collection.topViewSubject
-            .sink(receiveCompletion: { _ in }) { [weak self] parameter in
-                guard let self else { return }
-                self.viewModel.loadSubject.send((parameter, false))
-            }
-            .store(in: &self.cancellables)
     }
 }
 #endif

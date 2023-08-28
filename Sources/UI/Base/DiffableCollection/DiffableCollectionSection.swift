@@ -13,24 +13,36 @@ public protocol PagingInfoInitializable {
     )
 }
 
+/// DiffableCollection UI setting protocol
 @MainActor
 public protocol DiffableCollectionSection: Hashable {
+    /// cell registration
     associatedtype CellRegistration: Initializable
+    /// header and footer registration
     associatedtype SupplementaryRegistration: PagingInfoInitializable
+    /// section data type
     associatedtype Item: Hashable
 
+    /// need pullToRefresh or not
     static var pullToRefreshable: Bool { get }
+    /// section contents holder
     static var sections: [Self] { get }
+    /// fetch all contents data interval
     static var fetchAllMinuteInterval: Int? { get }
+    /// fetch all contents data
     static func reload(fetchRemote: Bool) async -> Result<[Self], AppError>
 
+    /// section header text
     var headerText: String { get }
+    /// section header secondary text
     var headerSecondaryText: String { get }
 
+    /// fetch contents for each section
     func fetch(
         fetchRemote: Bool
     ) async -> Result<[Item], AppError>
 
+    /// layout setting for each section
     func layout(
         section: Int,
         environment: NSCollectionLayoutEnvironment,
@@ -38,6 +50,7 @@ public protocol DiffableCollectionSection: Hashable {
         pagingInfoSubject: PassthroughSubject<PagingSectionFooterView.PagingInfo, Never>
     ) -> NSCollectionLayoutSection
 
+    /// cell setting
     func cellRegistration(
         cellRegistration: CellRegistration,
         collectionView: UICollectionView,
@@ -45,6 +58,7 @@ public protocol DiffableCollectionSection: Hashable {
         item: Item
     ) -> UICollectionViewCell?
 
+    /// header and footer settnig
     func supplementaryRegistration(
         collectionView: UICollectionView,
         kind: String,

@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/miyoshi-cq/swift-architecture-template-utility",
       "state" : {
-        "revision" : "7c463289b3c5494ab00e5761a38ec961c9babc9e",
-        "version" : "0.26.1"
+        "revision" : "183b22fb9fc0a45b794ee03bf9d57c47f4ec1ee5",
+        "version" : "1.0.0"
       }
     },
     {

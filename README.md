@@ -2,9 +2,57 @@
 
 UI Components
 
-## Installation
+## Intoroduction
 
 [Swift Package Manager](https://www.swift.org/package-manager/) is supported.
+
+### Into Project
+
+add package into `Package Dependencies`
+
+### Into Package
+
+```swift
+let package = Package(
+    name: "Sample",
+    platforms: [
+        .iOS(.v14),
+    ],
+    products: [
+        .library(
+            name: "Sample",
+            targets: ["Sample"]
+        ),
+    ],
+    dependencies: [
+        .package(
+            url: "https://github.com/miyoshi-cq/swift-architecture-template-ui",
+            .upToNextMajor(from: "1.0.0")
+        ),
+    ],
+    targets: [
+        .target(
+            name: "Sample",
+            dependencies: [
+                .product(name: "UI", package: "swift-architecture-template-ui"),
+            ]
+        ),
+        .testTarget(
+            name: "SampleTests",
+            dependencies: ["Sample"]
+        ),
+    ]
+)
+```
+
+### Usage
+
+`import UI`
+
+## Requirements
+
+- Xcode 14.3.1 or later
+- iOS 14 or later
 
 ## Documentation
 
@@ -15,3 +63,11 @@ UI Components
 
 ## Generate docs
 - `make` or `make create_doc`
+
+## Code Format
+
+`swiftformat .`
+
+## Versioning
+
+[Semantic Versioning](https://semver.org/)

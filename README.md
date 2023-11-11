@@ -26,7 +26,7 @@ let package = Package(
     ],
     dependencies: [
         .package(
-            url: "https://github.com/miyoshi-cq/swift-architecture-template-ui",
+            url: "https://github.com/takaakimiyoshi/swift-architecture-template-ui",
             .upToNextMajor(from: "1.0.0")
         ),
     ],

@@ -26,7 +26,7 @@ let package = Package(
     ],
     dependencies: [
         .package(
-            url: "https://github.com/takaakimiyoshi/swift-architecture-template-ui",
+            url: "https://github.com/miyoshitakaaki/swift-architecture-template-ui",
             .upToNextMajor(from: "1.0.0")
         ),
     ],
@@ -56,10 +56,10 @@ let package = Package(
 
 ## Documentation
 
-- [Create List UI](https://miyoshi-cq.github.io/swift-architecture-template-ui/documentation/ui/listusage/)
-- [Create multi cell collection UI](https://miyoshi-cq.github.io/swift-architecture-template-ui/documentation/ui/diffablecollectionusage/)
-- [Create Form and FormConfirm UI](https://miyoshi-cq.github.io/swift-architecture-template-ui/documentation/ui/formusage/)
-- [Create Webview](https://miyoshi-cq.github.io/swift-architecture-template-ui/documentation/ui/webviewusage)
+- [Create List UI](https://miyoshitakaaki.github.io/swift-architecture-template-ui/documentation/ui/listusage/)
+- [Create multi cell collection UI](https://miyoshitakaaki.github.io/swift-architecture-template-ui/documentation/ui/diffablecollectionusage/)
+- [Create Form and FormConfirm UI](https://miyoshitakaaki.github.io/swift-architecture-template-ui/documentation/ui/formusage/)
+- [Create Webview](https://miyoshitakaaki.github.io/swift-architecture-template-ui/documentation/ui/webviewusage)
 
 ## Generate docs
 - `make` or `make create_doc`

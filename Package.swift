@@ -15,7 +15,7 @@ let package = Package(
     ],
     dependencies: [
         .package(
-            url: "https://github.com/miyoshi-cq/swift-architecture-template-utility",
+            url: "https://github.com/miyoshitakaaki/swift-architecture-template-utility",
             .upToNextMajor(from: "1.0.0")
         ),
         .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.2.0"),

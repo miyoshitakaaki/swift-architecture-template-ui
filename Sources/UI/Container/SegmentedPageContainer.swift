@@ -42,7 +42,7 @@ open class SegmentedPageContainer<T: SegmentedControl>: UIPageViewController,
     private let margin: CGFloat = 16
 
     private var vcs: [UIViewController]
-    private let tab: T
+    private let tabSegmentedControl: T
 
     private let tabview: UIView = {
         let view = UIView()
@@ -70,7 +70,7 @@ open class SegmentedPageContainer<T: SegmentedControl>: UIPageViewController,
         badgePublishers: [AnyPublisher<BadgeDisplay, AppError>] = []
     ) {
         self.vcs = viewControllers
-        self.tab = T(items: tabItems)
+        self.tabSegmentedControl = T(items: tabItems)
         self.hidesBarsOnSwipe = hidesBarsOnSwipe
         self.initialIndex = initialIndex
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
@@ -130,7 +130,7 @@ open class SegmentedPageContainer<T: SegmentedControl>: UIPageViewController,
 
         view.addSubviews(
             self.tabview,
-            self.tab,
+            self.tabSegmentedControl,
 
             constraints:
             self.tabview.rightAnchor.constraint(
@@ -141,20 +141,21 @@ open class SegmentedPageContainer<T: SegmentedControl>: UIPageViewController,
             ),
             self.tabview.topAnchor.constraint(equalTo: self.view.topAnchor),
             self.tabview.bottomAnchor.constraint(
-                equalTo: self.tab.bottomAnchor,
+                equalTo: self.tabSegmentedControl.bottomAnchor,
                 constant: self.margin
             ),
 
-            self.tab.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-            self.tab.rightAnchor.constraint(
+            self.tabSegmentedControl.topAnchor
+                .constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            self.tabSegmentedControl.rightAnchor.constraint(
                 equalTo: self.view.safeAreaLayoutGuide.rightAnchor,
                 constant: -self.margin
             ),
-            self.tab.leftAnchor.constraint(
+            self.tabSegmentedControl.leftAnchor.constraint(
                 equalTo: self.view.safeAreaLayoutGuide.leftAnchor,
                 constant: self.margin
             ),
-            self.tab.heightAnchor.constraint(equalToConstant: self.tabHeight)
+            self.tabSegmentedControl.heightAnchor.constraint(equalToConstant: self.tabHeight)
         )
 
         self.setViewControllers(
@@ -172,7 +173,7 @@ open class SegmentedPageContainer<T: SegmentedControl>: UIPageViewController,
         self.dataSource = self
         self.delegate = self
 
-        self.tab.addTarget(
+        self.tabSegmentedControl.addTarget(
             self,
             action: #selector(Self.segmentChanged(sender:)),
             for: .valueChanged
@@ -200,7 +201,7 @@ open class SegmentedPageContainer<T: SegmentedControl>: UIPageViewController,
     }
 
     public func selectTab(index: Int, animated: Bool) {
-        self.tab.selectedSegmentIndex = index
+        self.tabSegmentedControl.selectedSegmentIndex = index
         let direction: UIPageViewController
             .NavigationDirection = index > self.currentIndex ? .forward : .reverse
         self.setViewControllers([self.vcs[index]], direction: direction, animated: animated)
@@ -211,7 +212,7 @@ open class SegmentedPageContainer<T: SegmentedControl>: UIPageViewController,
     }
 
     public func showBadge(show: Bool, index: Int, number: Int?) {
-        self.tab.showBadge(show: show, index: index, number: number)
+        self.tabSegmentedControl.showBadge(show: show, index: index, number: number)
     }
 
     public func presentationCount(for pageViewController: UIPageViewController) -> Int { self.vcs
@@ -249,7 +250,7 @@ open class SegmentedPageContainer<T: SegmentedControl>: UIPageViewController,
         guard
             let vc = viewControllers?.first,
             let index = self.vcs.firstIndex(of: vc) else { return }
-        self.tab.selectedSegmentIndex = index
+        self.tabSegmentedControl.selectedSegmentIndex = index
     }
 }
 #endif

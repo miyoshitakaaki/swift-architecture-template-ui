@@ -5,6 +5,7 @@ import Utility
 
 public struct EmptyContent: Hashable {}
 
+@MainActor
 public protocol PagingInfoInitializable {
     init(
         initialPagingInfo: [PagingSectionFooterView.InitialPagingInfo],

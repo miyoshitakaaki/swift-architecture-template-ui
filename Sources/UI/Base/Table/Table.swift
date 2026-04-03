@@ -3,6 +3,7 @@ import UIKit
 import Utility
 
 /// Table UI setting protocol
+@MainActor
 public protocol Table: List, AnalyticsScreenName {
     /// navigation content type
     associatedtype NavContent: NavigationContent
